@@ -8,68 +8,36 @@
 
 class UInputComponent;
 
-UCLASS(config = Game)
+UCLASS(abstract, config = Game)
 class AFPSCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
-		/** Pawn mesh: 1st person view (arms; seen only by self) */
-		UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-		class USkeletalMeshComponent* Mesh1P;
-
-	/** Gun mesh: 1st person view (seen only by self) */
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-		class USkeletalMeshComponent* FP_Gun;
-
-	/** Location on gun mesh where projectiles should spawn. */
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-		class USceneComponent* FP_MuzzleLocation;
-
-	/** Gun mesh: VR view (attached to the VR controller directly, no arm, just the actual gun) */
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-		class USkeletalMeshComponent* VR_Gun;
-
-	/** Location on VR gun mesh where projectiles should spawn. */
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-		class USceneComponent* VR_MuzzleLocation;
-
-	/** First person camera */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		class UCameraComponent* FirstPersonCameraComponent;
-
-	/** Motion controller (right hand) */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		class UMotionControllerComponent* R_MotionController;
-
-	/** Motion controller (left hand) */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		class UMotionControllerComponent* L_MotionController;
-
-	UPROPERTY(VisibleAnywhere, Category = Gun)
-		int CurrentAmmo;
-
-	UPROPERTY(VisibleAnywhere, Category = Gun)
-		int CurrentMagAmmo;
-
-	UPROPERTY(VisibleAnywhere, Category = Gun)
-		class UMaterialInstanceDynamic* AmmoDigit100;
-
-	UPROPERTY(VisibleAnywhere, Category = Gun)
-		class UMaterialInstanceDynamic* AmmoDigit10;
-
-	UPROPERTY(VisibleAnywhere, Category = Gun)
-		class UMaterialInstanceDynamic* AmmoDigit1;
-
-	UPROPERTY(VisibleAnywhere, Category = Gun)
-		class UMaterialInstanceDynamic* AmmoChargeMag;
-
 	FTimerHandle FireTimeHandle;
-	bool bIsFiring = false;
 
 public:
 	AFPSCharacter();
 
 protected:
+	/** Pawn mesh: 1st person view (arms; seen only by self) */
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+		class USkeletalMeshComponent* Mesh1P;
+
+	/** Location on gun mesh where projectiles should spawn. */
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+		class USceneComponent* FP_MuzzleLocation;
+
+	/** Gun mesh: 1st person view (seen only by self) */
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+		class USkeletalMeshComponent* FP_Gun;
+
+	/** First person camera */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+		class UCameraComponent* FirstPersonCameraComponent;
+
+
+	bool bIsFiring = false;
+
 	virtual void BeginPlay();
 
 public:
@@ -80,12 +48,6 @@ public:
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		float BaseLookUpRate;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gun)
-		int MaxAmmo = 300;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gun)
-		int MaxMagAmmo = 60;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gun)
 		float FireDelay = .1f;
@@ -118,21 +80,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		uint32 bUsingMotionControllers : 1;
 
-protected:
-
-	bool isMagEmpty();
 
 	void OnFirePressed();
 
 	void OnFireReleased();
 
 	/** Fires a projectile. */
-	void OnFire();
+	virtual void OnFire();
 
 	/** Reloads */
-	void OnReload();
-
-	void Tick(float DeltaSeconds);
+	virtual void OnReload();
 
 	/** Resets HMD orientation and position in VR. */
 	void OnResetVR();
@@ -168,7 +125,7 @@ protected:
 	void TouchUpdate(const ETouchIndex::Type FingerIndex, const FVector Location);
 	TouchData	TouchItem;
 
-	void UpdateAmmoMaterials();
+
 
 protected:
 	// APawn interface
@@ -189,6 +146,5 @@ public:
 	/** Returns FirstPersonCameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
-	void ReloadAmmo();
 };
 

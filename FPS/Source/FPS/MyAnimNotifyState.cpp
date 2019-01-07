@@ -4,7 +4,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "Components/SkeletalMeshComponent.h"
-#include "FPSCharacter.h"
+#include "Player/PlayerCharacter.h"
 
 void UMyAnimNotifyState::NotifyBegin(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation, float TotalDuration)
 {
@@ -12,8 +12,8 @@ void UMyAnimNotifyState::NotifyBegin(USkeletalMeshComponent * MeshComp, UAnimSeq
 	UWorld* world = MeshComp->GetWorld();
 	if (world != nullptr) {
 		ACharacter* player = UGameplayStatics::GetPlayerCharacter(world, 0);
-		if (player != nullptr && player->IsA(AFPSCharacter::StaticClass())) {
-			Cast<AFPSCharacter>(player)->ReloadAmmo();
+		if (player != nullptr && player->IsA(APlayerCharacter::StaticClass())) {
+			Cast<APlayerCharacter>(player)->ReloadAmmo();
 			UE_LOG(LogTemp, Warning, TEXT("UMyAnimNotifyState::NotifyBegin 2"));
 		}
 	}
