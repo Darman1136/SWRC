@@ -4,26 +4,31 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Weapon/UseableWeapon.h"
 #include "DC17mBlaster.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class FPS_API UDC17mBlaster : public UActorComponent
+UCLASS(ClassGroup = (Weapon), meta = (BlueprintSpawnableComponent))
+class FPS_API UDC17mBlaster : public UObject, public IUseableWeapon
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UDC17mBlaster();
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Gun")
+		int32 GetDamage();
+	virtual int32 GetDamage_Implementation() override;
 
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Gun")
+		int32 GetMaxAmmo();
+	virtual int32 GetMaxAmmo_Implementation() override;
 
-		
-	
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Gun")
+		int32 GetMagSize();
+	virtual int32 GetMagSize_Implementation() override;
+
+private:
+	FWeaponDataTable* BlasterStats;
 };

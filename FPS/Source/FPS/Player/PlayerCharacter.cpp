@@ -14,11 +14,10 @@
 #include "Engine/World.h"
 #include "TimerManager.h"
 #include "FPSProjectile.h"
+#include "Weapon/DC17mBlaster.h"
+#include "Data/DC17mBlasterStats.h"
 
 APlayerCharacter::APlayerCharacter() {
-	CurrentAmmo = MaxAmmo;
-	CurrentMagAmmo = MaxMagAmmo;
-
 	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
 	Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
 	Mesh1P->SetOnlyOwnerSee(true);
@@ -42,10 +41,26 @@ APlayerCharacter::APlayerCharacter() {
 
 	// Default offset from the character location for projectiles to spawn
 	GunOffset = FVector(100.0f, 0.0f, 10.0f);
+
 }
 
 void APlayerCharacter::BeginPlay() {
 	Super::BeginPlay();
+
+	//IUseableWeapon* WeaponStats
+	//WeaponStatsReference = NewObject<UDC17mBlaster>(this);
+	//WeaponStatsObject = WeaponStatsReference.GetObject();
+	//WeaponStatsInterface = Cast<IUseableWeapon>(WeaponStatsObject);
+	//if (WeaponStatsObject) {
+	//	CurrentAmmo = WeaponStatsInterface->Execute_GetMaxAmmo(WeaponStatsObject);
+	//	CurrentMagAmmo = WeaponStatsInterface->Execute_GetMagSize(WeaponStatsObject);
+	//}
+	WeaponStats = NewObject<UDC17mBlasterStats>(this);
+	//WeaponStatsObject = WeaponStatsReference.GetObject();
+	if (WeaponStats) {
+		CurrentAmmo = WeaponStats->GetMaxAmmo();
+		CurrentMagAmmo = WeaponStats->GetMagSize();
+	}
 
 	TArray<class UMaterialInterface*> materials = Mesh1P->GetMaterials();
 	if (materials[0] != nullptr) {
@@ -132,6 +147,8 @@ void APlayerCharacter::OnFire()
 			UpdateAmmoMaterials();
 		}
 	}
+
+	GetDamage();
 }
 
 bool APlayerCharacter::isMagEmpty()
@@ -205,5 +222,12 @@ void APlayerCharacter::OnReload()
 				AnimInstance->Montage_Play(ReloadAnimation, 1.f);
 			}
 		}
+	}
+}
+
+void APlayerCharacter::GetDamage()
+{
+	if (WeaponStats) {
+		UE_LOG(LogTemp, Warning, TEXT("GetDamage: %d"), WeaponStats->GetDamage());
 	}
 }

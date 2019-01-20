@@ -6,29 +6,22 @@
 // Sets default values for this component's properties
 UDC17mBlaster::UDC17mBlaster()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
+	if (Data) {
+		BlasterStats = Data->FindRow<FWeaponDataTable>(FName("DC17mBlaster"), FString(""));
+	}
 }
 
-
-// Called when the game starts
-void UDC17mBlaster::BeginPlay()
+int32 UDC17mBlaster::GetDamage_Implementation()
 {
-	Super::BeginPlay();
-
-	// ...
-	
+	return GetDamageInternal(BlasterStats);
 }
 
-
-// Called every frame
-void UDC17mBlaster::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+int32 UDC17mBlaster::GetMaxAmmo_Implementation()
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
+	return GetMaxAmmoInternal(BlasterStats);
 }
 
+int32 UDC17mBlaster::GetMagSize_Implementation()
+{
+	return GetMagSizeInternal(BlasterStats);
+}

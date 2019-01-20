@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "FPSCharacter.h"
+#include "Weapon/UseableWeapon.h"
 #include "PlayerCharacter.generated.h"
 
 /**
@@ -32,7 +33,11 @@ class FPS_API APlayerCharacter : public AFPSCharacter
 	UPROPERTY(VisibleAnywhere, Category = Gun)
 		class UMaterialInstanceDynamic* AmmoChargeMag;
 
-
+	//UPROPERTY(VisibleAnywhere, Category = Gun)
+	//	TScriptInterface<UUseableWeapon> WeaponStatsReference;
+	//UObject* WeaponStatsObject;
+	//IUseableWeapon* WeaponStatsInterface;
+	class UWeaponStats* WeaponStats;
 
 public:
 	APlayerCharacter();
@@ -58,4 +63,7 @@ public:
 	void OnFire() override;
 
 	void OnReload() override;
+
+private:
+	void GetDamage();
 };
