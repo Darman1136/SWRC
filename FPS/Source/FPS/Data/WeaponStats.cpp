@@ -12,6 +12,13 @@ UWeaponStats::UWeaponStats()
 	Data = Data_BP.Object;
 }
 
+
+
+TSoftObjectPtr<UStaticMesh> UWeaponStats::GetMesh()
+{
+	return WeaponData->Mesh;
+}
+
 int32 UWeaponStats::GetDamage()
 {
 	if (WeaponData)

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
+#include "Engine/StaticMesh.h"
 #include "WeaponDataTable.generated.h"
 
 /**
@@ -17,7 +18,7 @@ struct FPS_API FWeaponDataTable : public FTableRowBase
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
-		int32 Mesh;
+		TSoftObjectPtr<UStaticMesh> Mesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		int32 MagSize;

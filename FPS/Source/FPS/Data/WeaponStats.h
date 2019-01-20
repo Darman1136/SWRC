@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "Data/WeaponDataTable.h"
+#include "Engine/StaticMesh.h"
 #include "WeaponStats.generated.h"
 
 /**
@@ -18,6 +19,7 @@ class FPS_API UWeaponStats : public UObject
 public:
 	UWeaponStats();
 
+	TSoftObjectPtr<UStaticMesh> GetMesh();
 	int32 GetDamage();
 	int32 GetMaxAmmo();
 	int32 GetMagSize();
