@@ -5,6 +5,8 @@
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Data/DC17mBlasterStats.h"
+#include "Kismet/GameplayStatics.h"
+#include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 
 
 ADC17mBlasterProjectile::ADC17mBlasterProjectile() {
@@ -14,6 +16,9 @@ ADC17mBlasterProjectile::ADC17mBlasterProjectile() {
 	ProjectileMesh->SetCollisionProfileName(TEXT("NoCollision"));
 
 	ProjectileMovement->ProjectileGravityScale = 0.f;
+
+	CollisionComp->OnComponentHit.AddDynamic(this, &ADC17mBlasterProjectile::OnHit);
+
 }
 
 //void ADC17mBlasterProjectile::BeginPlay() {
@@ -39,5 +44,20 @@ void ADC17mBlasterProjectile::OnConstruction(const FTransform & Transform)
 
 		//ProjectileMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
+	}
+}
+
+void ADC17mBlasterProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit) {
+	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL))
+	{
+		if (OtherComp->IsSimulatingPhysics()) {
+			OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
+		}
+
+		if (ImpactGenericParticleSystem) {
+			FVector location = GetActorLocation() * 0.99f;
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactGenericParticleSystem, location, GetActorRotation());
+		}
+		Destroy();
 	}
 }

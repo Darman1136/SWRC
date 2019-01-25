@@ -121,26 +121,24 @@ void APlayerCharacter::OnFire()
 			}
 			UpdateAmmoMaterials();
 
-			TSoftObjectPtr<UStaticMesh> ProjectileMeshPtr = WeaponStats->GetMesh();
-			UStaticMesh* ProjectileMesh = ProjectileMeshPtr.Get();
-			UClass* PClass = ProjectileMesh->GetClass();
+			//if (WeaponStats) {
+			//	TSoftObjectPtr<UStaticMesh> ProjectileMeshPtr = WeaponStats->GetMesh();
+			//	UStaticMesh* ProjectileMesh = ProjectileMeshPtr.Get();
+			//	UClass* PClass = ProjectileMesh->GetClass();
+			//}
 			if (ProjectileClass != NULL)
 			{
 				UWorld* const World = GetWorld();
 				if (World != NULL)
 				{
-					const FRotator SpawnRotation = GetControlRotation();
-					// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-					//const FVector SpawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
+					FRotator SpawnRotation = GetControlRotation();
+					SpawnRotation.Add(-2.f, -.3f, 0.f);
 					const FTransform MuzzleTransform = Mesh1P->GetBoneTransform(Mesh1P->GetBoneIndex(TEXT("muzzle")));
 					const FVector SpawnLocation = MuzzleTransform.GetLocation();
 
-					//Set Spawn Collision Handling Override
 					FActorSpawnParameters ActorSpawnParams;
 					ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
-					
-					// spawn the projectile at the muzzle
 					World->SpawnActor<AFPSProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 				}
 			}
