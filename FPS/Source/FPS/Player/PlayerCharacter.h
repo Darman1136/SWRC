@@ -40,7 +40,7 @@ class FPS_API APlayerCharacter : public AFPSCharacter
 	class UWeaponStats* WeaponStats;
 
 public:
-	APlayerCharacter();
+	APlayerCharacter(const FObjectInitializer& ObjectInitializer);
 
 protected:
 	virtual void BeginPlay();

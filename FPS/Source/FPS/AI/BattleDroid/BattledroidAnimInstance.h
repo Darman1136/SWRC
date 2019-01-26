@@ -23,19 +23,25 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = State)
 		bool Alive = true;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
-		bool IsWalking = false;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
-		bool IsRunning = false;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = State)
 		bool IsFiring = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
+		bool IsWalking = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
 		float WalkSpeed = 0.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
+		bool IsRunning = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
 		float RunSpeed = 0.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
+		bool IsStrafing = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
+		float StrafeSpeed = 0.f;
 };
 

@@ -6,7 +6,7 @@
 #include "AI/BattleDroid/BattledroidAnimInstance.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
-ABattledroidAIController::ABattledroidAIController() {
+ABattledroidAIController::ABattledroidAIController(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {
 
 }
 
@@ -36,16 +36,33 @@ void ABattledroidAIController::Tick(float DeltaTime) {
 	bool InAction = false;
 
 	FVector CurrentVelocity = GetPawn()->GetVelocity();
-	UE_LOG(LogTemp, Warning, TEXT("     Vel: %s"), *CurrentVelocity.ToString());
+	const FRotator CurrentRotation = GetPawn()->GetActorRotation();
+	CurrentVelocity = CurrentRotation.UnrotateVector(CurrentVelocity);
+	//UE_LOG(LogTemp, Warning, TEXT("     Vel: %s"), *CurrentVelocity.ToString());
+
+	if (BlackboardComp->GetValueAsObject(ABasicAIController::BKPlayer)) {
+		InAction = true;
+	}
 
 	if (!CurrentVelocity.IsNearlyZero()) {
 		float MaxSpeed = CharacterMovementComponent->MaxWalkSpeed;
 		FVector Norm = CurrentVelocity / MaxSpeed;
-		UE_LOG(LogTemp, Warning, TEXT("Norm Vel: %s"), *Norm.ToString());
+		//UE_LOG(LogTemp, Warning, TEXT("Norm Vel: %s"), *Norm.ToString());
 
 		InAction = true;
 		BattledroidAnimInstance->IsWalking = true;
-		BattledroidAnimInstance->WalkSpeed = Norm.GetMax();
+
+		float Max = Norm.GetAbsMax();
+		if (FMath::IsNearlyEqual(Max, FMath::Abs(Norm.X))) {
+			BattledroidAnimInstance->WalkSpeed = Norm.X;
+			BattledroidAnimInstance->StrafeSpeed = 0.f;
+		}
+		else if (FMath::IsNearlyEqual(Max, FMath::Abs(Norm.Y))) {
+			BattledroidAnimInstance->WalkSpeed = 0.f;
+			BattledroidAnimInstance->StrafeSpeed = Norm.Y;
+		}
+
+		// UE_LOG(LogTemp, Warning, TEXT("%s %s"), *FString::SanitizeFloat(BattledroidAnimInstance->WalkSpeed), *FString::SanitizeFloat(BattledroidAnimInstance->StrafeSpeed));
 	}
 	else {
 		BattledroidAnimInstance->IsWalking = false;

@@ -15,7 +15,7 @@ class FPS_API ABattledroidAIController : public ABasicAIController
 	GENERATED_BODY()
 
 public:
-	ABattledroidAIController();
+	ABattledroidAIController(const FObjectInitializer& ObjectInitializer);
 
 	virtual void BeginPlay() override;
 

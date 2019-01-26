@@ -4,18 +4,20 @@
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "Engine/DataTable.h"
 #include "Data/WeaponDataTable.h"
+#include "Weapon/Projectile/DC17mBlasterProjectile.h"
 
-UWeaponStats::UWeaponStats()
-{
+UWeaponStats::UWeaponStats(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {
 	ConstructorHelpers::FObjectFinder<UDataTable>
 		Data_BP(TEXT("DataTable'/Game/Data/WeaponData.WeaponData'"));
 	Data = Data_BP.Object;
 }
 
-
-
 TSoftObjectPtr<UStaticMesh> UWeaponStats::GetMesh()
 {
+	if (!WeaponData->Mesh) {
+		const FSoftObjectPath Path = WeaponData->Mesh.ToSoftObjectPath();
+		StaticLoadObject(UObject::StaticClass(), nullptr, *Path.GetAssetPathString());
+	}
 	return WeaponData->Mesh;
 }
 

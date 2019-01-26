@@ -16,7 +16,7 @@ class AFPSCharacter : public ACharacter
 	FTimerHandle FireTimeHandle;
 
 public:
-	AFPSCharacter();
+	AFPSCharacter(const FObjectInitializer& ObjectInitializer);
 
 protected:
 	/** Pawn mesh: 1st person view (arms; seen only by self) */

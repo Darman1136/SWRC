@@ -17,7 +17,7 @@
 #include "Weapon/DC17mBlaster.h"
 #include "Data/DC17mBlasterStats.h"
 
-APlayerCharacter::APlayerCharacter() {
+APlayerCharacter::APlayerCharacter(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {
 	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
 	Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
 	Mesh1P->SetOnlyOwnerSee(true);
@@ -197,7 +197,6 @@ void APlayerCharacter::OnReload()
 		return;
 	}
 
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("OnReload"));
 	// try and play the sound if specified
 	if (ReloadSound != NULL)
 	{
@@ -207,13 +206,11 @@ void APlayerCharacter::OnReload()
 	// try and play a firing animation if specified
 	if (ReloadAnimation != NULL)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("ReloadAnimation != NULL"));
 		// Get the animation object for the arms mesh
 		UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
 		if (AnimInstance != NULL)
 		{
 			if (AnimInstance->GetCurrentActiveMontage() == NULL) {
-				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("AnimInstance != NULL"));
 				AnimInstance->Montage_Play(ReloadAnimation, 1.f);
 			}
 		}

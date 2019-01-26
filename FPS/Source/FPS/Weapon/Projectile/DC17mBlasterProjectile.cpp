@@ -9,7 +9,7 @@
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 
 
-ADC17mBlasterProjectile::ADC17mBlasterProjectile() {
+ADC17mBlasterProjectile::ADC17mBlasterProjectile(const FObjectInitializer& ObjectInitializer) {
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMesh"));
 	ProjectileMesh->SetupAttachment(CollisionComp);
 	ProjectileMesh->SetMobility(EComponentMobility::Movable);

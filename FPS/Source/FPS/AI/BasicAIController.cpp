@@ -7,7 +7,10 @@
 #include "Kismet/GameplayStatics.h"
 #include "FPSCharacter.h"
 
-ABasicAIController::ABasicAIController() {
+const FName ABasicAIController::BKPlayer = FName("Player");
+const FName ABasicAIController::BKTargetLocation = FName("TargetLocation");
+
+ABasicAIController::ABasicAIController(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {
 	BlackboardComp = CreateDefaultSubobject<UBlackboardComponent>(TEXT("BlackboardComponent"));
 
 	SetActorTickEnabled(true);
@@ -34,7 +37,8 @@ void ABasicAIController::BeginPlay() {
 			UGameplayStatics::GetAllActorsOfClass(GetWorld(), AFPSCharacter::StaticClass(), FoundActors);
 
 			if (FoundActors.Num() == 1) {
-				BlackboardComp->SetValueAsObject(BKPlayer, FoundActors[0]);
+				BlackboardComp->SetValueAsObject(ABasicAIController::BKPlayer, FoundActors[0]);
+				SetFocus(FoundActors[0], EAIFocusPriority::Gameplay);
 			}
 			else {
 				UE_LOG(LogTemp, Error, TEXT("Failed to find and set player"));

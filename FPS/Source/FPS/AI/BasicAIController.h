@@ -18,7 +18,7 @@ class FPS_API ABasicAIController : public AAIController
 	GENERATED_BODY()
 
 public:
-	ABasicAIController();
+	ABasicAIController(const FObjectInitializer& ObjectInitializer);
 
 	virtual void Possess(class APawn* InPawn) override;
 
@@ -31,8 +31,8 @@ protected:
 
 	class UBlackboardComponent* BlackboardComp;
 
-private:
-	FName BKPlayer = FName("Player");
-	FName BKTargetLocation = FName("TargetLocation");
+public:
+	static const FName BKPlayer;
+	static const FName BKTargetLocation;
 };
 
