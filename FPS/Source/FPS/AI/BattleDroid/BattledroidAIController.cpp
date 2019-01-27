@@ -5,6 +5,8 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "AI/BattleDroid/BattledroidAnimInstance.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "FPSCharacter.h"
+#include "Kismet/KismetMathLibrary.h"
 
 ABattledroidAIController::ABattledroidAIController(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {
 
@@ -40,8 +42,12 @@ void ABattledroidAIController::Tick(float DeltaTime) {
 	CurrentVelocity = CurrentRotation.UnrotateVector(CurrentVelocity);
 	//UE_LOG(LogTemp, Warning, TEXT("     Vel: %s"), *CurrentVelocity.ToString());
 
-	if (BlackboardComp->GetValueAsObject(ABasicAIController::BKPlayer)) {
+	UObject* PlayerObject =  BlackboardComp->GetValueAsObject(ABasicAIController::BKTarget);
+	if (PlayerObject && PlayerObject->IsA(AFPSCharacter::StaticClass())) {
+		AFPSCharacter* Player = Cast<AFPSCharacter>(PlayerObject);
 		InAction = true;
+
+		TurnHeadToObject(Player);
 	}
 
 	if (!CurrentVelocity.IsNearlyZero()) {
@@ -71,4 +77,3 @@ void ABattledroidAIController::Tick(float DeltaTime) {
 
 	BattledroidAnimInstance->InAction = InAction;
 }
-

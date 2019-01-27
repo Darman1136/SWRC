@@ -30,6 +30,12 @@ public:
 		bool IsWalking = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
+		bool TurnRight = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
+		bool TurnLeft = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
 		float WalkSpeed = 0.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
@@ -43,5 +49,11 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
 		float StrafeSpeed = 0.f;
+
+protected:
+	// Returns rotation
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Look")
+		void FindLookAtObjectRotator(FRotator& Rotation, float& Alpha);
+
 };
 

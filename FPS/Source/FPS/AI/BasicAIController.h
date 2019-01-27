@@ -25,6 +25,10 @@ public:
 	virtual void BeginPlay() override;
 
 	virtual void Tick(float DeltaTime) override;
+
+protected:
+	virtual void TurnHeadToObject(AActor* Actor);
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = AI)
 		class UBehaviorTree* BehaviorTree;
@@ -32,7 +36,7 @@ protected:
 	class UBlackboardComponent* BlackboardComp;
 
 public:
-	static const FName BKPlayer;
+	static const FName BKTarget;
 	static const FName BKTargetLocation;
 };
 
