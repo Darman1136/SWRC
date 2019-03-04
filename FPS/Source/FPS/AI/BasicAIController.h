@@ -26,6 +26,10 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
+	int32 GetHealth();
+
+	virtual void TakeDamage(AActor* AttackingActor, UObject* DamageType, int32 amount);
+
 protected:
 	virtual void TurnHeadToObject(AActor* Actor);
 
@@ -35,8 +39,14 @@ protected:
 
 	class UBlackboardComponent* BlackboardComp;
 
+	UPROPERTY(EditAnywhere, Category = AIProperties)
+		int MaxHealth = 100;
+	UPROPERTY(EditAnywhere, Category = AIProperties)
+		int Health = 100;
+
 public:
 	static const FName BKTarget;
 	static const FName BKTargetLocation;
+	
 };
 

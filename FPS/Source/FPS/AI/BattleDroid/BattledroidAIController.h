@@ -25,4 +25,6 @@ private:
 	class UBattledroidAnimInstance* BattledroidAnimInstance;
 
 	class UCharacterMovementComponent* CharacterMovementComponent;
+
+	class UBattleDroidStats* BattleDroidStats;
 };

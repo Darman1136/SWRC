@@ -18,7 +18,7 @@ void UBattledroidAnimInstance::FindLookAtObjectRotator(FRotator& Rotation, float
 	Alpha = 0;
 	Rotation = FRotator();
 
-	AActor* OwningActor = GetOwningActor();
+/*	AActor* OwningActor = GetOwningActor();
 	if (OwningActor && OwningActor->IsA(ABattledroidAICharacter::StaticClass())) {
 		const ABattledroidAICharacter* BattledroidCharacter = Cast<ABattledroidAICharacter>(OwningActor);
 		if (BattledroidCharacter && BattledroidCharacter->GetController()) {
@@ -51,5 +51,5 @@ void UBattledroidAnimInstance::FindLookAtObjectRotator(FRotator& Rotation, float
 				}
 			}
 		}
-	}
+	}*/
 }

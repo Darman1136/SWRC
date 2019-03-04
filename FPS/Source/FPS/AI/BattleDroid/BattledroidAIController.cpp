@@ -7,6 +7,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "FPSCharacter.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Data/EnemyStats/BattleDroidStats.h"
 
 ABattledroidAIController::ABattledroidAIController(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {
 
@@ -28,6 +29,12 @@ void ABattledroidAIController::BeginPlay() {
 			}
 
 			CharacterMovementComponent = Cast<UCharacterMovementComponent>(Character->GetMovementComponent());
+
+			BattleDroidStats = NewObject<UBattleDroidStats>(this);
+			if (BattleDroidStats) {
+				MaxHealth = BattleDroidStats->GetMaxHealth();
+				Health = BattleDroidStats->GetHealth();
+			}
 		}
 	}
 }

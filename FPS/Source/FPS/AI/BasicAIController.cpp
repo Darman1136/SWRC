@@ -54,6 +54,20 @@ void ABasicAIController::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 }
 
+int32 ABasicAIController::GetHealth()
+{
+	return Health;
+}
+
+void ABasicAIController::TakeDamage(AActor * AttackingActor, UObject * DamageType, int32 amount)
+{
+	Health -= amount;
+	if (Health < 0) {
+		Health = 0;
+	}
+	UE_LOG(LogTemp, Warning, TEXT("Health: %d"), Health);
+}
+
 void ABasicAIController::TurnHeadToObject(AActor* Actor)
 {
 
