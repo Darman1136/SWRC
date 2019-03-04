@@ -57,7 +57,7 @@ void ADC17mBlasterProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherA
 		ABasicAICharacter* BasicAICharacter = Cast<ABasicAICharacter>(OtherActor);
 		if (BasicAICharacter) {
 			ABasicAIController* BasicAIController = BasicAICharacter->GetCastedController();
-			BasicAIController->TakeDamage(GetProjectileOwner(), GetDamageType(), GetDamage());
+			BasicAIController->TakeDamage(GetProjectileOwner(), GetDamageType(), GetDamage(), Hit);
 		}
 
 		if (ImpactGenericParticleSystem) {

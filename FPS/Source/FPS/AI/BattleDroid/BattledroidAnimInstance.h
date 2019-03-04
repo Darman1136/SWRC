@@ -24,6 +24,9 @@ public:
 		bool Alive = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = State)
+		bool DeathByHeadshot = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = State)
 		bool IsFiring = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)

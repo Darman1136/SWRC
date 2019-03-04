@@ -8,6 +8,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "Weapon/Projectile/WeaponDamageType.h"
+#include "Weapon/Projectile/DamageAreaEnum.h"
 #include "BasicAIController.generated.h"
 
 /**
@@ -29,10 +30,16 @@ public:
 
 	int32 GetHealth();
 
-	virtual void TakeDamage(AActor* AttackingActor, EWeaponDamageType DamageType, float amount);
+	virtual void TakeDamage(AActor* AttackingActor, EWeaponDamageType DamageType, float amount, const FHitResult& Hit);
 
 protected:
 	virtual void TurnHeadToObject(AActor* Actor);
+
+	virtual EDamageArea GetTakenDamageAreaByBoneName(FName Bone);
+
+	virtual float GetTakenDamageMultiplier(FName Bone);
+
+	virtual void OnDeath();
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = AI)

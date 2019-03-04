@@ -7,6 +7,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "FPSCharacter.h"
 #include "Weapon/Projectile/WeaponDamageType.h"
+#include "Weapon/Projectile/DamageAreaEnum.h"
 #include "FPS.h"
 
 const FName ABasicAIController::BKTarget = FName("Target");
@@ -61,16 +62,31 @@ int32 ABasicAIController::GetHealth()
 	return Health;
 }
 
-void ABasicAIController::TakeDamage(AActor* AttackingActor, EWeaponDamageType DamageType, float amount)
+void ABasicAIController::TakeDamage(AActor* AttackingActor, EWeaponDamageType DamageType, float amount, const FHitResult& Hit)
 {
-	Health -= amount;
+	EDamageArea DamageArea = GetTakenDamageAreaByBoneName(Hit.BoneName);
+
+	Health -= amount * GetTakenDamageMultiplier(Hit.BoneName);
 	if (Health < 0) {
 		Health = 0;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Health: %d, Type: %s, Amount: %f, Attacker: %s"), Health, *GETENUMSTRING("EWeaponDamageType", DamageType), amount, *AttackingActor->GetName());
+	UE_LOG(LogTemp, Warning, TEXT("Health: %d, Type: %s, Amount: %f, Attacker: %s, Bone: %s, DamageAreaByBone: %s"), Health, *GETENUMSTRING("EWeaponDamageType", DamageType), amount, *AttackingActor->GetName(), *Hit.BoneName.ToString(), *GETENUMSTRING("EDamageArea", DamageArea));
 }
 
 void ABasicAIController::TurnHeadToObject(AActor* Actor)
 {
+}
 
+EDamageArea ABasicAIController::GetTakenDamageAreaByBoneName(FName Bone)
+{
+	return EDamageArea::DADefault;
+}
+
+float ABasicAIController::GetTakenDamageMultiplier(FName Bone)
+{
+	return 1.f;
+}
+
+void ABasicAIController::OnDeath()
+{
 }
