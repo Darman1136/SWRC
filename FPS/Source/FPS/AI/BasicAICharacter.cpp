@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "BasicAICharacter.h"
+#include "BasicAIController.h"
 
 
 // Sets default values
@@ -30,5 +31,10 @@ void ABasicAICharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+ABasicAIController* ABasicAICharacter::GetCastedController()
+{
+	return Cast<ABasicAIController>(GetController());
 }
 

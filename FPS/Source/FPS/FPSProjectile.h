@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Weapon/Projectile/WeaponDamageType.h"
 #include "FPSProjectile.generated.h"
 
 UCLASS(config = Game)
@@ -23,6 +24,18 @@ public:
 	/** Returns ProjectileMovement subobject **/
 	FORCEINLINE class UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
 
+	EWeaponDamageType GetDamageType();
+
+	void SetDamageType(EWeaponDamageType DamageType);
+
+	float GetDamage();
+
+	void SetDamage(float Damage);
+
+	AActor* GetProjectileOwner();
+
+	void SetProjectileOwner(AActor* NewOwner);
+
 protected:
 	/** Sphere collision component */
 	UPROPERTY(VisibleDefaultsOnly, Category = Projectile)
@@ -38,5 +51,14 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = Impact)
 		class UParticleSystem* ImpactGenericParticleSystem;
 
+private:
+	UPROPERTY(VisibleAnywhere)
+		AActor* ProjectileOwner;
+
+	UPROPERTY(VisibleAnywhere)
+		EWeaponDamageType DamageType;
+
+	UPROPERTY(VisibleAnywhere)
+		float Damage;
 };
 

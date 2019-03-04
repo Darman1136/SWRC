@@ -6,6 +6,8 @@
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "FPSCharacter.h"
+#include "Weapon/Projectile/WeaponDamageType.h"
+#include "FPS.h"
 
 const FName ABasicAIController::BKTarget = FName("Target");
 const FName ABasicAIController::BKTargetLocation = FName("TargetLocation");
@@ -59,13 +61,13 @@ int32 ABasicAIController::GetHealth()
 	return Health;
 }
 
-void ABasicAIController::TakeDamage(AActor * AttackingActor, UObject * DamageType, int32 amount)
+void ABasicAIController::TakeDamage(AActor* AttackingActor, EWeaponDamageType DamageType, float amount)
 {
 	Health -= amount;
 	if (Health < 0) {
 		Health = 0;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Health: %d"), Health);
+	UE_LOG(LogTemp, Warning, TEXT("Health: %d, Type: %s, Amount: %f, Attacker: %s"), Health, *GETENUMSTRING("EWeaponDamageType", DamageType), amount, *AttackingActor->GetName());
 }
 
 void ABasicAIController::TurnHeadToObject(AActor* Actor)

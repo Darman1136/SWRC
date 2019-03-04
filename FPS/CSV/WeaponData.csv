@@ -1,3 +1,3 @@
-Name,Mesh,MagSize,MaxAmmo,Damage,AOE,AOERange
-"DC17mBlaster","StaticMesh'/Game/FirstPerson/Meshes/Projectiles/DC17Blaster/DC17BlasterProjectile.DC17BlasterProjectile'",60,300,30,false,0
-"DC17mAA","StaticMesh'/Game/FirstPerson/Meshes/Projectiles/DC17Blaster/DC17BlasterProjectile.DC17BlasterProjectile'",1,5,120,true,100
+Name,Mesh,MagSize,MaxAmmo,DamageType,Damage,AOE,AOERange
+"DC17mBlaster","StaticMesh'/Game/FirstPerson/Meshes/Projectiles/DC17Blaster/DC17BlasterProjectile.DC17BlasterProjectile'",60,300,WDTEnergy,30,false,0
+"DC17mAA","StaticMesh'/Game/FirstPerson/Meshes/Projectiles/DC17Blaster/DC17BlasterProjectile.DC17BlasterProjectile'",1,5,WDTExplosion,120,true,100

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
 #include "Engine/StaticMesh.h"
+#include "Weapon/Projectile/WeaponDamageType.h"
 #include "WeaponDataTable.generated.h"
 
 /**
@@ -25,6 +26,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		int32 MaxAmmo;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		EWeaponDamageType DamageType;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		int32 Damage;

@@ -7,6 +7,7 @@
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
+#include "Weapon/Projectile/WeaponDamageType.h"
 #include "BasicAIController.generated.h"
 
 /**
@@ -28,7 +29,7 @@ public:
 
 	int32 GetHealth();
 
-	virtual void TakeDamage(AActor* AttackingActor, UObject* DamageType, int32 amount);
+	virtual void TakeDamage(AActor* AttackingActor, EWeaponDamageType DamageType, float amount);
 
 protected:
 	virtual void TurnHeadToObject(AActor* Actor);

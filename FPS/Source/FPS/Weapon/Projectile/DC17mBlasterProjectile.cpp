@@ -7,7 +7,8 @@
 #include "Data/DC17mBlasterStats.h"
 #include "Kismet/GameplayStatics.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
-
+#include "AI/BasicAICharacter.h"
+#include "AI/BasicAIController.h"
 
 ADC17mBlasterProjectile::ADC17mBlasterProjectile(const FObjectInitializer& ObjectInitializer) {
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMesh"));
@@ -18,7 +19,6 @@ ADC17mBlasterProjectile::ADC17mBlasterProjectile(const FObjectInitializer& Objec
 	ProjectileMovement->ProjectileGravityScale = 0.f;
 
 	CollisionComp->OnComponentHit.AddDynamic(this, &ADC17mBlasterProjectile::OnHit);
-
 }
 
 //void ADC17mBlasterProjectile::BeginPlay() {
@@ -52,6 +52,12 @@ void ADC17mBlasterProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherA
 	{
 		if (OtherComp->IsSimulatingPhysics()) {
 			OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
+		}
+
+		ABasicAICharacter* BasicAICharacter = Cast<ABasicAICharacter>(OtherActor);
+		if (BasicAICharacter) {
+			ABasicAIController* BasicAIController = BasicAICharacter->GetCastedController();
+			BasicAIController->TakeDamage(GetProjectileOwner(), GetDamageType(), GetDamage());
 		}
 
 		if (ImpactGenericParticleSystem) {

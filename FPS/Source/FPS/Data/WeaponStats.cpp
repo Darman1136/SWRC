@@ -5,6 +5,7 @@
 #include "Engine/DataTable.h"
 #include "Data/WeaponDataTable.h"
 #include "Weapon/Projectile/DC17mBlasterProjectile.h"
+#include "Weapon/Projectile/WeaponDamageType.h"
 
 UWeaponStats::UWeaponStats(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {
 	ConstructorHelpers::FObjectFinder<UDataTable>
@@ -20,6 +21,16 @@ TSoftObjectPtr<UStaticMesh> UWeaponStats::GetMesh()
 	}
 	return WeaponData->Mesh;
 }
+
+EWeaponDamageType UWeaponStats::GetDamageType()
+{
+	if (WeaponData)
+	{
+		return WeaponData->DamageType;
+	}
+	return EWeaponDamageType::WDTDefault;
+}
+
 
 int32 UWeaponStats::GetDamage()
 {

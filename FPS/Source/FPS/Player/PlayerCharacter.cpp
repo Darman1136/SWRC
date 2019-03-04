@@ -139,7 +139,12 @@ void APlayerCharacter::OnFire()
 					FActorSpawnParameters ActorSpawnParams;
 					ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 
-					World->SpawnActor<AFPSProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+					AFPSProjectile* SpawnedProjectile = World->SpawnActor<AFPSProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+					if (SpawnedProjectile) {
+						SpawnedProjectile->SetProjectileOwner(this);
+						SpawnedProjectile->SetDamage(WeaponStats->GetDamage());
+						SpawnedProjectile->SetDamageType(WeaponStats->GetDamageType());
+					}
 				}
 			}
 		}

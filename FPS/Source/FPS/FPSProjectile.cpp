@@ -3,9 +3,9 @@
 #include "FPSProjectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
+#include "Weapon/Projectile/WeaponDamageType.h"
 
-AFPSProjectile::AFPSProjectile() 
-{
+AFPSProjectile::AFPSProjectile() {
 	// Use a sphere as a simple collision representation
 	CollisionComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
 	CollisionComp->InitSphereRadius(5.0f);
@@ -39,4 +39,34 @@ void AFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPr
 
 		Destroy();
 	}
+}
+
+EWeaponDamageType AFPSProjectile::GetDamageType()
+{
+	return DamageType;
+}
+
+void AFPSProjectile::SetDamageType(EWeaponDamageType NewDamageType)
+{
+	DamageType = NewDamageType;
+}
+
+float AFPSProjectile::GetDamage()
+{
+	return Damage;
+}
+
+void AFPSProjectile::SetDamage(float NewDamage)
+{
+	Damage = NewDamage;
+}
+
+AActor * AFPSProjectile::GetProjectileOwner()
+{
+	return ProjectileOwner;
+}
+
+void AFPSProjectile::SetProjectileOwner(AActor * NewOwner)
+{
+	ProjectileOwner = NewOwner;
 }
