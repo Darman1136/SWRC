@@ -17,6 +17,8 @@
 #include "Engine/World.h"
 #include "TimerManager.h"
 #include "FPSProjectile.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Camera/PlayerCameraManager.h"
 
 APrologueCharacter::APrologueCharacter(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {
 	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
@@ -26,7 +28,11 @@ APrologueCharacter::APrologueCharacter(const FObjectInitializer& ObjectInitializ
 	Mesh1P->bCastDynamicShadow = false;
 	Mesh1P->CastShadow = false;
 	Mesh1P->RelativeRotation = FRotator(1.9f, -19.19f, 5.2f);
-	Mesh1P->RelativeLocation = FVector(-0.5f, -4.4f, -155.7f);
+	//Mesh1P->RelativeLocation = FVector(-0.5f, -4.4f, -155.7f);
+	Mesh1P->RelativeLocation = FVector(-0.5f, -4.4f, -0.f);
+
+	UCharacterMovementComponent* CharacterMovementComponent = Cast<UCharacterMovementComponent>(GetMovementComponent());
+	CharacterMovementComponent->GravityScale = 0.f;
 
 	//// Create a gun mesh component
 	//FP_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FP_Gun"));
@@ -42,6 +48,20 @@ APrologueCharacter::APrologueCharacter(const FObjectInitializer& ObjectInitializ
 
 	// Default offset from the character location for projectiles to spawn
 	GunOffset = FVector(100.0f, 0.0f, 10.0f);
+}
+
+void APrologueCharacter::BeginPlay() {
+	Super::BeginPlay();
+	CameraManager = Cast<APlayerCameraManager>(UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0));
+	if (CameraManager)
+	{
+		CameraManager->ViewYawMin = -230.f;
+		CameraManager->ViewYawMax = 230.f;
+
+		CameraManager->ViewPitchMin = -40.f;
+		CameraManager->ViewPitchMax = 40.f;
+
+	}
 }
 
 void APrologueCharacter::OnFire() {

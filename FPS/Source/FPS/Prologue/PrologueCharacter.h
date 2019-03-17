@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "FPSCharacter.h"
+#include "Camera/PlayerCameraManager.h"
 #include "PrologueCharacter.generated.h"
 
 /**
@@ -22,5 +23,9 @@ public:
 
 	void OnReload() override;
 
+protected:
+	virtual void BeginPlay();
 
+private:
+	APlayerCameraManager* CameraManager;
 };
