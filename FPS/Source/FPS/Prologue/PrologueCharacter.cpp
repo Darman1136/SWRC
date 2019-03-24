@@ -55,11 +55,11 @@ void APrologueCharacter::BeginPlay() {
 	CameraManager = Cast<APlayerCameraManager>(UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0));
 	if (CameraManager)
 	{
-		CameraManager->ViewYawMin = -230.f;
-		CameraManager->ViewYawMax = 230.f;
+		CameraManager->ViewYawMin = -200.f;
+		CameraManager->ViewYawMax = 280.f;
 
-		CameraManager->ViewPitchMin = -40.f;
-		CameraManager->ViewPitchMax = 40.f;
+		CameraManager->ViewPitchMin = -20.f;
+		CameraManager->ViewPitchMax = 30.f;
 
 	}
 }
