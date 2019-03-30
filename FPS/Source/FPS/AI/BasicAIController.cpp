@@ -70,7 +70,7 @@ void ABasicAIController::TakeDamage(AActor* AttackingActor, EWeaponDamageType Da
 	if (Health < 0) {
 		Health = 0;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Health: %d, Type: %s, Amount: %f, Attacker: %s, Bone: %s, DamageAreaByBone: %s"), Health, *GETENUMSTRING("EWeaponDamageType", DamageType), amount, *AttackingActor->GetName(), *Hit.BoneName.ToString(), *GETENUMSTRING("EDamageArea", DamageArea));
+	// UE_LOG(LogTemp, Warning, TEXT("Health: %d, Type: %s, Amount: %f, Attacker: %s, Bone: %s, DamageAreaByBone: %s"), Health, *GETENUMSTRING("EWeaponDamageType", DamageType), amount, *AttackingActor->GetName(), *Hit.BoneName.ToString(), *GETENUMSTRING("EDamageArea", DamageArea));
 }
 
 void ABasicAIController::TurnHeadToObject(AActor* Actor)
@@ -88,5 +88,9 @@ float ABasicAIController::GetTakenDamageMultiplier(FName Bone)
 }
 
 void ABasicAIController::OnDeath()
+{
+}
+
+void ABasicAIController::LookedAtByPlayer(AActor* PlayerActor)
 {
 }

@@ -33,6 +33,7 @@ APrologueCharacter::APrologueCharacter(const FObjectInitializer& ObjectInitializ
 
 	UCharacterMovementComponent* CharacterMovementComponent = Cast<UCharacterMovementComponent>(GetMovementComponent());
 	CharacterMovementComponent->GravityScale = 0.f;
+	CharacterMovementComponent->MaxWalkSpeed = 0.f;
 
 	//// Create a gun mesh component
 	//FP_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FP_Gun"));
@@ -53,6 +54,8 @@ APrologueCharacter::APrologueCharacter(const FObjectInitializer& ObjectInitializ
 void APrologueCharacter::BeginPlay() {
 	Super::BeginPlay();
 	CameraManager = Cast<APlayerCameraManager>(UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0));
+
+	/*
 	if (CameraManager)
 	{
 		CameraManager->ViewYawMin = -200.f;
@@ -62,6 +65,7 @@ void APrologueCharacter::BeginPlay() {
 		CameraManager->ViewPitchMax = 30.f;
 
 	}
+	*/
 }
 
 void APrologueCharacter::OnFire() {

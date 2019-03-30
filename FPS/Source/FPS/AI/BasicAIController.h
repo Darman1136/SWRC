@@ -32,6 +32,8 @@ public:
 
 	virtual void TakeDamage(AActor* AttackingActor, EWeaponDamageType DamageType, float amount, const FHitResult& Hit);
 
+	virtual void LookedAtByPlayer(AActor* PlayerActor);
+
 protected:
 	virtual void TurnHeadToObject(AActor* Actor);
 

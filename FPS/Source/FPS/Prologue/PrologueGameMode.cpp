@@ -2,6 +2,8 @@
 
 #include "PrologueGameMode.h"
 #include "UObject/ConstructorHelpers.h"
+#include "EngineUtils.h"
+#include "GameFramework/PlayerStart.h"
 #include "FPSHUD.h"
 
 APrologueGameMode::APrologueGameMode()
@@ -13,6 +15,17 @@ APrologueGameMode::APrologueGameMode()
 
 	// use our custom HUD class
 	HUDClass = AFPSHUD::StaticClass();
+}
+
+AActor* APrologueGameMode::ChoosePlayerStart_Implementation(AController* Player) {
+	for (TActorIterator<APlayerStart> ActorItr(GetWorld()); ActorItr; ++ActorItr) {
+		// Same as with the Object Iterator, access the subclass instance with the * or -> operators.
+		APlayerStart* PlayerStart = *ActorItr;
+		if (PlayerStart->ActorHasTag(PlayerStartName)) {
+			return PlayerStart;
+		}
+	}
+	return Super::ChoosePlayerStart_Implementation(Player);
 }
 
 

@@ -16,4 +16,9 @@ class FPS_API APrologueGameMode : public AFPSGameMode
 	
 public:
 	APrologueGameMode();
+
+	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
+
+private:
+	const FName PlayerStartName = FName("InitialLocation");
 };
