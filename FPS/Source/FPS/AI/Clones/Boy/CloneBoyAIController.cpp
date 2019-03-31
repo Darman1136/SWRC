@@ -3,6 +3,14 @@
 #include "CloneBoyAIController.h"
 
 
+ACloneBoyAIController::ACloneBoyAIController(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {
+
+}
+
+void ACloneBoyAIController::BeginPlay() {
+	Super::BeginPlay();
+}
+
 void ACloneBoyAIController::LookedAtByPlayer(AActor* PlayerActor)
 {
 }

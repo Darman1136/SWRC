@@ -32,9 +32,3 @@ void ABasicAICharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
-
-ABasicAIController* ABasicAICharacter::GetCastedController()
-{
-	return Cast<ABasicAIController>(GetController());
-}
-

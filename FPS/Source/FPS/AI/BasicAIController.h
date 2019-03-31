@@ -54,6 +54,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = AIProperties)
 		int Health = 100;
 
+	UPROPERTY(EditAnywhere, Category = Animation)
+		bool LookAtCanInterrupt = false;
+
 public:
 	static const FName BKTarget;
 	static const FName BKTargetLocation;

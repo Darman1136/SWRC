@@ -15,6 +15,4 @@ class FPS_API AStaticActorAICharacter : public ABasicAICharacter
 	GENERATED_BODY()
 	
 	
-	
-	
 };

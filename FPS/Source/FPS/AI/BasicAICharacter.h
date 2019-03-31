@@ -24,7 +24,10 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	virtual ABasicAIController* GetCastedController();
+	template <typename ABasicAIController>
+	ABasicAIController* GetCastedController() {
+		return Cast<ABasicAIController>(GetController());
+	}
 
 protected:
 	// Called when the game starts or when spawned
