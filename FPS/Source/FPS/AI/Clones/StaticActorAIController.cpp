@@ -16,7 +16,7 @@ void AStaticActorAIController::BeginPlay() {
 
 	if (AutoStartCustomAnimation) {
 		GetPawn()->GetWorldTimerManager().SetTimer(
-			AutoStartTimerHandle, this, &AStaticActorAIController::StartAnimationCycle, AutoStartDelay, false);
+			AutoStartTimerHandle, this, &AStaticActorAIController::StartAnimationCycle, AutoStartDelay / 1000.f, false);
 	}
 }
 

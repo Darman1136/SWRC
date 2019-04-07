@@ -42,8 +42,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CustomAnimation)
 		bool AutoStartCustomAnimation = true;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CustomAnimation, meta = (ClampMin = "0.0", UIMin = "0.0", EditCondition = "AutoStartCustomAnimation"))
-		float AutoStartDelay = 0.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CustomAnimation, meta = (ClampMin = "1.0", UIMin = "1.0", EditCondition = "AutoStartCustomAnimation"))
+		float AutoStartDelay = 1.f;
 
 private:
 	int32 CurrentAnimationIndex = 0;
