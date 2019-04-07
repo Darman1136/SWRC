@@ -24,7 +24,12 @@ public:
 	void OnReload() override;
 
 protected:
-	virtual void BeginPlay();
+	virtual void BeginPlay() override;
+
+	virtual void Tick(float DeltaTime) override;
+
+private: 
+	void SendLookRay();
 
 private:
 	APlayerCameraManager* CameraManager;

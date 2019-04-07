@@ -7,14 +7,22 @@
 #include "CloneBoyAICharacter.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
-class FPS_API ACloneBoyAICharacter : public AStaticActorAICharacter
-{
+class FPS_API ACloneBoyAICharacter : public AStaticActorAICharacter {
 	GENERATED_BODY()
-	
-	
-	
-	
+
+public:
+	UAnimationAsset* GetLookAtAnimation();
+
+	float GetLookAtAnimationLength();
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CustomAnimation)
+		UAnimationAsset* LookAtAnimation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CustomAnimation)
+		float LookAtAnimationLength;
+
 };

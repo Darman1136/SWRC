@@ -19,6 +19,11 @@
 #include "FPSProjectile.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Camera/PlayerCameraManager.h"
+#include "Runtime/Engine/Public/DrawDebugHelpers.h"
+#include "Runtime/Engine/Classes/Engine/World.h"
+#include "Runtime/Engine/Classes/Engine/EngineTypes.h"
+#include "AI/BasicAICharacter.h"
+#include "AI/BasicAIController.h"
 
 APrologueCharacter::APrologueCharacter(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {
 	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
@@ -49,6 +54,13 @@ APrologueCharacter::APrologueCharacter(const FObjectInitializer& ObjectInitializ
 
 	// Default offset from the character location for projectiles to spawn
 	GunOffset = FVector(100.0f, 0.0f, 10.0f);
+
+	PrimaryActorTick.bCanEverTick = true;
+
+	/* ignore collisions with trace channel "LookAtTraceChannel" defined by the editor in the DefaultEngine.ini */
+	Mesh1P->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel2, ECollisionResponse::ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel2, ECollisionResponse::ECR_Ignore);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel2, ECollisionResponse::ECR_Ignore);
 }
 
 void APrologueCharacter::BeginPlay() {
@@ -66,6 +78,35 @@ void APrologueCharacter::BeginPlay() {
 
 	}
 	*/
+}
+
+void APrologueCharacter::Tick(float DeltaTime) {
+	SendLookRay();
+}
+
+void APrologueCharacter::SendLookRay() {
+	AController* Controller = GetController();
+	if (Controller) {
+		FVector CameraLocation = CameraManager->GetCameraLocation();
+		FVector ForwardVector = CameraManager->GetActorForwardVector();
+		ForwardVector *= 600;
+
+		FVector LookTraceVector = CameraLocation + ForwardVector;
+		// DrawDebugLine(GetWorld(), CameraLocation, LookTraceVector, FColor::Red, false, 1.f);
+
+		FHitResult LookTraceResult;
+		GetWorld()->LineTraceSingleByChannel(LookTraceResult, CameraLocation, LookTraceVector, /* LookAtTraceChannel defined by the editor in the DefaultEngine.ini */ ECollisionChannel::ECC_GameTraceChannel2);
+		if (LookTraceResult.bBlockingHit && LookTraceResult.GetActor()) {
+			AActor* HitActor = LookTraceResult.GetActor();
+			UE_LOG(LogTemp, Warning, TEXT("Trace %s"),
+				*HitActor->GetName());
+			if (HitActor->IsA(ABasicAICharacter::StaticClass())) {
+				ABasicAICharacter* BasicAICharacter = Cast<ABasicAICharacter>(HitActor);
+				ABasicAIController* BasicAIController = BasicAICharacter->GetCastedController<ABasicAIController>();
+				BasicAIController->LookedAtByPlayer(this);
+			}
+		}
+	}
 }
 
 void APrologueCharacter::OnFire() {

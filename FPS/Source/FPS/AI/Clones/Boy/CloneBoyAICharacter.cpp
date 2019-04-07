@@ -2,6 +2,12 @@
 
 #include "CloneBoyAICharacter.h"
 
+UAnimationAsset* ACloneBoyAICharacter::GetLookAtAnimation() {
+	return LookAtAnimation;
+}
 
+float ACloneBoyAICharacter::GetLookAtAnimationLength() {
+	return LookAtAnimationLength;
+}
 
 
