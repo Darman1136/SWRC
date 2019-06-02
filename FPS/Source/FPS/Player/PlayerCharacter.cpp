@@ -27,6 +27,14 @@ APlayerCharacter::APlayerCharacter(const FObjectInitializer& ObjectInitializer) 
 	Mesh1P->RelativeRotation = FRotator(1.9f, -19.19f, 5.2f);
 	Mesh1P->RelativeLocation = FVector(-0.5f, -4.4f, -155.7f);
 
+	VisorMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VisorMesh"));
+	VisorMesh->SetOnlyOwnerSee(true);
+	VisorMesh->SetupAttachment(FirstPersonCameraComponent);
+	VisorMesh->bCastDynamicShadow = false;
+	VisorMesh->CastShadow = false;
+	VisorMesh->RelativeRotation = FRotator(1.9f, -19.19f, 5.2f);
+	VisorMesh->RelativeLocation = FVector(-0.5f, -4.4f, -155.7f);
+
 	// Create a gun mesh component
 	//FP_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FP_Gun"));
 	//FP_Gun->SetOnlyOwnerSee(true);			// only the owning player will see this mesh

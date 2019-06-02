@@ -23,6 +23,9 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 		class USkeletalMeshComponent* Mesh1P;
 
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+		class UStaticMeshComponent* VisorMesh;
+
 	/** Location on gun mesh where projectiles should spawn. */
 	//UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 	//	class USceneComponent* FP_MuzzleLocation;
@@ -143,6 +146,8 @@ protected:
 public:
 	/** Returns Mesh1P subobject **/
 	FORCEINLINE class USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
+	/** Returns Mesh1P subobject **/
+	FORCEINLINE class UStaticMeshComponent* GetVisorMesh() const { return VisorMesh; }
 	/** Returns FirstPersonCameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
