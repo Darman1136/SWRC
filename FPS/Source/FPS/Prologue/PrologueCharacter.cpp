@@ -22,6 +22,7 @@
 #include "Runtime/Engine/Public/DrawDebugHelpers.h"
 #include "Runtime/Engine/Classes/Engine/World.h"
 #include "Runtime/Engine/Classes/Engine/EngineTypes.h"
+#include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
 #include "AI/BasicAICharacter.h"
 #include "AI/BasicAIController.h"
 
@@ -35,6 +36,23 @@ APrologueCharacter::APrologueCharacter(const FObjectInitializer& ObjectInitializ
 	Mesh1P->RelativeRotation = FRotator(1.9f, -19.19f, 5.2f);
 	//Mesh1P->RelativeLocation = FVector(-0.5f, -4.4f, -155.7f);
 	Mesh1P->RelativeLocation = FVector(-0.5f, -4.4f, -0.f);
+
+	VisorMeshBoy = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("VisorMeshBoy"));
+	VisorMeshBoy->SetOnlyOwnerSee(true);
+	VisorMeshBoy->SetupAttachment(FirstPersonCameraComponent);
+	VisorMeshBoy->bCastDynamicShadow = false;
+	VisorMeshBoy->CastShadow = false;
+	VisorMeshBoy->RelativeLocation = FVector(16.916187f, -0.115124f, -0.419205f);
+	VisorMeshBoy->RelativeScale3D = FVector(0.3f, 0.8f, 0.55f);
+
+	VisorMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VisorMesh"));
+	VisorMesh->SetOnlyOwnerSee(true);
+	VisorMesh->SetupAttachment(FirstPersonCameraComponent);
+	VisorMesh->bCastDynamicShadow = false;
+	VisorMesh->CastShadow = false;
+	VisorMesh->RelativeRotation = FRotator(1.9f, -19.19f, 5.2f);
+	VisorMesh->RelativeLocation = FVector(16.916187f, -0.115124f, -0.419205f);
+	VisorMesh->RelativeScale3D = FVector(0.3f, 0.8f, 0.55f);
 
 	UCharacterMovementComponent* CharacterMovementComponent = Cast<UCharacterMovementComponent>(GetMovementComponent());
 	CharacterMovementComponent->GravityScale = 0.f;
@@ -118,3 +136,12 @@ void APrologueCharacter::OnReload() {
 
 }
 
+void APrologueCharacter::SwitchToBoyMesh() {
+	Mesh1P->SetVisibility(false);
+	VisorMeshBoy->SetVisibility(true);
+}
+
+void APrologueCharacter::SwitchToVisorMesh() {
+	VisorMeshBoy->SetVisibility(false);
+	VisorMesh->SetVisibility(true);
+}
