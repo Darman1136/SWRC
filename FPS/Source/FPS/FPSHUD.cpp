@@ -5,13 +5,14 @@
 #include "Engine/Texture2D.h"
 #include "TextureResource.h"
 #include "CanvasItem.h"
+#include "Blueprint/UserWidget.h"
 #include "UObject/ConstructorHelpers.h"
 
 AFPSHUD::AFPSHUD()
 {
 	// Set the crosshair texture
-	static ConstructorHelpers::FObjectFinder<UTexture2D> CrosshairTexObj(TEXT("/Game/FirstPerson/Textures/FirstPersonCrosshair"));
-	CrosshairTex = CrosshairTexObj.Object;
+	static ConstructorHelpers::FClassFinder<UUserWidget> CrosshairWidgetClassFinder(TEXT("/Game/FirstPerson/HUD/CrosshairWidgetBlueprint"));
+	CrosshairWidgetClass = CrosshairWidgetClassFinder.Class;
 }
 
 
@@ -29,7 +30,18 @@ void AFPSHUD::DrawHUD()
 										   (Center.Y + 20.0f));
 
 	// draw the crosshair
-	FCanvasTileItem TileItem( CrosshairDrawPosition, CrosshairTex->Resource, FLinearColor::White);
+	/*FCanvasTileItem TileItem( CrosshairDrawPosition, CrosshairTex->Resource, FLinearColor::White);
 	TileItem.BlendMode = SE_BLEND_Translucent;
-	Canvas->DrawItem( TileItem );
+	Canvas->DrawItem( TileItem );*/
+}
+
+void AFPSHUD::BeginPlay() {
+	Super::BeginPlay();
+
+	if (CrosshairWidgetClass) {
+		CrosshairWidget = CreateWidget<UUserWidget>(GetWorld(), CrosshairWidgetClass);
+		if (CrosshairWidget) {
+			CrosshairWidget->AddToViewport();
+		}
+	}
 }
