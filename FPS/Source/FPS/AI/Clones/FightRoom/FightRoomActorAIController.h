@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AI/Clones/StaticActorAIController.h"
+#include "AI/Clones/CloneAIController.h"
 #include "FightRoomActorAIController.generated.h"
 
 /**
  *
  */
 UCLASS()
-class FPS_API AFightRoomActorAIController : public AStaticActorAIController {
+class FPS_API AFightRoomActorAIController : public ACloneAIController {
 	GENERATED_BODY()
 
 public:

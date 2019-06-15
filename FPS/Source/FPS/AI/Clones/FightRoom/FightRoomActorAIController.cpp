@@ -3,8 +3,6 @@
 #include "FightRoomActorAIController.h"
 #include "FightRoomActorAICharacter.h"
 
-
-
 void AFightRoomActorAIController::BeginPlay() {
 	Super::BeginPlay();
 
@@ -14,7 +12,5 @@ void AFightRoomActorAIController::BeginPlay() {
 
 		UBlackboardComponent* BlackboardComponent = GetBlackboardComponent();
 		BlackboardComponent->SetValueAsObject(TargetBlackboardKeyName, Character->GetAimTarget());
-
-		RunBehaviorTree(BehaviorTree);
 	}
 }

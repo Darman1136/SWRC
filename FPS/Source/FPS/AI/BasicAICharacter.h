@@ -10,8 +10,7 @@
 #include "BasicAICharacter.generated.h"
 
 UCLASS()
-class FPS_API ABasicAICharacter : public ACharacter
-{
+class FPS_API ABasicAICharacter : public ACharacter {
 	GENERATED_BODY()
 
 public:
@@ -33,7 +32,4 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-protected:
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	class USkeletalMeshComponent* SMesh;
 };

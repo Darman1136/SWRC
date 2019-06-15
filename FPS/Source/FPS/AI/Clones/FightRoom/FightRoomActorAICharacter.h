@@ -3,19 +3,21 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AI/Clones/StaticActorAICharacter.h"
+#include "AI/Clones/CloneAICharacter.h"
 #include "FightRoomActorAICharacter.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class FPS_API AFightRoomActorAICharacter : public AStaticActorAICharacter
+class FPS_API AFightRoomActorAICharacter : public ACloneAICharacter
 {
 	GENERATED_BODY()
 	
 public:
 	AActor* GetAimTarget();
+
+	virtual void BeginPlay() override;
 
 private:
 	UPROPERTY(EditAnywhere)
