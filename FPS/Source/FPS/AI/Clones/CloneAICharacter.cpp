@@ -5,6 +5,8 @@
 #include "Data/WeaponStats.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/SphereComponent.h"
+#include "Data/DC17mBlasterStats.h"
+#include "Animation/AnimInstance.h"
 
 ACloneAICharacter::ACloneAICharacter() {
 	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Weapon Mesh"));
@@ -17,16 +19,12 @@ ACloneAICharacter::ACloneAICharacter() {
 
 void ACloneAICharacter::BeginPlay() {
 	Super::BeginPlay();
+
+	WeaponStats = NewObject<UDC17mBlasterStats>(this);
 }
 
 void ACloneAICharacter::OnFire() {
-	if (!bIsFiring || IsMagEmpty()) {
-		return;
-	}
-
-	// try and play a firing animation if specified
 	if (FireAnimation != NULL) {
-		// Get the animation object for the arms mesh
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		if (AnimInstance != NULL) {
 			if (CurrentAmmo > 0) {
@@ -35,20 +33,16 @@ void ACloneAICharacter::OnFire() {
 				CurrentAmmo = 0;
 			}
 
-			//if (WeaponStats) {
-			//	TSoftObjectPtr<UStaticMesh> ProjectileMeshPtr = WeaponStats->GetMesh();
-			//	UStaticMesh* ProjectileMesh = ProjectileMeshPtr.Get();
-			//	UClass* PClass = ProjectileMesh->GetClass();
-			//}
 			if (ProjectileClass != NULL) {
 				UWorld* const World = GetWorld();
 				if (World != NULL) {
 					FRotator SpawnRotation = GetControlRotation();
 					SpawnRotation.Add(-2.f, -.3f, 0.f);
-					const FVector SpawnLocation = Muzzle->GetRelativeTransform().GetLocation();
+					const FVector SpawnLocation = Muzzle->GetComponentLocation();
 
 					FActorSpawnParameters ActorSpawnParams;
-					ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+					// ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+					ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 					AFPSProjectile* SpawnedProjectile = World->SpawnActor<AFPSProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 					if (SpawnedProjectile) {
@@ -57,6 +51,10 @@ void ACloneAICharacter::OnFire() {
 						SpawnedProjectile->SetDamageType(WeaponStats->GetDamageType());
 					}
 				}
+			}
+
+			if (AnimInstance->GetCurrentActiveMontage() == NULL) {
+				AnimInstance->Montage_Play(FireAnimation, 1.f);
 			}
 		}
 	}
@@ -67,4 +65,11 @@ bool ACloneAICharacter::IsMagEmpty() {
 	return false;
 }
 
+bool ACloneAICharacter::IsReadyToFire() {
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	if (AnimInstance != NULL && AnimInstance->GetCurrentActiveMontage() == NULL) {
+		return true;
+	}
+	return false;
+}
 

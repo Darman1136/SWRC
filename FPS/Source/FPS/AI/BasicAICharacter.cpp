@@ -26,10 +26,10 @@ void ABasicAICharacter::Tick(float DeltaTime)
 
 }
 
-// Called to bind functionality to input
-void ABasicAICharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
+void ABasicAICharacter::OnFire() {
+	//
 }
 
+bool ABasicAICharacter::IsReadyToFire() {
+	return true;
+}

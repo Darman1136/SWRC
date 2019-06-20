@@ -43,7 +43,6 @@ void ADC17mBlasterProjectile::OnConstruction(const FTransform & Transform)
 		ProjectileMesh->AddLocalRotation(FQuat(FVector(0.f, 0.f, 1.f), 1.5708f));
 
 		//ProjectileMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
 	}
 }
 
@@ -61,7 +60,7 @@ void ADC17mBlasterProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherA
 		}
 
 		if (ImpactGenericParticleSystem) {
-			FVector location = GetActorLocation() * 0.99f;
+			FVector location = GetActorLocation();
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactGenericParticleSystem, location, GetActorRotation());
 		}
 		Destroy();

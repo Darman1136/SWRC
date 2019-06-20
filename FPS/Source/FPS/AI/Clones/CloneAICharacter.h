@@ -17,14 +17,15 @@ class FPS_API ACloneAICharacter : public ABasicAICharacter
 public:
 	ACloneAICharacter();
 
-	virtual void OnFire();
+	virtual void OnFire() override;
 
 	class UStaticMeshComponent* GetWeaponMesh() const { return WeaponMesh; }
 
 	class USphereComponent* GetMuzzle() const { return Muzzle; }
+
+	virtual bool IsReadyToFire() override;
 	
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	virtual bool IsMagEmpty();
@@ -43,7 +44,7 @@ private:
 	bool bIsFiring = false;
 
 	UPROPERTY(VisibleAnywhere, Category = Gun)
-		int CurrentAmmo;
+		int32 CurrentAmmo = 30;
 
 	UPROPERTY(EditDefaultsOnly, Category = Projectile)
 		TSubclassOf<class AFPSProjectile> ProjectileClass;
