@@ -7,6 +7,7 @@
 #include "Components/SphereComponent.h"
 #include "Data/DC17mBlasterStats.h"
 #include "Animation/AnimInstance.h"
+#include "Kismet/KismetMathLibrary.h"
 
 ACloneAICharacter::ACloneAICharacter() {
 	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Weapon Mesh"));
@@ -38,6 +39,9 @@ void ACloneAICharacter::OnFire() {
 				if (World != NULL) {
 					FRotator SpawnRotation = GetControlRotation();
 					SpawnRotation.Add(-2.f, -.3f, 0.f);
+
+					
+					SpawnRotation.Add(GetRandomDeviation(Accuracy), GetRandomDeviation(Accuracy), GetRandomDeviation(Accuracy));
 					const FVector SpawnLocation = Muzzle->GetComponentLocation();
 
 					FActorSpawnParameters ActorSpawnParams;
@@ -73,3 +77,7 @@ bool ACloneAICharacter::IsReadyToFire() {
 	return false;
 }
 
+float ACloneAICharacter::GetRandomDeviation(float Accuracy) {
+	float RandomDeviation = FMath::RandRange(0.f - (1.f - Accuracy), 0.f + 1.f - Accuracy);
+	return MaxAccuracyDeviation * RandomDeviation;
+}

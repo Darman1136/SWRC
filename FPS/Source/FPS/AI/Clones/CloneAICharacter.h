@@ -7,13 +7,12 @@
 #include "CloneAICharacter.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
-class FPS_API ACloneAICharacter : public ABasicAICharacter
-{
+class FPS_API ACloneAICharacter : public ABasicAICharacter {
 	GENERATED_BODY()
-	
+
 public:
 	ACloneAICharacter();
 
@@ -24,7 +23,7 @@ public:
 	class USphereComponent* GetMuzzle() const { return Muzzle; }
 
 	virtual bool IsReadyToFire() override;
-	
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -40,10 +39,20 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		class USphereComponent* Muzzle;
 
+	/* Shot accuracy, 0 = bad, 1 = perfect */
+	UPROPERTY(EditAnywhere, Category = Gun, meta = (ClampMin = "0.0", ClampMax = "1.0"))
+		float Accuracy = 1.f;
+
+	UPROPERTY(EditAnywhere, Category = Gun)
+		float MaxAccuracyDeviation = 10.f;
+
+private:
+	float GetRandomDeviation(float MaxDeviation);
+
 private:
 	bool bIsFiring = false;
 
-	UPROPERTY(VisibleAnywhere, Category = Gun)
+	UPROPERTY(EditAnywhere, Category = Gun)
 		int32 CurrentAmmo = 30;
 
 	UPROPERTY(EditDefaultsOnly, Category = Projectile)
