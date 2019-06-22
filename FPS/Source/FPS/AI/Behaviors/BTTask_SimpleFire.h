@@ -7,8 +7,7 @@
 #include "BTTask_SimpleFire.generated.h"
 
 struct FBTSimpleFireTaskMemory {
-	float DoneRepeats;
-	bool WaitingForFireDone;
+	int32 DoneRepeats;
 };
 
 /**
@@ -24,6 +23,8 @@ public:
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 
 	virtual FString GetStaticDescription() const override;
+
+	virtual uint16 GetInstanceMemorySize() const override { return sizeof(FBTSimpleFireTaskMemory); }
 
 public:
 	UPROPERTY(EditAnywhere)

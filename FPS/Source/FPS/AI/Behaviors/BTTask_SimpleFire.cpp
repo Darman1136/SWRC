@@ -18,7 +18,6 @@ EBTNodeResult::Type UBTTask_SimpleFire::ExecuteTask(UBehaviorTreeComponent & Own
 
 		FBTSimpleFireTaskMemory* MyMemory = (FBTSimpleFireTaskMemory*)NodeMemory;
 		MyMemory->DoneRepeats = 1;
-		MyMemory->WaitingForFireDone = true;
 		return EBTNodeResult::InProgress;
 	}
 	return EBTNodeResult::Failed;
@@ -42,6 +41,7 @@ void UBTTask_SimpleFire::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Node
 }
 
 bool UBTTask_SimpleFire::IsTaskDone(AActor* Owner, FBTSimpleFireTaskMemory* MyMemory) {
+	UE_LOG(LogTemp, Warning, TEXT("Reps: %d - %s"), MyMemory->DoneRepeats, *Owner->GetName());
 	return MyMemory->DoneRepeats >= Repeats;
 }
 

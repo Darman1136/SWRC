@@ -15,11 +15,11 @@ class FPS_API AFightRoomActorAICharacter : public ACloneAICharacter
 	GENERATED_BODY()
 	
 public:
-	// AFightRoomActorAICharacter();
-
 	AActor* GetAimTarget();
 
 	virtual void BeginPlay() override;
+
+	virtual void OnConstruction(const FTransform& Transform) override;
 
 private:
 	UPROPERTY(EditAnywhere)
