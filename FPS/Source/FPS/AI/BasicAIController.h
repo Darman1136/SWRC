@@ -22,7 +22,7 @@ class FPS_API ABasicAIController : public AAIController
 public:
 	ABasicAIController(const FObjectInitializer& ObjectInitializer);
 
-	virtual void Possess(class APawn* InPawn) override;
+	virtual void OnPossess(class APawn* InPawn) override;
 
 	virtual void BeginPlay() override;
 

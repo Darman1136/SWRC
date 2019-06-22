@@ -20,8 +20,8 @@ ABasicAIController::ABasicAIController(const FObjectInitializer& ObjectInitializ
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-void ABasicAIController::Possess(class APawn* InPawn) {
-	Super::Possess(InPawn);
+void ABasicAIController::OnPossess(class APawn* InPawn) {
+	Super::OnPossess(InPawn);
 	SetPawn(InPawn);
 
 	if (BehaviorTree) {
