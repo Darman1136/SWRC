@@ -27,6 +27,15 @@ void AStaticActorAIController::StartAnimationCycle() {
 	}
 }
 
+void AStaticActorAIController::StartAnimationCycleWithDelay(float MinRandomDelay, float MaxRandomDelay) {
+	if (MinRandomDelay > 0 && MinRandomDelay < MaxRandomDelay) {
+		GetPawn()->GetWorldTimerManager().SetTimer(
+			AutoStartTimerHandle, this, &AStaticActorAIController::StartAnimationCycle, FMath::RandRange(MinRandomDelay, MaxRandomDelay) / 1000.f, false);
+	} else {
+		UE_LOG(LogTemp, Warning, TEXT("StartAnimationCycleWithDelay: Given Delays are invalid, min: %f, max: %f"), MinRandomDelay, MaxRandomDelay);
+	}
+}
+
 void AStaticActorAIController::PlayNextAnimation() {
 	CurrentAnimationIndex++;
 	if (CurrentAnimationIndex >= AnimationCycle.Num() && LoopCustomAnimation) {

@@ -11,8 +11,7 @@
  *
  */
 UCLASS()
-class FPS_API AStaticActorAIController : public ABasicAIController
-{
+class FPS_API AStaticActorAIController : public ABasicAIController {
 	GENERATED_BODY()
 
 public:
@@ -21,7 +20,11 @@ public:
 	virtual void BeginPlay() override;
 
 	UFUNCTION(BlueprintCallable, Category = "CustomAnimation")
-	virtual void StartAnimationCycle();
+		virtual void StartAnimationCycle();
+
+	/* Adds a random delay before starting the animation cycle, Range in milliseconds */
+	UFUNCTION(BlueprintCallable, Category = "CustomAnimation")
+		virtual void StartAnimationCycleWithDelay(float MinRandomDelay, float MaxRandomDelay);
 
 	void PlayNextAnimation();
 
