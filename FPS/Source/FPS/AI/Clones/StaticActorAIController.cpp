@@ -5,8 +5,8 @@
 #include "TimerManager.h"
 #include "StaticActorAICharacter.h"
 
-AStaticActorAIController::AStaticActorAIController(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {
-
+AStaticActorAIController::AStaticActorAIController() : Super() {
+	//
 }
 
 void AStaticActorAIController::BeginPlay() {

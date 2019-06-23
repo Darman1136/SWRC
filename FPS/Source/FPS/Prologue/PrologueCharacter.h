@@ -16,7 +16,7 @@ class FPS_API APrologueCharacter : public AFPSCharacter {
 
 
 public:
-	APrologueCharacter(const FObjectInitializer& ObjectInitializer);
+	APrologueCharacter();
 
 	void OnFire() override;
 

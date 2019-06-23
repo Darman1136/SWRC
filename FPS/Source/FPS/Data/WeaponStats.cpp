@@ -7,7 +7,7 @@
 #include "Weapon/Projectile/DC17mBlasterProjectile.h"
 #include "Weapon/Projectile/WeaponDamageType.h"
 
-UWeaponStats::UWeaponStats(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {
+UWeaponStats::UWeaponStats() : Super() {
 	ConstructorHelpers::FObjectFinder<UDataTable>
 		Data_BP(TEXT("DataTable'/Game/Data/WeaponData.WeaponData'"));
 	Data = Data_BP.Object;

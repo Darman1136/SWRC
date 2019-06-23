@@ -5,7 +5,7 @@
 #include "AI/BasicAICharacter.h"
 
 
-UBTTask_SimpleFire::UBTTask_SimpleFire(const FObjectInitializer& ObjectInitializer) {
+UBTTask_SimpleFire::UBTTask_SimpleFire() : Super() {
 	NodeName = "Simple Fire";
 	Repeats = 1;
 	bNotifyTick = true;

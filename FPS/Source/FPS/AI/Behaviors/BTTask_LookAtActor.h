@@ -14,7 +14,7 @@ class FPS_API UBTTask_LookAtActor : public UBTTask_BlackboardBase {
 	GENERATED_BODY()
 
 public:
-	UBTTask_LookAtActor(const FObjectInitializer& ObjectInitializer);
+	UBTTask_LookAtActor();
 
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 

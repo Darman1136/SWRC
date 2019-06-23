@@ -15,7 +15,7 @@ class FPS_API UBattleDroidStats : public UEnemyStats
 	GENERATED_BODY()
 	
 public:
-	UBattleDroidStats(const FObjectInitializer& ObjectInitializer);
+	UBattleDroidStats();
 	
 private:
 	const FName BattleDroidEntry = FName("BattleDroid");

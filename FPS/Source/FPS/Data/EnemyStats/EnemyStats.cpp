@@ -5,7 +5,7 @@
 #include "Engine/DataTable.h"
 #include "Data/EnemyStats/EnemyDataTable.h"
 
-UEnemyStats::UEnemyStats(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {
+UEnemyStats::UEnemyStats() : Super() {
 	ConstructorHelpers::FObjectFinder<UDataTable>
 		Data_BP(TEXT("DataTable'/Game/Data/EnemyData.EnemyData'"));
 	Data = Data_BP.Object;

@@ -14,7 +14,7 @@ class FPS_API ACloneBoyAIController : public AStaticActorAIController {
 	GENERATED_BODY()
 
 public:
-	ACloneBoyAIController(const FObjectInitializer& ObjectInitializer);
+	ACloneBoyAIController();
 
 	virtual void BeginPlay() override;
 

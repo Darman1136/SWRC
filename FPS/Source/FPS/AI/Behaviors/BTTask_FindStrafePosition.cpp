@@ -7,7 +7,7 @@
 #include "NavigationSystem.h"
 #include "AI/BasicAIController.h"
 
-UBTTask_FindStrafePosition::UBTTask_FindStrafePosition(const FObjectInitializer& ObjectInitializer) {
+UBTTask_FindStrafePosition::UBTTask_FindStrafePosition() : Super() {
 	NodeName = "Find Strafe To Position";
 }
 

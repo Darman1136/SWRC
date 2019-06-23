@@ -16,7 +16,7 @@ class FPS_API UEnemyStats : public UObject
 	GENERATED_BODY()
 
 public:
-	UEnemyStats(const FObjectInitializer& ObjectInitializer);
+	UEnemyStats();
 
 	int32 GetMaxHealth();
 	int32 GetHealth();

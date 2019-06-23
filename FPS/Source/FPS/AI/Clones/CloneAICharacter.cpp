@@ -25,6 +25,7 @@ void ACloneAICharacter::BeginPlay() {
 }
 
 void ACloneAICharacter::OnFire() {
+	Super::OnFire();
 	if (FireAnimation != NULL) {
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		if (AnimInstance != NULL) {
@@ -66,14 +67,6 @@ void ACloneAICharacter::OnFire() {
 
 
 bool ACloneAICharacter::IsMagEmpty() {
-	return false;
-}
-
-bool ACloneAICharacter::IsReadyToFire() {
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	if (AnimInstance != NULL && AnimInstance->GetCurrentActiveMontage() == NULL) {
-		return true;
-	}
 	return false;
 }
 

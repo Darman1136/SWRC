@@ -7,7 +7,7 @@
 #include "NavigationSystem.h"
 #include "AI/BasicAIController.h"
 
-UBTTask_Strafe::UBTTask_Strafe(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+UBTTask_Strafe::UBTTask_Strafe() : Super()
 {
 	NodeName = "Strafe To";
 	bNotifyTaskFinished = true;

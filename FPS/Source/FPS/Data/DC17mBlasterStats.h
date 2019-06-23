@@ -15,7 +15,7 @@ class FPS_API UDC17mBlasterStats : public UWeaponStats
 	GENERATED_BODY()
 
 public:
-	UDC17mBlasterStats(const FObjectInitializer& ObjectInitializer);
+	UDC17mBlasterStats();
 
 
 };

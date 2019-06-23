@@ -18,7 +18,7 @@ class FPS_API UBTTask_SimpleFire : public UBTTask_BlackboardBase {
 	GENERATED_BODY()
 
 public:
-	UBTTask_SimpleFire(const FObjectInitializer& ObjectInitializer);
+	UBTTask_SimpleFire();
 
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 

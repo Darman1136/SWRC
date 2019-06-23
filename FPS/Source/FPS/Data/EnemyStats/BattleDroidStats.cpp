@@ -2,7 +2,7 @@
 
 #include "BattleDroidStats.h"
 
-UBattleDroidStats::UBattleDroidStats(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {
+UBattleDroidStats::UBattleDroidStats() : Super() {
 	if (Data) {
 		EnemyData = Data->FindRow<FEnemyDataTable>(BattleDroidEntry, FString(""));
 	}

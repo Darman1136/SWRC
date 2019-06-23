@@ -20,7 +20,7 @@ class FPS_API ABasicAIController : public AAIController
 	GENERATED_BODY()
 
 public:
-	ABasicAIController(const FObjectInitializer& ObjectInitializer);
+	ABasicAIController();
 
 	virtual void OnPossess(class APawn* InPawn) override;
 

@@ -15,7 +15,7 @@ class FPS_API UBTTask_FindStrafePosition : public UBTTask_BlackboardBase
 	GENERATED_BODY()
 
 public:
-	UBTTask_FindStrafePosition(const FObjectInitializer& ObjectInitializer);
+	UBTTask_FindStrafePosition();
 
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 

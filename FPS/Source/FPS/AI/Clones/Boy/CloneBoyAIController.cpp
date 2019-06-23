@@ -6,8 +6,8 @@
 #include "Kismet/GameplayStatics.h"
 
 
-ACloneBoyAIController::ACloneBoyAIController(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {
-
+ACloneBoyAIController::ACloneBoyAIController() : Super() {
+	//
 }
 
 void ACloneBoyAIController::BeginPlay() {

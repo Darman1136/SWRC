@@ -15,7 +15,25 @@ class FPS_API APlayerCharacter : public AFPSCharacter
 {
 	GENERATED_BODY()
 
-		UPROPERTY(VisibleAnywhere, Category = Gun)
+public:
+	APlayerCharacter();
+
+	void UpdateAmmoMaterials();
+
+	void ReloadAmmo();
+
+	void OnFire() override;
+
+	void OnReload() override;
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gun)
+		int MaxAmmo = 300;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gun)
+		int MaxMagAmmo = 60;
+
+	UPROPERTY(VisibleAnywhere, Category = Gun)
 		int CurrentAmmo;
 
 	UPROPERTY(VisibleAnywhere, Category = Gun)
@@ -39,30 +57,10 @@ class FPS_API APlayerCharacter : public AFPSCharacter
 	//IUseableWeapon* WeaponStatsInterface;
 	class UWeaponStats* WeaponStats;
 
-public:
-	APlayerCharacter(const FObjectInitializer& ObjectInitializer);
-
 protected:
 	virtual void BeginPlay();
 
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gun)
-		int MaxAmmo = 300;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gun)
-		int MaxMagAmmo = 60;
-
-protected:
 	bool isMagEmpty();
-
-public:
-	void UpdateAmmoMaterials();
-
-	void ReloadAmmo();
-
-	void OnFire() override;
-
-	void OnReload() override;
 
 private:
 	void GetDamage();

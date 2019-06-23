@@ -32,4 +32,13 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	void ResetFireCooldownComplete();
+
+protected:
+	FTimerHandle FireTimeHandle;
+
+	bool FireCooldownComplete;
+
+	UPROPERTY(EditAnywhere, Category = Fire)
+	float FireCooldownDelay = .1f;
 };

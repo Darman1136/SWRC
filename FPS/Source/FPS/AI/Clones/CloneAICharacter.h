@@ -22,8 +22,6 @@ public:
 
 	class USphereComponent* GetMuzzle() const { return Muzzle; }
 
-	virtual bool IsReadyToFire() override;
-
 protected:
 	virtual void BeginPlay() override;
 

@@ -17,7 +17,7 @@
 #include "Weapon/DC17mBlaster.h"
 #include "Data/DC17mBlasterStats.h"
 
-APlayerCharacter::APlayerCharacter(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {
+APlayerCharacter::APlayerCharacter() : Super() {
 	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
 	Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
 	Mesh1P->SetOnlyOwnerSee(true);

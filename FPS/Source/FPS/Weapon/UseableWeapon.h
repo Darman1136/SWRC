@@ -8,15 +8,13 @@
 #include "UseableWeapon.generated.h"
 
 UINTERFACE(BlueprintType)
-class FPS_API UUseableWeapon : public UInterface
-{
+class FPS_API UUseableWeapon : public UInterface {
 	GENERATED_BODY()
 
-		UUseableWeapon(const class FObjectInitializer& ObjectInitializer);
+		UUseableWeapon();
 };
 
-class FPS_API IUseableWeapon
-{
+class FPS_API IUseableWeapon {
 	GENERATED_BODY()
 
 public:

@@ -18,7 +18,7 @@ class FPS_API UWeaponStats : public UObject
 	GENERATED_BODY()
 
 public:
-	UWeaponStats(const FObjectInitializer& ObjectInitializer);
+	UWeaponStats();
 
 	TSoftObjectPtr<UStaticMesh> GetMesh();
 	EWeaponDamageType GetDamageType();

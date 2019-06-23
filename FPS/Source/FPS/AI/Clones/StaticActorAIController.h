@@ -16,7 +16,7 @@ class FPS_API AStaticActorAIController : public ABasicAIController
 	GENERATED_BODY()
 
 public:
-	AStaticActorAIController(const FObjectInitializer& ObjectInitializer);
+	AStaticActorAIController();
 
 	virtual void BeginPlay() override;
 

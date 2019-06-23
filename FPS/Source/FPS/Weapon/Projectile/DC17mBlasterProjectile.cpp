@@ -10,7 +10,7 @@
 #include "AI/BasicAICharacter.h"
 #include "AI/BasicAIController.h"
 
-ADC17mBlasterProjectile::ADC17mBlasterProjectile(const FObjectInitializer& ObjectInitializer) {
+ADC17mBlasterProjectile::ADC17mBlasterProjectile() : Super() {
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMesh"));
 	ProjectileMesh->SetupAttachment(CollisionComp);
 	ProjectileMesh->SetMobility(EComponentMobility::Movable);

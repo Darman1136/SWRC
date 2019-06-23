@@ -5,7 +5,7 @@
 #include "Runtime/Engine/Classes/Kismet/KismetMathLibrary.h"
 
 
-UBTTask_LookAtActor::UBTTask_LookAtActor(const FObjectInitializer& ObjectInitializer) {
+UBTTask_LookAtActor::UBTTask_LookAtActor() : Super() {
 	NodeName = "Look At Actor";
 }
 

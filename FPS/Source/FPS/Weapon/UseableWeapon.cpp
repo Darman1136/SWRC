@@ -5,38 +5,32 @@
 #include "Data/WeaponDataTable.h"
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 
-UUseableWeapon::UUseableWeapon(const class FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
-{
+UUseableWeapon::UUseableWeapon() : Super() {
 
 }
 
-IUseableWeapon::IUseableWeapon()
-{
+IUseableWeapon::IUseableWeapon() {
 	// why does this code sometimes cause exceptions on hot reload
 	//ConstructorHelpers::FObjectFinder<UDataTable>
 	//	Data_BP(TEXT("DataTable'/Game/Data/WeaponData.WeaponData'"));
 	//Data = Data_BP.Object;
 }
 
-int32 IUseableWeapon::GetDamageInternal(FWeaponDataTable * WeaponDataTable)
-{
+int32 IUseableWeapon::GetDamageInternal(FWeaponDataTable* WeaponDataTable) {
 	if (WeaponDataTable) {
 		return WeaponDataTable->Damage;
 	}
 	return 0;
 }
 
-int32 IUseableWeapon::GetMaxAmmoInternal(FWeaponDataTable * WeaponDataTable)
-{
+int32 IUseableWeapon::GetMaxAmmoInternal(FWeaponDataTable* WeaponDataTable) {
 	if (WeaponDataTable) {
 		return WeaponDataTable->MaxAmmo;
 	}
 	return 0;
 }
 
-int32 IUseableWeapon::GetMagSizeInternal(FWeaponDataTable * WeaponDataTable)
-{
+int32 IUseableWeapon::GetMagSizeInternal(FWeaponDataTable* WeaponDataTable) {
 	if (WeaponDataTable) {
 		return WeaponDataTable->MagSize;
 	}

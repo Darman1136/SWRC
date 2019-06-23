@@ -5,7 +5,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "BehaviorTree/Blackboard/BlackboardKeyType_Float.h"
 
-UBTTask_SetWalkSpeed::UBTTask_SetWalkSpeed(const FObjectInitializer& ObjectInitializer) {
+UBTTask_SetWalkSpeed::UBTTask_SetWalkSpeed() : Super() {
 	NodeName = "Set Walk Speed";
 }
 

@@ -15,7 +15,7 @@ class FPS_API UBTTask_Strafe : public UBTTask_BlackboardBase
 	GENERATED_BODY()
 
 public:
-	UBTTask_Strafe(const FObjectInitializer& ObjectInitializer);
+	UBTTask_Strafe();
 
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 

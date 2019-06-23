@@ -15,7 +15,7 @@ class FPS_API UBTTask_SetWalkSpeed : public UBTTaskNode
 	GENERATED_BODY()
 	
 public:
-	UBTTask_SetWalkSpeed(const FObjectInitializer& ObjectInitializer);
+	UBTTask_SetWalkSpeed();
 
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 	

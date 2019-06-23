@@ -13,7 +13,7 @@
 const FName ABasicAIController::BKTarget = FName("Target");
 const FName ABasicAIController::BKTargetLocation = FName("TargetLocation");
 
-ABasicAIController::ABasicAIController(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {
+ABasicAIController::ABasicAIController() : Super() {
 	BlackboardComp = CreateDefaultSubobject<UBlackboardComponent>(TEXT("BlackboardComponent"));
 
 	SetActorTickEnabled(true);

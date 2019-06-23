@@ -13,7 +13,8 @@
 const FName ABattledroidAIController::BoneNameHead = FName("Head");
 const float ABattledroidAIController::FreakOutByHeadshotChance = 0.07f;
 
-ABattledroidAIController::ABattledroidAIController(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {
+ABattledroidAIController::ABattledroidAIController() : Super() {
+	//
 }
 
 void ABattledroidAIController::BeginPlay() {

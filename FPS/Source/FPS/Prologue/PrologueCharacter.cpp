@@ -26,7 +26,7 @@
 #include "AI/BasicAICharacter.h"
 #include "AI/BasicAIController.h"
 
-APrologueCharacter::APrologueCharacter(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {
+APrologueCharacter::APrologueCharacter() : Super() {
 	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
 	Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
 	Mesh1P->SetOnlyOwnerSee(true);
