@@ -6,11 +6,12 @@
 #include "GameFramework/Character.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
+#include "BasicCharacter.h"
 #include "BasicAIController.h"
 #include "BasicAICharacter.generated.h"
 
 UCLASS()
-class FPS_API ABasicAICharacter : public ACharacter {
+class FPS_API ABasicAICharacter : public ABasicCharacter {
 	GENERATED_BODY()
 
 public:

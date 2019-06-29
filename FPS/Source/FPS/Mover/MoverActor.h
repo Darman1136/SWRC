@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "MoverTriggerBox.h"
 #include "MoverActor.generated.h"
 
 UCLASS()
@@ -25,6 +26,8 @@ protected:
 
 	virtual void Rotate(float DeltaTime);
 
+	virtual bool CanStartReverse();
+
 protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 		class UStaticMeshComponent* MoverMesh;
@@ -32,11 +35,17 @@ protected:
 private:
 	void Move(float DeltaTime);
 
-	void PauseBeforeReverse();
+	void PauseBeforeReverse(float Delay);
 
 	void Reverse();
 
 	void DoTranslation(FVector LocalVectorToAdd);
+
+	UFUNCTION()
+		void AddActorInsideCollider(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
+
+	UFUNCTION()
+		void RemoveActorInsideCollider(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
 
 private:
 	// Settings
@@ -74,6 +83,17 @@ private:
 		float DelayBeforeReverseTranslation = 1000.f;
 
 	FTimerHandle ReverseTranslationTimerHandle;
+
+	/* Before this mover starts it's reverse animation, these must not collide with actors of the given classes */
+	UPROPERTY(EditAnywhere, Category = MoverTranslation, meta = (EditCondition = "ReversableTranslation"))
+		TArray<AMoverTriggerBox*> ReverseColliders;
+
+	/* The actors the colliders care about */
+	UPROPERTY(EditAnywhere, Category = MoverTranslation, meta = (EditCondition = "ReversableTranslation"))
+		TArray<UClass*> ReverseCollidersImportantActors;
+
+	/* Array which holds the actors currently blocking the reverse animation */
+	TArray<AActor*> ReverseBlockingActors;
 
 	// Rotation
 	UPROPERTY(EditAnywhere, Category = MoverRotation)

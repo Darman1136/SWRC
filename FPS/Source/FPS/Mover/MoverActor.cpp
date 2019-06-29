@@ -4,16 +4,33 @@
 #include "Components/StaticMeshComponent.h"
 #include "TimerManager.h"
 
-AMoverActor::AMoverActor() {
+/* Deprecated, use MoverLerpActor instead */
+
+AMoverActor::AMoverActor() : Super() {
 	MoverMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mover Mesh"));
+	RootComponent = MoverMesh;
 
 	PrimaryActorTick.bCanEverTick = true;
+
+	UE_LOG(LogTemp, Warning, TEXT("Deprecated, use MoverLerpActor instead"));
 }
 
 void AMoverActor::BeginPlay() {
 	Super::BeginPlay();
 
 	InitialTransform = GetTransform();
+
+	for (AMoverTriggerBox* Trigger : ReverseColliders) {
+		if (Trigger) {
+			FScriptDelegate DelegateAdd;
+			DelegateAdd.BindUFunction(this, "AddActorInsideCollider");
+			Trigger->OnActorBeginOverlap.AddUnique(DelegateAdd);
+
+			FScriptDelegate DelegateRemove;
+			DelegateRemove.BindUFunction(this, "RemoveActorInsideCollider");
+			Trigger->OnActorEndOverlap.AddUnique(DelegateRemove);
+		}
+	}
 }
 
 void AMoverActor::Tick(float DeltaTime) {
@@ -62,7 +79,7 @@ void AMoverActor::Translate(float DeltaTime) {
 					IsReversingTranlation = true;
 
 					if (DelayBeforeReverseTranslation > 0) {
-						PauseBeforeReverse();
+						PauseBeforeReverse(DelayBeforeReverseTranslation);
 						Offset = FVector();
 					} else {
 						Offset *= -1;
@@ -85,16 +102,34 @@ void AMoverActor::Translate(float DeltaTime) {
 	DoTranslation(Offset);
 }
 
-void AMoverActor::PauseBeforeReverse() {
+void AMoverActor::PauseBeforeReverse(float Delay) {
 	Paused = true;
 	GetWorldTimerManager().SetTimer(
-		ReverseTranslationTimerHandle, this, &AMoverActor::Reverse, DelayBeforeReverseTranslation / 1000.f, false);
+		ReverseTranslationTimerHandle, this, &AMoverActor::Reverse, Delay / 1000.f, false);
+}
+
+bool AMoverActor::CanStartReverse() {
+	return ReverseBlockingActors.Num() == 0;
 }
 
 void AMoverActor::Reverse() {
-	Paused = false;
+	if (CanStartReverse()) {
+		Paused = false;
+	} else {
+		PauseBeforeReverse(50.f);
+	}
 }
 
 void AMoverActor::Rotate(float DeltaTime) {
 	MoverMesh->AddLocalRotation(FRotator(Rotation.Y * DeltaTime, Rotation.Z * DeltaTime, Rotation.X * DeltaTime));
+}
+
+void AMoverActor::AddActorInsideCollider(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit) {
+	// UE_LOG(LogTemp, Warning, TEXT("ADD: %s, %s"), *SelfActor->GetName(), *OtherActor->GetName());
+	ReverseBlockingActors.Add(OtherActor);
+}
+
+void AMoverActor::RemoveActorInsideCollider(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit) {
+	// UE_LOG(LogTemp, Warning, TEXT("REMOVE: %s, %s"), *SelfActor->GetName(), *OtherActor->GetName());
+	ReverseBlockingActors.Remove(OtherActor);
 }

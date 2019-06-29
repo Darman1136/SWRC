@@ -4,12 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "BasicCharacter.h"
 #include "FPSCharacter.generated.h"
 
 class UInputComponent;
 
 UCLASS(abstract, config = Game)
-class AFPSCharacter : public ACharacter
+class AFPSCharacter : public ABasicCharacter
 {
 	GENERATED_BODY()
 

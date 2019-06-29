@@ -41,7 +41,7 @@ void UBTTask_SimpleFire::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* Node
 }
 
 bool UBTTask_SimpleFire::IsTaskDone(AActor* Owner, FBTSimpleFireTaskMemory* MyMemory) {
-	UE_LOG(LogTemp, Warning, TEXT("Reps: %d - %s"), MyMemory->DoneRepeats, *Owner->GetName());
+	// UE_LOG(LogTemp, Warning, TEXT("Reps: %d - %s"), MyMemory->DoneRepeats, *Owner->GetName());
 	return MyMemory->DoneRepeats >= Repeats;
 }
 
