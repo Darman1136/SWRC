@@ -16,6 +16,9 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintCallable, Category = Mover)
+	void TriggerMover(bool MovesOnCollisionTriggerAfterwards = true);
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -83,12 +86,15 @@ private:
 
 	FTimerHandle ReverseTimerHandle;
 
+	UPROPERTY(EditAnywhere, Category = MoverSettingsTrigger)
+		bool TriggersStartMover = false;
+
 	/* Triggers the mover. Also before mover starts it's reverse animation, these must not collide with actor classes specified */
-	UPROPERTY(EditAnywhere, Category = MoverSettings)
+	UPROPERTY(EditAnywhere, Category = MoverSettingsTrigger)
 		TArray<AMoverTriggerBox*> TriggerColliders;
 
 	/* The actors the colliders care about */
-	UPROPERTY(EditAnywhere, Category = MoverSettings)
+	UPROPERTY(EditAnywhere, Category = MoverSettingsTrigger)
 		TArray<UClass*> TriggerCollidersImportantActors;
 
 	/* Array which holds the actors currently blocking the reverse animation */

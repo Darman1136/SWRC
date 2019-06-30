@@ -50,10 +50,12 @@ void AMoverLerpActor::AddActorInsideCollider(AActor* SelfActor, AActor* OtherAct
 			}
 		}
 	}
-	
+
 	if (IsImportant) {
 		BlockingActors.Add(OtherActor);
-		Triggered = true;
+		if (TriggersStartMover) {
+			Triggered = true;
+		}
 	}
 }
 
@@ -64,7 +66,7 @@ void AMoverLerpActor::RemoveActorInsideCollider(AActor* SelfActor, AActor* Other
 void AMoverLerpActor::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 
-	if ((AlwaysOn || Triggered ) && !Paused) {
+	if ((AlwaysOn || Triggered) && !Paused) {
 		TimeSinceMovementStart += DeltaTime;
 		float LerpAlpha = TimeSinceMovementStart * 1000.f / EndMovementDelay;
 		if (EnableTranslation) {
@@ -77,8 +79,12 @@ void AMoverLerpActor::Tick(float DeltaTime) {
 		if (LerpAlpha >= 1.f) {
 			Finished();
 		}
-
 	}
+}
+
+void AMoverLerpActor::TriggerMover(bool MovesOnCollisionTriggerAfterwards) {
+	Triggered = true;
+	TriggersStartMover = MovesOnCollisionTriggerAfterwards;
 }
 
 void AMoverLerpActor::DoTranslation(float LerpAlpha) {
