@@ -18,6 +18,8 @@
 #include "Data/DC17mBlasterStats.h"
 
 APlayerCharacter::APlayerCharacter() : Super() {
+	PrimaryActorTick.bCanEverTick = true;
+
 	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
 	Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
 	Mesh1P->SetOnlyOwnerSee(true);
@@ -34,6 +36,10 @@ APlayerCharacter::APlayerCharacter() : Super() {
 	VisorMesh->CastShadow = false;
 	VisorMesh->RelativeRotation = FRotator(1.9f, -19.19f, 5.2f);
 	VisorMesh->RelativeLocation = FVector(-0.5f, -4.4f, -155.7f);
+
+
+
+
 
 	// Create a gun mesh component
 	//FP_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FP_Gun"));
@@ -97,10 +103,32 @@ void APlayerCharacter::BeginPlay() {
 	}
 
 	UpdateAmmoMaterials();
+
+	UMaterialInterface* VisorMaterial = VisorMesh->GetMaterial(0);
+	if (VisorMaterial) {
+		VisorMaterialInstance = UMaterialInstanceDynamic::Create(VisorMaterial, this);
+		VisorMaterialInstance->SetVectorParameterValue("WiperTime", FVector(-3.f, 0.f, 0.f));
+		UE_LOG(LogTemp, Warning, TEXT("Wipertime"));
+		VisorMesh->SetMaterial(0, VisorMaterialInstance);
+	}
 }
 
-void APlayerCharacter::OnFire()
-{
+void APlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) {
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	PlayerInputComponent->BindAction("TestKey", IE_Pressed, this, &APlayerCharacter::StartWiper);
+	PlayerInputComponent->BindAction("TestKey", IE_Released, this, &APlayerCharacter::ResetWiper);
+}
+
+void APlayerCharacter::Tick(float DeltaTime) {
+	Super::Tick(DeltaTime);
+
+	if (VisorWiperActive) {
+		PlayWiper(DeltaTime);
+	}
+}
+
+void APlayerCharacter::OnFire() {
 	if (!bIsFiring || isMagEmpty()) {
 		OnFireReleased();
 		return;
@@ -109,22 +137,18 @@ void APlayerCharacter::OnFire()
 	Super::OnFire();
 
 	// try and play a firing animation if specified
-	if (FireAnimation != NULL)
-	{
+	if (FireAnimation != NULL) {
 		// Get the animation object for the arms mesh
 		UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
-		if (AnimInstance != NULL)
-		{
+		if (AnimInstance != NULL) {
 			if (CurrentAmmo > 0) {
 				CurrentAmmo--;
-			}
-			else {
+			} else {
 				CurrentAmmo = 0;
 			}
 			if (CurrentMagAmmo > 0) {
 				CurrentMagAmmo--;
-			}
-			else {
+			} else {
 				CurrentMagAmmo = 0;
 			}
 			UpdateAmmoMaterials();
@@ -134,11 +158,9 @@ void APlayerCharacter::OnFire()
 			//	UStaticMesh* ProjectileMesh = ProjectileMeshPtr.Get();
 			//	UClass* PClass = ProjectileMesh->GetClass();
 			//}
-			if (ProjectileClass != NULL)
-			{
+			if (ProjectileClass != NULL) {
 				UWorld* const World = GetWorld();
-				if (World != NULL)
-				{
+				if (World != NULL) {
 					FRotator SpawnRotation = GetControlRotation();
 					SpawnRotation.Add(-2.f, -.3f, 0.f);
 					const FTransform MuzzleTransform = Mesh1P->GetBoneTransform(Mesh1P->GetBoneIndex(TEXT("muzzle")));
@@ -159,28 +181,24 @@ void APlayerCharacter::OnFire()
 	}
 }
 
-bool APlayerCharacter::isMagEmpty()
-{
+bool APlayerCharacter::isMagEmpty() {
 	return CurrentMagAmmo <= 0;
 }
 
-void APlayerCharacter::UpdateAmmoMaterials()
-{
+void APlayerCharacter::UpdateAmmoMaterials() {
 	UE_LOG(LogTemp, Warning, TEXT("CurrentAmmo: %d"), CurrentAmmo);
 	UE_LOG(LogTemp, Warning, TEXT("CurrentMagAmmo: %d"), CurrentMagAmmo);
 	if (AmmoDigit100 != nullptr) {
 		if (CurrentAmmo >= 100) {
 			AmmoDigit100->SetVectorParameterValue("Value", FLinearColor((CurrentAmmo / 100) % 10, 0, 0));
-		}
-		else {
+		} else {
 			AmmoDigit100->SetVectorParameterValue("Value", FLinearColor(0, 0, 0));
 		}
 	}
 	if (AmmoDigit10 != nullptr) {
 		if (CurrentAmmo >= 10) {
 			AmmoDigit10->SetVectorParameterValue("Value", FLinearColor((CurrentAmmo / 10) % 10, 0, 0));
-		}
-		else {
+		} else {
 			AmmoDigit10->SetVectorParameterValue("Value", FLinearColor(0, 0, 0));
 		}
 	}
@@ -190,39 +208,33 @@ void APlayerCharacter::UpdateAmmoMaterials()
 	if (AmmoChargeMag != nullptr) {
 		if (CurrentMagAmmo == MaxMagAmmo) {
 			AmmoChargeMag->SetVectorParameterValue("Value", FLinearColor(21, 0, 0));
-		}
-		else {
+		} else {
 			AmmoChargeMag->SetVectorParameterValue("Value", FLinearColor(FMath::CeilToInt(CurrentMagAmmo / 3.f), 0, 0));
 		}
 	}
 }
 
-void APlayerCharacter::ReloadAmmo()
-{
+void APlayerCharacter::ReloadAmmo() {
 	UE_LOG(LogTemp, Log, TEXT("ReloadAmmo"));
 	CurrentMagAmmo = MaxMagAmmo;
 	UpdateAmmoMaterials();
 }
 
-void APlayerCharacter::OnReload()
-{
+void APlayerCharacter::OnReload() {
 	if (CurrentAmmo <= 0 || CurrentMagAmmo == MaxMagAmmo) {
 		return;
 	}
 
 	// try and play the sound if specified
-	if (ReloadSound != NULL)
-	{
+	if (ReloadSound != NULL) {
 		UGameplayStatics::PlaySoundAtLocation(this, ReloadSound, GetActorLocation());
 	}
 
 	// try and play a firing animation if specified
-	if (ReloadAnimation != NULL)
-	{
+	if (ReloadAnimation != NULL) {
 		// Get the animation object for the arms mesh
 		UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
-		if (AnimInstance != NULL)
-		{
+		if (AnimInstance != NULL) {
 			if (AnimInstance->GetCurrentActiveMontage() == NULL) {
 				AnimInstance->Montage_Play(ReloadAnimation, 1.f);
 			}
@@ -230,9 +242,32 @@ void APlayerCharacter::OnReload()
 	}
 }
 
-void APlayerCharacter::GetDamage()
-{
+void APlayerCharacter::GetDamage() {
 	if (WeaponStats) {
 		UE_LOG(LogTemp, Warning, TEXT("GetDamage: %d"), WeaponStats->GetDamage());
+	}
+}
+
+void APlayerCharacter::StartWiper() {
+	VisorWiperActive = true;
+	UE_LOG(LogTemp, Warning, TEXT("WIPE start"));
+}
+
+void APlayerCharacter::PlayWiper(float DeltaTime) {
+	if (VisorMaterialInstance) {
+		VisorWiperCurrentTime += DeltaTime;
+		VisorMaterialInstance->SetVectorParameterValue("WiperTime", FVector(VisorWiperCurrentTime, 0.f, 0.f));
+		int32 wipe = FMath::RandRange(0, 3);
+		UE_LOG(LogTemp, Warning, TEXT("WIPE %d"), wipe);
+		VisorMaterialInstance->SetScalarParameterValue("WiperInt", wipe);
+	}
+}
+
+void APlayerCharacter::ResetWiper() {
+	UE_LOG(LogTemp, Warning, TEXT("WIPE stop"));
+	VisorWiperActive = false;
+	if (VisorMaterialInstance) {
+		VisorWiperCurrentTime = VisorWiperStartTime;
+		VisorMaterialInstance->SetVectorParameterValue("WiperTime", FVector(VisorWiperCurrentTime, 0.f, 0.f));
 	}
 }

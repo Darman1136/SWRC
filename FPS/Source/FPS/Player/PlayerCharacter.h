@@ -11,8 +11,7 @@
  *
  */
 UCLASS(config = Game)
-class FPS_API APlayerCharacter : public AFPSCharacter
-{
+class FPS_API APlayerCharacter : public AFPSCharacter {
 	GENERATED_BODY()
 
 public:
@@ -58,10 +57,26 @@ public:
 	class UWeaponStats* WeaponStats;
 
 protected:
-	virtual void BeginPlay();
+	virtual void BeginPlay() override;
+
+	virtual void Tick(float DeltaTime) override;
+
+	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 
 	bool isMagEmpty();
 
+	void StartWiper();
+
+	void PlayWiper(float DeltaTime);
+
+	void ResetWiper();
+
 private:
 	void GetDamage();
+
+private:
+	UMaterialInstanceDynamic* VisorMaterialInstance;
+	float VisorWiperStartTime = -2.f;
+	float VisorWiperCurrentTime = VisorWiperStartTime;
+	bool VisorWiperActive = false;
 };
