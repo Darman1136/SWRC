@@ -16,6 +16,9 @@ class FPS_API AFightRoomActorAIController : public ACloneAIController {
 public:
 	virtual void BeginPlay() override;
 
+	UFUNCTION(BlueprintCallable, Category = "AI")
+		virtual void StartBehaviorTree() override;
+
 private:
 	UPROPERTY(EditAnywhere)
 		FName TargetBlackboardKeyName;

@@ -24,31 +24,14 @@ void ABasicAIController::OnPossess(class APawn* InPawn) {
 	Super::OnPossess(InPawn);
 	SetPawn(InPawn);
 
-	if (BehaviorTree) {
-		BlackboardComp->InitializeBlackboard(*(BehaviorTree->BlackboardAsset));
-	}
 	UE_LOG(LogTemp, Warning, TEXT("Possess"));
 }
 
 void ABasicAIController::BeginPlay() {
 	Super::BeginPlay();
 
-	if (BehaviorTree) {
-		APawn* Pawn = GetPawn();
-		if (BlackboardComp != nullptr) {
-			TArray<AActor*> FoundActors;
-			UGameplayStatics::GetAllActorsOfClass(GetWorld(), AFPSCharacter::StaticClass(), FoundActors);
-
-			if (FoundActors.Num() == 1) {
-				BlackboardComp->SetValueAsObject(ABasicAIController::BKTarget, FoundActors[0]);
-				//SetFocus(FoundActors[0], EAIFocusPriority::Gameplay);
-			}
-			else {
-				UE_LOG(LogTemp, Error, TEXT("Failed to find and set player"));
-			}
-		}
-		UE_LOG(LogTemp, Warning, TEXT("Running BehaviorTree"));
-		RunBehaviorTree(BehaviorTree);
+	if (AutoStartBehaviorTree) {
+		StartBehaviorTree();
 	}
 }
 
@@ -93,4 +76,25 @@ void ABasicAIController::OnDeath()
 
 void ABasicAIController::LookedAtByPlayer(AActor* PlayerActor)
 {
+}
+
+void ABasicAIController::StartBehaviorTree() {
+	UE_LOG(LogTemp, Warning, TEXT("StartBehaviorTree"));
+	if (BehaviorTree) {
+		BlackboardComp->InitializeBlackboard(*(BehaviorTree->BlackboardAsset));
+		APawn* Pawn = GetPawn();
+		if (BlackboardComp != nullptr) {
+			TArray<AActor*> FoundActors;
+			UGameplayStatics::GetAllActorsOfClass(GetWorld(), AFPSCharacter::StaticClass(), FoundActors);
+
+			if (FoundActors.Num() == 1) {
+				BlackboardComp->SetValueAsObject(ABasicAIController::BKTarget, FoundActors[0]);
+				//SetFocus(FoundActors[0], EAIFocusPriority::Gameplay);
+			} else {
+				UE_LOG(LogTemp, Error, TEXT("Failed to find and set player"));
+			}
+		}
+		UE_LOG(LogTemp, Warning, TEXT("Running BehaviorTree"));
+		RunBehaviorTree(BehaviorTree);
+	}
 }

@@ -39,7 +39,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UCameraComponent* FirstPersonCameraComponent;
 
-
 	bool bIsFiring = false;
 
 	virtual void BeginPlay();
@@ -128,8 +127,6 @@ public:
 	void EndTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void TouchUpdate(const ETouchIndex::Type FingerIndex, const FVector Location);
 	TouchData	TouchItem;
-
-
 
 protected:
 	// APawn interface

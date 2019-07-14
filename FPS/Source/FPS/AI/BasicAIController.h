@@ -34,6 +34,8 @@ public:
 
 	virtual void LookedAtByPlayer(AActor* PlayerActor);
 
+	virtual void StartBehaviorTree();
+
 protected:
 	virtual void TurnHeadToObject(AActor* Actor);
 
@@ -56,6 +58,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = Animation)
 		bool LookAtCanInterrupt = false;
+
+	UPROPERTY(EditAnywhere, Category = AIProperties)
+	bool AutoStartBehaviorTree = false;
 
 public:
 	static const FName BKTarget;

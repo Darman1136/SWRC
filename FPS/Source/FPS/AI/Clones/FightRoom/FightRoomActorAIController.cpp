@@ -6,11 +6,18 @@
 void AFightRoomActorAIController::BeginPlay() {
 	Super::BeginPlay();
 
+}
+
+void AFightRoomActorAIController::StartBehaviorTree() {
+	Super::StartBehaviorTree();
+
 	AActor* Pawn = GetPawn();
 	if (BehaviorTree && Pawn && Pawn->IsA(AFightRoomActorAICharacter::StaticClass())) {
 		AFightRoomActorAICharacter* Character = Cast<AFightRoomActorAICharacter>(Pawn);
 
 		UBlackboardComponent* BlackboardComponent = GetBlackboardComponent();
-		BlackboardComponent->SetValueAsObject(TargetBlackboardKeyName, Character->GetAimTarget());
+		if (BlackboardComponent != nullptr) {
+			BlackboardComponent->SetValueAsObject(TargetBlackboardKeyName, Character->GetAimTarget());
+		}
 	}
 }

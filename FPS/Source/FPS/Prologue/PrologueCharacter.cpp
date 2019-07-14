@@ -58,6 +58,10 @@ APrologueCharacter::APrologueCharacter() : Super() {
 	CharacterMovementComponent->GravityScale = 0.f;
 	CharacterMovementComponent->MaxWalkSpeed = 0.f;
 
+	SpeechAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("SpeechAudioComponent"));
+
+	AmbientAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AmbientAudioComponent"));
+	
 	//// Create a gun mesh component
 	//FP_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FP_Gun"));
 	//FP_Gun->SetOnlyOwnerSee(true);			// only the owning player will see this mesh
@@ -79,6 +83,12 @@ APrologueCharacter::APrologueCharacter() : Super() {
 	Mesh1P->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel2, ECollisionResponse::ECR_Ignore);
 	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel2, ECollisionResponse::ECR_Ignore);
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel2, ECollisionResponse::ECR_Ignore);
+}
+
+void APrologueCharacter::OnConstruction(const FTransform& Transform) {
+	Super::OnConstruction(Transform);
+	SpeechAudioComponent->SetAutoActivate(false);
+	AmbientAudioComponent->SetAutoActivate(false);
 }
 
 void APrologueCharacter::BeginPlay() {
@@ -144,4 +154,9 @@ void APrologueCharacter::SwitchToBoyMesh() {
 void APrologueCharacter::SwitchToVisorMesh() {
 	VisorMeshBoy->SetVisibility(false);
 	VisorMesh->SetVisibility(true);
+}
+
+void APrologueCharacter::SwitchToTrainingMesh() {
+	Mesh1P->SetVisibility(false);
+	VisorMeshBoy->SetVisibility(false);
 }

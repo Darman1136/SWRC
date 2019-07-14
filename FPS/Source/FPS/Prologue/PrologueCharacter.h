@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "FPSCharacter.h"
 #include "Camera/PlayerCameraManager.h"
+#include "Components/AudioComponent.h"
 #include "PrologueCharacter.generated.h"
 
 /**
@@ -28,10 +29,21 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Mesh")
 		void SwitchToVisorMesh();
 
+	UFUNCTION(BlueprintCallable, Category = "Mesh")
+		void SwitchToTrainingMesh();
+
+	UFUNCTION(BlueprintPure, Category = "Speech|Audio")
+		UAudioComponent* GetSpeechAudioComponent() { return SpeechAudioComponent; }
+
+	UFUNCTION(BlueprintPure, Category = "Speech|Audio")
+		UAudioComponent* GetAmbientAudioComponent() { return AmbientAudioComponent; }
+
 protected:
 	virtual void BeginPlay() override;
 
 	virtual void Tick(float DeltaTime) override;
+
+	virtual void OnConstruction(const FTransform& Transform) override;
 
 private:
 	void SendLookRay();
@@ -39,6 +51,12 @@ private:
 protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 		class USkeletalMeshComponent* VisorMeshBoy;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+		class UAudioComponent* SpeechAudioComponent;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+		class UAudioComponent* AmbientAudioComponent;
 
 private:
 	APlayerCameraManager* CameraManager;

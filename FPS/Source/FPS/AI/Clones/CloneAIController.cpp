@@ -4,7 +4,4 @@
 
 void ACloneAIController::BeginPlay() {
 	Super::BeginPlay();
-	if (BehaviorTree) {
-		RunBehaviorTree(BehaviorTree);
-	}
 }
