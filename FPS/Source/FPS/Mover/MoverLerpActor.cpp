@@ -113,11 +113,10 @@ void AMoverLerpActor::Translate(FVector Start, FVector End, float LerpAlpha) {
 }
 
 void AMoverLerpActor::Finished() {
-	if (DelayBeforeReverse > 0.f) {
-		PauseBeforeReverse(DelayBeforeReverse);
-	}
-
 	if (EnableReverse) {
+		if (DelayBeforeReverse > 0.f) {
+			PauseBeforeReverse(DelayBeforeReverse);
+		}
 		if (ReverseActive) {
 			Triggered = false;
 		}
