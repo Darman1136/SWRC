@@ -35,8 +35,11 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Speech|Audio")
 		UAudioComponent* GetSpeechAudioComponent() { return SpeechAudioComponent; }
 
-	UFUNCTION(BlueprintPure, Category = "Speech|Audio")
+	UFUNCTION(BlueprintPure, Category = "Ambient|Audio")
 		UAudioComponent* GetAmbientAudioComponent() { return AmbientAudioComponent; }
+
+	UFUNCTION(BlueprintPure, Category = "Music|Audio")
+		UAudioComponent* GetMusicAudioComponent() { return MusicAudioComponent; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -52,11 +55,14 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 		class USkeletalMeshComponent* VisorMeshBoy;
 
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+	UPROPERTY(VisibleDefaultsOnly, Category = "Speech|Audio")
 		class UAudioComponent* SpeechAudioComponent;
 
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+	UPROPERTY(VisibleDefaultsOnly, Category = "Ambient|Audio")
 		class UAudioComponent* AmbientAudioComponent;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Music|Audio")
+		class UAudioComponent* MusicAudioComponent;
 
 private:
 	APlayerCameraManager* CameraManager;

@@ -61,6 +61,8 @@ APrologueCharacter::APrologueCharacter() : Super() {
 	SpeechAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("SpeechAudioComponent"));
 
 	AmbientAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AmbientAudioComponent"));
+
+	MusicAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("MusicAudioComponent"));
 	
 	//// Create a gun mesh component
 	//FP_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FP_Gun"));
