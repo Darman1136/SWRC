@@ -8,6 +8,7 @@
 #include "FPSCharacter.h"
 #include "Weapon/Projectile/WeaponDamageType.h"
 #include "Weapon/Projectile/DamageAreaEnum.h"
+#include "BasicAICharacter.h"
 #include "FPS.h"
 
 const FName ABasicAIController::BKTarget = FName("Target");
@@ -40,13 +41,11 @@ void ABasicAIController::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 }
 
-int32 ABasicAIController::GetHealth()
-{
+int32 ABasicAIController::GetHealth() {
 	return Health;
 }
 
-void ABasicAIController::TakeDamage(AActor* AttackingActor, EWeaponDamageType DamageType, float amount, const FHitResult& Hit)
-{
+void ABasicAIController::TakeDamage(AActor* AttackingActor, EWeaponDamageType DamageType, float amount, const FHitResult& Hit) {
 	EDamageArea DamageArea = GetTakenDamageAreaByBoneName(Hit.BoneName);
 
 	Health -= amount * GetTakenDamageMultiplier(Hit.BoneName);
@@ -56,26 +55,21 @@ void ABasicAIController::TakeDamage(AActor* AttackingActor, EWeaponDamageType Da
 	// UE_LOG(LogTemp, Warning, TEXT("Health: %d, Type: %s, Amount: %f, Attacker: %s, Bone: %s, DamageAreaByBone: %s"), Health, *GETENUMSTRING("EWeaponDamageType", DamageType), amount, *AttackingActor->GetName(), *Hit.BoneName.ToString(), *GETENUMSTRING("EDamageArea", DamageArea));
 }
 
-void ABasicAIController::TurnHeadToObject(AActor* Actor)
-{
+void ABasicAIController::TurnHeadToObject(AActor* Actor) {
 }
 
-EDamageArea ABasicAIController::GetTakenDamageAreaByBoneName(FName Bone)
-{
+EDamageArea ABasicAIController::GetTakenDamageAreaByBoneName(FName Bone) {
 	return EDamageArea::DADefault;
 }
 
-float ABasicAIController::GetTakenDamageMultiplier(FName Bone)
-{
+float ABasicAIController::GetTakenDamageMultiplier(FName Bone) {
 	return 1.f;
 }
 
-void ABasicAIController::OnDeath()
-{
+void ABasicAIController::OnDeath() {
 }
 
-void ABasicAIController::LookedAtByPlayer(AActor* PlayerActor)
-{
+void ABasicAIController::LookedAtByPlayer(AActor* PlayerActor) {
 }
 
 void ABasicAIController::StartBehaviorTree() {
@@ -84,6 +78,9 @@ void ABasicAIController::StartBehaviorTree() {
 		BlackboardComp->InitializeBlackboard(*(BehaviorTree->BlackboardAsset));
 		APawn* Pawn = GetPawn();
 		if (BlackboardComp != nullptr) {
+
+			InitializeBlackboardWithValues();
+
 			TArray<AActor*> FoundActors;
 			UGameplayStatics::GetAllActorsOfClass(GetWorld(), AFPSCharacter::StaticClass(), FoundActors);
 
@@ -96,5 +93,19 @@ void ABasicAIController::StartBehaviorTree() {
 		}
 		UE_LOG(LogTemp, Warning, TEXT("Running BehaviorTree"));
 		RunBehaviorTree(BehaviorTree);
+	}
+}
+
+void ABasicAIController::InitializeBlackboardWithValues() {
+	APawn* ThisPawn = GetPawn();
+	if (ThisPawn && ThisPawn->IsA(ABasicAICharacter::StaticClass())) {
+		ABasicAICharacter* BasicCharacter = Cast<ABasicAICharacter>(ThisPawn);
+		TMap<FName, AActor*> ObjectMap = BasicCharacter->GetBlackboardObjectMap();
+		if (ObjectMap.Num() > 0) {
+			for (auto& Entry : ObjectMap) {
+				UE_LOG(LogTemp, Warning, TEXT("ObjectMap: %s # %s"), *Entry.Key.ToString(), *Entry.Value->GetName());
+				BlackboardComp->SetValueAsObject(Entry.Key, Entry.Value);
+			}
+		}
 	}
 }

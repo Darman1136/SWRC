@@ -29,6 +29,8 @@ public:
 	virtual void OnFire();
 
 	virtual bool IsReadyToFire();
+
+	TMap<FName, AActor*> GetBlackboardObjectMap() { return BlackboardObjectMap; }
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -41,5 +43,8 @@ protected:
 	bool FireCooldownComplete;
 
 	UPROPERTY(EditAnywhere, Category = Fire)
-	float FireCooldownDelay = .1f;
+		float FireCooldownDelay = .1f;
+
+	UPROPERTY(EditAnywhere, Category = "AI|Behavior")
+		TMap<FName, AActor*> BlackboardObjectMap;
 };

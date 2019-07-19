@@ -15,8 +15,7 @@
  *
  */
 UCLASS()
-class FPS_API ABasicAIController : public AAIController
-{
+class FPS_API ABasicAIController : public AAIController {
 	GENERATED_BODY()
 
 public:
@@ -60,11 +59,14 @@ protected:
 		bool LookAtCanInterrupt = false;
 
 	UPROPERTY(EditAnywhere, Category = AIProperties)
-	bool AutoStartBehaviorTree = false;
+		bool AutoStartBehaviorTree = false;
+
+private:
+	void InitializeBlackboardWithValues();
 
 public:
 	static const FName BKTarget;
 	static const FName BKTargetLocation;
-	
+
 };
 
