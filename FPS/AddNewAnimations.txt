@@ -3,7 +3,8 @@ Import PSA (check All actions to NLA track)
 Export as FBX
 
 Import to UE4
-Select skeleton named "Commando_Skeleton"
+Select skeleton named "Clone_Skeleton"
+Check "Import Animations"
 Remove newly imported skeletal mesh and physics asset
 Remove duplicated animations NOT starting with "CommandoNoHelmet2_Anim_CloneCommando_"
 Remove prefix "CommandoNoHelmet2_"
