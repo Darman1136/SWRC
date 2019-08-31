@@ -76,7 +76,6 @@ void ABasicAIController::StartBehaviorTree() {
 	UE_LOG(LogTemp, Warning, TEXT("StartBehaviorTree"));
 	if (BehaviorTree) {
 		BlackboardComp->InitializeBlackboard(*(BehaviorTree->BlackboardAsset));
-		APawn* Pawn = GetPawn();
 		if (BlackboardComp != nullptr) {
 
 			InitializeBlackboardWithValues();
@@ -97,9 +96,9 @@ void ABasicAIController::StartBehaviorTree() {
 }
 
 void ABasicAIController::InitializeBlackboardWithValues() {
-	APawn* ThisPawn = GetPawn();
-	if (ThisPawn && ThisPawn->IsA(ABasicAICharacter::StaticClass())) {
-		ABasicAICharacter* BasicCharacter = Cast<ABasicAICharacter>(ThisPawn);
+	APawn* CurrentPawn = GetPawn();
+	if (CurrentPawn && CurrentPawn->IsA(ABasicAICharacter::StaticClass())) {
+		ABasicAICharacter* BasicCharacter = Cast<ABasicAICharacter>(CurrentPawn);
 		TMap<FName, AActor*> ObjectMap = BasicCharacter->GetBlackboardObjectMap();
 		if (ObjectMap.Num() > 0) {
 			for (auto& Entry : ObjectMap) {

@@ -5,91 +5,22 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "BasicCharacter.h"
+#include "Player/PlayerMeshComponent.h"
 #include "FPSCharacter.generated.h"
 
 class UInputComponent;
 
-UCLASS(abstract, config = Game)
-class AFPSCharacter : public ABasicCharacter
-{
-	GENERATED_BODY()
 
-	FTimerHandle FireTimeHandle;
+UCLASS(abstract, config = Game)
+class AFPSCharacter : public ABasicCharacter {
+	GENERATED_BODY()
 
 public:
 	AFPSCharacter();
 
-protected:
-	/** Pawn mesh: 1st person view (arms; seen only by self) */
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-		class USkeletalMeshComponent* Mesh1P;
-
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-		class UStaticMeshComponent* VisorMesh;
-
-	/** Location on gun mesh where projectiles should spawn. */
-	//UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	//	class USceneComponent* FP_MuzzleLocation;
-
-	/** Gun mesh: 1st person view (seen only by self) */
-	//UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	//	class USkeletalMeshComponent* FP_Gun;
-
-	/** First person camera */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		class UCameraComponent* FirstPersonCameraComponent;
-
-	bool bIsFiring = false;
-
-	virtual void BeginPlay();
-
-public:
-	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
-		float BaseTurnRate;
-
-	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
-		float BaseLookUpRate;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gun)
-		float FireDelay = .1f;
-
-	/** Gun muzzle's offset from the characters location */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-		FVector GunOffset;
-
-	/** Projectile class to spawn */
-	UPROPERTY(EditDefaultsOnly, Category = Projectile)
-		TSubclassOf<class AFPSProjectile> ProjectileClass;
-
-	/** Sound to play each time we fire */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-		class USoundBase* FireSound;
-
-	/** AnimMontage to play each time we fire */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-		class UAnimMontage* FireAnimation;
-
-	/** Sound to play each time we fire */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-		class USoundBase* ReloadSound;
-
-	/** AnimMontage to play each time we reload */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-		class UAnimMontage* ReloadAnimation;
-
-	/** Whether to use motion controller location for aiming. */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-		uint32 bUsingMotionControllers : 1;
-
-
 	void OnFirePressed();
 
 	void OnFireReleased();
-
-	/** Fires a projectile. */
-	virtual void OnFire();
 
 	/** Reloads */
 	virtual void OnReload();
@@ -115,39 +46,50 @@ public:
 	 */
 	void LookUpAtRate(float Rate);
 
-	struct TouchData
-	{
-		TouchData() { bIsPressed = false; Location = FVector::ZeroVector; }
-		bool bIsPressed;
-		ETouchIndex::Type FingerIndex;
-		FVector Location;
-		bool bMoved;
-	};
-	void BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
-	void EndTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
-	void TouchUpdate(const ETouchIndex::Type FingerIndex, const FVector Location);
-	TouchData	TouchItem;
+	FORCEINLINE class UPlayerMeshComponent* GetActivePlayerMeshComponent() const { return ActivePlayerMeshComponent; }
 
-protected:
-	// APawn interface
-	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
-	// End of APawn interface
-
-	/*
-	 * Configures input for touchscreen devices if there is a valid touch interface for doing so
-	 *
-	 * @param	InputComponent	The input component pointer to bind controls to
-	 * @returns true if touch controls were enabled.
-	 */
-	bool EnableTouchscreenMovement(UInputComponent* InputComponent);
-
-public:
-	/** Returns Mesh1P subobject **/
-	FORCEINLINE class USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
-	/** Returns Mesh1P subobject **/
 	FORCEINLINE class UStaticMeshComponent* GetVisorMesh() const { return VisorMesh; }
 	/** Returns FirstPersonCameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
+
+public:
+	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
+		float BaseTurnRate;
+
+	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
+		float BaseLookUpRate;
+
+	/** Whether to use motion controller location for aiming. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		uint32 bUsingMotionControllers : 1;
+
+protected:
+	virtual void BeginPlay();
+
+	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
+
+	UFUNCTION(BlueprintCallable, Category = "Mesh|Player")
+	void ActivatePlayerMesh(EPlayerMeshType Type);
+
+	void AddPlayerMesh(EPlayerMeshType Type, UPlayerMeshComponent* PlayerMeshComponent, bool IsStartingMesh = false);
+
+protected:
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+		class UStaticMeshComponent* VisorMesh;
+
+	/** First person camera */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+		class UCameraComponent* FirstPersonCameraComponent;
+
+	UPROPERTY(EditAnywhere, Category = "Mesh|Player")
+		TMap<EPlayerMeshType, UPlayerMeshComponent*> PlayerMeshComponentMap;
+
+private:
+	/** Pawn mesh: 1st person view (arms; seen only by self) */
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+		class UPlayerMeshComponent* ActivePlayerMeshComponent;
 
 };
 

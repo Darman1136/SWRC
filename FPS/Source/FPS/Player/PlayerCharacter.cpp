@@ -16,18 +16,14 @@
 #include "FPSProjectile.h"
 #include "Weapon/DC17mBlaster.h"
 #include "Data/DC17mBlasterStats.h"
+#include "Player/Mesh/PlayerDC17MMeshComponent.h"
 
 APlayerCharacter::APlayerCharacter() : Super() {
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
-	Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
-	Mesh1P->SetOnlyOwnerSee(true);
-	Mesh1P->SetupAttachment(FirstPersonCameraComponent);
-	Mesh1P->bCastDynamicShadow = false;
-	Mesh1P->CastShadow = false;
-	Mesh1P->RelativeRotation = FRotator(1.9f, -19.19f, 5.2f);
-	Mesh1P->RelativeLocation = FVector(-0.5f, -4.4f, -155.7f);
+	PlayerDC17MMeshComponent = CreateDefaultSubobject<UPlayerDC17MMeshComponent>(TEXT("PlayerDC17MMesh"));
+	PlayerDC17MMeshComponent->Initialize(this);
+	AddPlayerMesh(PlayerDC17MMeshComponent->GetPlayerMeshType(), PlayerDC17MMeshComponent, true);
 
 	VisorMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VisorMesh"));
 	VisorMesh->SetOnlyOwnerSee(true);
@@ -36,73 +32,19 @@ APlayerCharacter::APlayerCharacter() : Super() {
 	VisorMesh->CastShadow = false;
 	VisorMesh->RelativeRotation = FRotator(1.9f, -19.19f, 5.2f);
 	VisorMesh->RelativeLocation = FVector(-0.5f, -4.4f, -155.7f);
-
-
-
-
-
-	// Create a gun mesh component
-	//FP_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FP_Gun"));
-	//FP_Gun->SetOnlyOwnerSee(true);			// only the owning player will see this mesh
-	//FP_Gun->bCastDynamicShadow = false;
-	//FP_Gun->CastShadow = false;
-	//// FP_Gun->SetupAttachment(Mesh1P, TEXT("GripPoint"));
-	//FP_Gun->SetupAttachment(RootComponent);
-
-	//FP_MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));
-	//FP_MuzzleLocation->SetupAttachment(FP_Gun);
-	//FP_MuzzleLocation->SetRelativeLocation(FVector(0.2f, 48.4f, -10.6f));
-
-	// Default offset from the character location for projectiles to spawn
-	GunOffset = FVector(100.0f, 0.0f, 10.0f);
-
 }
 
 void APlayerCharacter::BeginPlay() {
 	Super::BeginPlay();
 
-	//IUseableWeapon* WeaponStats
-	//WeaponStatsReference = NewObject<UDC17mBlaster>(this);
-	//WeaponStatsObject = WeaponStatsReference.GetObject();
-	//WeaponStatsInterface = Cast<IUseableWeapon>(WeaponStatsObject);
-	//if (WeaponStatsObject) {
-	//	CurrentAmmo = WeaponStatsInterface->Execute_GetMaxAmmo(WeaponStatsObject);
-	//	CurrentMagAmmo = WeaponStatsInterface->Execute_GetMagSize(WeaponStatsObject);
-	//}
+	// Can't get DataTables to work properly without crashing sometimes
+	/*
 	WeaponStats = NewObject<UDC17mBlasterStats>(this);
-	//WeaponStatsObject = WeaponStatsReference.GetObject();
 	if (WeaponStats) {
 		CurrentAmmo = WeaponStats->GetMaxAmmo();
 		CurrentMagAmmo = WeaponStats->GetMagSize();
 	}
-
-	TArray<class UMaterialInterface*> materials = Mesh1P->GetMaterials();
-	if (materials[0] != nullptr) {
-		AmmoDigit100 = UMaterialInstanceDynamic::Create(materials[0], this);
-		if (AmmoDigit100 != NULL) {
-			Mesh1P->SetMaterial(0, AmmoDigit100);
-		}
-	}
-	if (materials[1] != nullptr) {
-		AmmoDigit10 = UMaterialInstanceDynamic::Create(materials[1], this);
-		if (AmmoDigit10 != NULL) {
-			Mesh1P->SetMaterial(1, AmmoDigit10);
-		}
-	}
-	if (materials[5] != nullptr) {
-		AmmoDigit1 = UMaterialInstanceDynamic::Create(materials[5], this);
-		if (AmmoDigit1 != NULL) {
-			Mesh1P->SetMaterial(5, AmmoDigit1);
-		}
-	}
-	if (materials[2] != nullptr) {
-		AmmoChargeMag = UMaterialInstanceDynamic::Create(materials[2], this);
-		if (AmmoChargeMag != NULL) {
-			Mesh1P->SetMaterial(2, AmmoChargeMag);
-		}
-	}
-
-	UpdateAmmoMaterials();
+	*/
 
 	UMaterialInterface* VisorMaterial = VisorMesh->GetMaterial(0);
 	if (VisorMaterial) {
@@ -128,123 +70,17 @@ void APlayerCharacter::Tick(float DeltaTime) {
 	}
 }
 
-void APlayerCharacter::OnFire() {
-	if (!bIsFiring || isMagEmpty()) {
-		OnFireReleased();
-		return;
+void APlayerCharacter::ReloadAmmoCount() {
+	UPlayerMeshComponent* ActiveMesh = GetActivePlayerMeshComponent();
+	if (ActiveMesh->IsA(UPlayerWeaponMeshComponent::StaticClass())) {
+		Cast<UPlayerWeaponMeshComponent>(ActiveMesh)->ReloadAmmoCount();
 	}
-
-	Super::OnFire();
-
-	// try and play a firing animation if specified
-	if (FireAnimation != NULL) {
-		// Get the animation object for the arms mesh
-		UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
-		if (AnimInstance != NULL) {
-			if (CurrentAmmo > 0) {
-				CurrentAmmo--;
-			} else {
-				CurrentAmmo = 0;
-			}
-			if (CurrentMagAmmo > 0) {
-				CurrentMagAmmo--;
-			} else {
-				CurrentMagAmmo = 0;
-			}
-			UpdateAmmoMaterials();
-
-			//if (WeaponStats) {
-			//	TSoftObjectPtr<UStaticMesh> ProjectileMeshPtr = WeaponStats->GetMesh();
-			//	UStaticMesh* ProjectileMesh = ProjectileMeshPtr.Get();
-			//	UClass* PClass = ProjectileMesh->GetClass();
-			//}
-			if (ProjectileClass != NULL) {
-				UWorld* const World = GetWorld();
-				if (World != NULL) {
-					FRotator SpawnRotation = GetControlRotation();
-					SpawnRotation.Add(-2.f, -.3f, 0.f);
-					const FTransform MuzzleTransform = Mesh1P->GetBoneTransform(Mesh1P->GetBoneIndex(TEXT("muzzle")));
-					const FVector SpawnLocation = MuzzleTransform.GetLocation();
-
-					FActorSpawnParameters ActorSpawnParams;
-					ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-
-					AFPSProjectile* SpawnedProjectile = World->SpawnActor<AFPSProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
-					if (SpawnedProjectile) {
-						SpawnedProjectile->SetProjectileOwner(this);
-						SpawnedProjectile->SetDamage(WeaponStats->GetDamage());
-						SpawnedProjectile->SetDamageType(WeaponStats->GetDamageType());
-					}
-				}
-			}
-		}
-	}
-}
-
-bool APlayerCharacter::isMagEmpty() {
-	return CurrentMagAmmo <= 0;
-}
-
-void APlayerCharacter::UpdateAmmoMaterials() {
-	UE_LOG(LogTemp, Warning, TEXT("CurrentAmmo: %d"), CurrentAmmo);
-	UE_LOG(LogTemp, Warning, TEXT("CurrentMagAmmo: %d"), CurrentMagAmmo);
-	if (AmmoDigit100 != nullptr) {
-		if (CurrentAmmo >= 100) {
-			AmmoDigit100->SetVectorParameterValue("Value", FLinearColor((CurrentAmmo / 100) % 10, 0, 0));
-		} else {
-			AmmoDigit100->SetVectorParameterValue("Value", FLinearColor(0, 0, 0));
-		}
-	}
-	if (AmmoDigit10 != nullptr) {
-		if (CurrentAmmo >= 10) {
-			AmmoDigit10->SetVectorParameterValue("Value", FLinearColor((CurrentAmmo / 10) % 10, 0, 0));
-		} else {
-			AmmoDigit10->SetVectorParameterValue("Value", FLinearColor(0, 0, 0));
-		}
-	}
-	if (AmmoDigit1 != nullptr) {
-		AmmoDigit1->SetVectorParameterValue("Value", FLinearColor(CurrentAmmo % 10, 0, 0));
-	}
-	if (AmmoChargeMag != nullptr) {
-		if (CurrentMagAmmo == MaxMagAmmo) {
-			AmmoChargeMag->SetVectorParameterValue("Value", FLinearColor(21, 0, 0));
-		} else {
-			AmmoChargeMag->SetVectorParameterValue("Value", FLinearColor(FMath::CeilToInt(CurrentMagAmmo / 3.f), 0, 0));
-		}
-	}
-}
-
-void APlayerCharacter::ReloadAmmo() {
-	UE_LOG(LogTemp, Log, TEXT("ReloadAmmo"));
-	CurrentMagAmmo = MaxMagAmmo;
-	UpdateAmmoMaterials();
 }
 
 void APlayerCharacter::OnReload() {
-	if (CurrentAmmo <= 0 || CurrentMagAmmo == MaxMagAmmo) {
-		return;
-	}
-
-	// try and play the sound if specified
-	if (ReloadSound != NULL) {
-		UGameplayStatics::PlaySoundAtLocation(this, ReloadSound, GetActorLocation());
-	}
-
-	// try and play a firing animation if specified
-	if (ReloadAnimation != NULL) {
-		// Get the animation object for the arms mesh
-		UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
-		if (AnimInstance != NULL) {
-			if (AnimInstance->GetCurrentActiveMontage() == NULL) {
-				AnimInstance->Montage_Play(ReloadAnimation, 1.f);
-			}
-		}
-	}
-}
-
-void APlayerCharacter::GetDamage() {
-	if (WeaponStats) {
-		UE_LOG(LogTemp, Warning, TEXT("GetDamage: %d"), WeaponStats->GetDamage());
+	UPlayerMeshComponent* ActiveMesh = GetActivePlayerMeshComponent();
+	if (ActiveMesh->IsA(UPlayerWeaponMeshComponent::StaticClass())) {
+		Cast<UPlayerWeaponMeshComponent>(ActiveMesh)->TriggerReload();
 	}
 }
 

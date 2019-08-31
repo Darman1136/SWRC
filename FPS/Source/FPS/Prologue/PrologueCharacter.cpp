@@ -25,25 +25,17 @@
 #include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
 #include "AI/BasicAICharacter.h"
 #include "AI/BasicAIController.h"
+#include "Player/Mesh/PlayerBabyMeshComponent.h"
+#include "Player/Mesh/PlayerBoyMeshComponent.h"
 
 APrologueCharacter::APrologueCharacter() : Super() {
-	// Create a mesh component that will be used when being viewed from a '1st person' view (when controlling this pawn)
-	Mesh1P = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
-	Mesh1P->SetOnlyOwnerSee(true);
-	Mesh1P->SetupAttachment(FirstPersonCameraComponent);
-	Mesh1P->bCastDynamicShadow = false;
-	Mesh1P->CastShadow = false;
-	Mesh1P->RelativeRotation = FRotator(1.9f, -19.19f, 5.2f);
-	//Mesh1P->RelativeLocation = FVector(-0.5f, -4.4f, -155.7f);
-	Mesh1P->RelativeLocation = FVector(-0.5f, -4.4f, -0.f);
+	PlayerBabyMeshComponent = CreateDefaultSubobject<UPlayerBabyMeshComponent>(TEXT("PlayerBabyMesh"));
+	PlayerBabyMeshComponent->Initialize(this);
+	AddPlayerMesh(PlayerBabyMeshComponent->GetPlayerMeshType(), PlayerBabyMeshComponent, true);
 
-	VisorMeshBoy = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("VisorMeshBoy"));
-	VisorMeshBoy->SetOnlyOwnerSee(true);
-	VisorMeshBoy->SetupAttachment(FirstPersonCameraComponent);
-	VisorMeshBoy->bCastDynamicShadow = false;
-	VisorMeshBoy->CastShadow = false;
-	VisorMeshBoy->RelativeLocation = FVector(16.916187f, -0.115124f, -0.419205f);
-	VisorMeshBoy->RelativeScale3D = FVector(0.3f, 0.8f, 0.55f);
+	PlayerBoyMeshComponent = CreateDefaultSubobject<UPlayerBoyMeshComponent>(TEXT("PlayerBoyMesh"));
+	PlayerBoyMeshComponent->Initialize(this);
+	AddPlayerMesh(PlayerBoyMeshComponent->GetPlayerMeshType(), PlayerBoyMeshComponent, false);
 
 	VisorMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VisorMesh"));
 	VisorMesh->SetOnlyOwnerSee(true);
@@ -63,26 +55,11 @@ APrologueCharacter::APrologueCharacter() : Super() {
 	AmbientAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AmbientAudioComponent"));
 
 	MusicAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("MusicAudioComponent"));
-	
-	//// Create a gun mesh component
-	//FP_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FP_Gun"));
-	//FP_Gun->SetOnlyOwnerSee(true);			// only the owning player will see this mesh
-	//FP_Gun->bCastDynamicShadow = false;
-	//FP_Gun->CastShadow = false;
-	//// FP_Gun->SetupAttachment(Mesh1P, TEXT("GripPoint"));
-	//FP_Gun->SetupAttachment(RootComponent);
 
-	//FP_MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));
-	//FP_MuzzleLocation->SetupAttachment(FP_Gun);
-	//FP_MuzzleLocation->SetRelativeLocation(FVector(0.2f, 48.4f, -10.6f));
-
-	// Default offset from the character location for projectiles to spawn
-	GunOffset = FVector(100.0f, 0.0f, 10.0f);
 
 	PrimaryActorTick.bCanEverTick = true;
 
 	/* ignore collisions with trace channel "LookAtTraceChannel" defined by the editor in the DefaultEngine.ini */
-	Mesh1P->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel2, ECollisionResponse::ECR_Ignore);
 	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel2, ECollisionResponse::ECR_Ignore);
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel2, ECollisionResponse::ECR_Ignore);
 }
@@ -115,8 +92,8 @@ void APrologueCharacter::Tick(float DeltaTime) {
 }
 
 void APrologueCharacter::SendLookRay() {
-	AController* Controller = GetController();
-	if (Controller) {
+	AController* CurrentController = GetController();
+	if (CurrentController) {
 		FVector CameraLocation = CameraManager->GetCameraLocation();
 		FVector ForwardVector = CameraManager->GetActorForwardVector();
 		ForwardVector *= 600;
@@ -128,8 +105,7 @@ void APrologueCharacter::SendLookRay() {
 		GetWorld()->LineTraceSingleByChannel(LookTraceResult, CameraLocation, LookTraceVector, /* LookAtTraceChannel defined by the editor in the DefaultEngine.ini */ ECollisionChannel::ECC_GameTraceChannel2);
 		if (LookTraceResult.bBlockingHit && LookTraceResult.GetActor()) {
 			AActor* HitActor = LookTraceResult.GetActor();
-			UE_LOG(LogTemp, Warning, TEXT("Trace %s"),
-				*HitActor->GetName());
+			// UE_LOG(LogTemp, Warning, TEXT("Trace %s"), *HitActor->GetName());
 			if (HitActor->IsA(ABasicAICharacter::StaticClass())) {
 				ABasicAICharacter* BasicAICharacter = Cast<ABasicAICharacter>(HitActor);
 				ABasicAIController* BasicAIController = BasicAICharacter->GetCastedController<ABasicAIController>();
@@ -139,26 +115,4 @@ void APrologueCharacter::SendLookRay() {
 	}
 }
 
-void APrologueCharacter::OnFire() {
-	Super::OnFire();
-}
-
-
-void APrologueCharacter::OnReload() {
-
-}
-
-void APrologueCharacter::SwitchToBoyMesh() {
-	Mesh1P->SetVisibility(false);
-	VisorMeshBoy->SetVisibility(true);
-}
-
-void APrologueCharacter::SwitchToVisorMesh() {
-	VisorMeshBoy->SetVisibility(false);
-	VisorMesh->SetVisibility(true);
-}
-
-void APrologueCharacter::SwitchToTrainingMesh() {
-	Mesh1P->SetVisibility(false);
-	VisorMeshBoy->SetVisibility(false);
-}
+void APrologueCharacter::OnReload() {}

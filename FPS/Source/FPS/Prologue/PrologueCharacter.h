@@ -19,18 +19,7 @@ class FPS_API APrologueCharacter : public AFPSCharacter {
 public:
 	APrologueCharacter();
 
-	void OnFire() override;
-
 	void OnReload() override;
-
-	UFUNCTION(BlueprintCallable, Category = "Mesh")
-		void SwitchToBoyMesh();
-
-	UFUNCTION(BlueprintCallable, Category = "Mesh")
-		void SwitchToVisorMesh();
-
-	UFUNCTION(BlueprintCallable, Category = "Mesh")
-		void SwitchToTrainingMesh();
 
 	UFUNCTION(BlueprintPure, Category = "Speech|Audio")
 		UAudioComponent* GetSpeechAudioComponent() { return SpeechAudioComponent; }
@@ -52,9 +41,6 @@ private:
 	void SendLookRay();
 
 protected:
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-		class USkeletalMeshComponent* VisorMeshBoy;
-
 	UPROPERTY(VisibleDefaultsOnly, Category = "Speech|Audio")
 		class UAudioComponent* SpeechAudioComponent;
 
@@ -64,6 +50,13 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Music|Audio")
 		class UAudioComponent* MusicAudioComponent;
 
+	UPROPERTY(EditAnywhere, Category = "Mesh|Player|Baby")
+		class UPlayerBabyMeshComponent* PlayerBabyMeshComponent;
+
+	UPROPERTY(EditAnywhere, Category = "Mesh|Player|Boy")
+		class UPlayerBoyMeshComponent* PlayerBoyMeshComponent;
+
 private:
 	APlayerCameraManager* CameraManager;
+
 };

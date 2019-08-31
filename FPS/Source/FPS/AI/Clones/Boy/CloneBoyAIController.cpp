@@ -24,10 +24,7 @@ void ACloneBoyAIController::LookedAtByPlayer(AActor* PlayerActor) {
 			if (LookAtAnimation && LookAtAnimationLength > 0.f && LastTimeAnimationTriggered + LookAtAnimationLength < UGameplayStatics::GetRealTimeSeconds(GetWorld())) {
 				LastTimeAnimationTriggered = UGameplayStatics::GetRealTimeSeconds(GetWorld());
 				CloneBoyAICharacter->GetMesh()->PlayAnimation(LookAtAnimation, false);
-			} else {
-				UE_LOG(LogTemp, Error, TEXT("LookAtAnimation not set properly"));
-			}
-
+			} 
 		}
 	}
 	UE_LOG(LogTemp, Warning, TEXT("HE LOOKED AT ME! %s"), *PlayerActor->GetName());

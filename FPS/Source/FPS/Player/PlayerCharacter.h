@@ -17,44 +17,16 @@ class FPS_API APlayerCharacter : public AFPSCharacter {
 public:
 	APlayerCharacter();
 
-	void UpdateAmmoMaterials();
-
-	void ReloadAmmo();
-
-	void OnFire() override;
+	void ReloadAmmoCount();
 
 	void OnReload() override;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gun)
-		int MaxAmmo = 300;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gun)
-		int MaxMagAmmo = 60;
-
-	UPROPERTY(VisibleAnywhere, Category = Gun)
-		int CurrentAmmo;
-
-	UPROPERTY(VisibleAnywhere, Category = Gun)
-		int CurrentMagAmmo;
-
-	UPROPERTY(VisibleAnywhere, Category = Gun)
-		class UMaterialInstanceDynamic* AmmoDigit100;
-
-	UPROPERTY(VisibleAnywhere, Category = Gun)
-		class UMaterialInstanceDynamic* AmmoDigit10;
-
-	UPROPERTY(VisibleAnywhere, Category = Gun)
-		class UMaterialInstanceDynamic* AmmoDigit1;
-
-	UPROPERTY(VisibleAnywhere, Category = Gun)
-		class UMaterialInstanceDynamic* AmmoChargeMag;
-
 	//UPROPERTY(VisibleAnywhere, Category = Gun)
 	//	TScriptInterface<UUseableWeapon> WeaponStatsReference;
 	//UObject* WeaponStatsObject;
 	//IUseableWeapon* WeaponStatsInterface;
-	class UWeaponStats* WeaponStats;
+	// class UWeaponStats* WeaponStats;
 
 protected:
 	virtual void BeginPlay() override;
@@ -63,16 +35,15 @@ protected:
 
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 
-	bool isMagEmpty();
-
 	void StartWiper();
 
 	void PlayWiper(float DeltaTime);
 
 	void ResetWiper();
 
-private:
-	void GetDamage();
+protected:
+	UPROPERTY(EditAnywhere, Category = "Mesh|Player|DC17M")
+		class UPlayerDC17MMeshComponent* PlayerDC17MMeshComponent;
 
 private:
 	UMaterialInstanceDynamic* VisorMaterialInstance;

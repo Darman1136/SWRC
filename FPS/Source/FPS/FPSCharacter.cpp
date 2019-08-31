@@ -15,14 +15,14 @@
 #include <Runtime/Engine/Classes/Engine/Engine.h>
 #include "Engine/World.h"
 #include "TimerManager.h"
+#include "Player/PlayerMeshComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
 //////////////////////////////////////////////////////////////////////////
 // AFPSCharacter
 
-AFPSCharacter::AFPSCharacter() 
-{
+AFPSCharacter::AFPSCharacter() {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
 
@@ -35,27 +35,25 @@ AFPSCharacter::AFPSCharacter()
 	FirstPersonCameraComponent->SetupAttachment(GetCapsuleComponent());
 	FirstPersonCameraComponent->RelativeLocation = FVector(-39.56f, 1.75f, 64.f); // Position the camera
 	FirstPersonCameraComponent->bUsePawnControlRotation = true;
+	FirstPersonCameraComponent->ComponentTags.Add(FName("FirstPersonCameraComponent"));
 
 	// Uncomment the following line to turn motion controllers on by default:
 	//bUsingMotionControllers = true;
 }
 
-void AFPSCharacter::BeginPlay()
-{
+void AFPSCharacter::BeginPlay() {
 	// Call the base class  
 	Super::BeginPlay();
 
-	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
-	//FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
-
-	Mesh1P->SetHiddenInGame(false, true);
+	for (const TPair<EPlayerMeshType, UPlayerMeshComponent*>& PlayerMeshComponent : PlayerMeshComponentMap) {
+		PlayerMeshComponent.Value->InitializeBeginPlay();
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Input
 
-void AFPSCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
-{
+void AFPSCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) {
 	// set up gameplay key bindings
 	check(PlayerInputComponent);
 
@@ -69,9 +67,6 @@ void AFPSCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 
 	// Bind reload event
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AFPSCharacter::OnReload);
-
-	// Enable touchscreen input
-	EnableTouchscreenMovement(PlayerInputComponent);
 
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AFPSCharacter::OnResetVR);
 
@@ -88,156 +83,64 @@ void AFPSCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AFPSCharacter::LookUpAtRate);
 }
 
-void AFPSCharacter::OnResetVR()
-{
+void AFPSCharacter::OnResetVR() {
 	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
 }
 
-void AFPSCharacter::BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location)
-{
-	if (TouchItem.bIsPressed == true)
-	{
-		return;
-	}
-	if ((FingerIndex == TouchItem.FingerIndex) && (TouchItem.bMoved == false))
-	{
-		OnFire();
-	}
-	TouchItem.bIsPressed = true;
-	TouchItem.FingerIndex = FingerIndex;
-	TouchItem.Location = Location;
-	TouchItem.bMoved = false;
-}
-
-void AFPSCharacter::EndTouch(const ETouchIndex::Type FingerIndex, const FVector Location)
-{
-	if (TouchItem.bIsPressed == false)
-	{
-		return;
-	}
-	TouchItem.bIsPressed = false;
-}
-
-
-
-//Commenting this section out to be consistent with FPS BP template.
-//This allows the user to turn without using the right virtual joystick
-
-//void AFPSCharacter::TouchUpdate(const ETouchIndex::Type FingerIndex, const FVector Location)
-//{
-//	if ((TouchItem.bIsPressed == true) && (TouchItem.FingerIndex == FingerIndex))
-//	{
-//		if (TouchItem.bIsPressed)
-//		{
-//			if (GetWorld() != nullptr)
-//			{
-//				UGameViewportClient* ViewportClient = GetWorld()->GetGameViewport();
-//				if (ViewportClient != nullptr)
-//				{
-//					FVector MoveDelta = Location - TouchItem.Location;
-//					FVector2D ScreenSize;
-//					ViewportClient->GetViewportSize(ScreenSize);
-//					FVector2D ScaledDelta = FVector2D(MoveDelta.X, MoveDelta.Y) / ScreenSize;
-//					if (FMath::Abs(ScaledDelta.X) >= 4.0 / ScreenSize.X)
-//					{
-//						TouchItem.bMoved = true;
-//						float Value = ScaledDelta.X * BaseTurnRate;
-//						AddControllerYawInput(Value);
-//					}
-//					if (FMath::Abs(ScaledDelta.Y) >= 4.0 / ScreenSize.Y)
-//					{
-//						TouchItem.bMoved = true;
-//						float Value = ScaledDelta.Y * BaseTurnRate;
-//						AddControllerPitchInput(Value);
-//					}
-//					TouchItem.Location = Location;
-//				}
-//				TouchItem.Location = Location;
-//			}
-//		}
-//	}
-//}
-
-void AFPSCharacter::MoveForward(float Value)
-{
-	if (Value != 0.0f)
-	{
+void AFPSCharacter::MoveForward(float Value) {
+	if (Value != 0.0f) {
 		// add movement in that direction
 		AddMovementInput(GetActorForwardVector(), Value);
 	}
 }
 
-void AFPSCharacter::MoveRight(float Value)
-{
-	if (Value != 0.0f)
-	{
+void AFPSCharacter::MoveRight(float Value) {
+	if (Value != 0.0f) {
 		// add movement in that direction
 		AddMovementInput(GetActorRightVector(), Value);
 	}
 }
 
-void AFPSCharacter::TurnAtRate(float Rate)
-{
+void AFPSCharacter::TurnAtRate(float Rate) {
 	// calculate delta for this frame from the rate information
 	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
 }
 
-void AFPSCharacter::LookUpAtRate(float Rate)
-{
+void AFPSCharacter::LookUpAtRate(float Rate) {
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
 
-bool AFPSCharacter::EnableTouchscreenMovement(class UInputComponent* PlayerInputComponent)
-{
-	if (FPlatformMisc::SupportsTouchInput() || GetDefault<UInputSettings>()->bUseMouseForTouch)
-	{
-		PlayerInputComponent->BindTouch(EInputEvent::IE_Pressed, this, &AFPSCharacter::BeginTouch);
-		PlayerInputComponent->BindTouch(EInputEvent::IE_Released, this, &AFPSCharacter::EndTouch);
-
-		//Commenting this out to be more consistent with FPS BP template.
-		//PlayerInputComponent->BindTouch(EInputEvent::IE_Repeat, this, &AFPSCharacter::TouchUpdate);
-		return true;
-	}
-
-	return false;
-}
-
 void AFPSCharacter::OnFirePressed() {
-	bIsFiring = true;
-
-	if (!FMath::IsNearlyEqual(FireDelay, -1)) {
-		GetWorld()->GetTimerManager().SetTimer(FireTimeHandle, this, &AFPSCharacter::OnFire, FireDelay, true, 0.f);
-	}
-	else {
-		OnFire();
-	}
+	GetActivePlayerMeshComponent()->TriggerMainAction();
 }
 
 void AFPSCharacter::OnFireReleased() {
-	bIsFiring = false;
-	GetWorld()->GetTimerManager().ClearTimer(FireTimeHandle);
+	GetActivePlayerMeshComponent()->TriggerStopMainAction();
 }
 
-void AFPSCharacter::OnFire() {
-	if (!bIsFiring) {
-		OnFireReleased();
-		return;
-	}
+void AFPSCharacter::OnReload() {}
 
-	if (FireAnimation != NULL)
-	{
-		// Get the animation object for the arms mesh
-		UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
-		if (AnimInstance != NULL && AnimInstance->GetCurrentActiveMontage() == NULL)
-		{
-			AnimInstance->Montage_Play(FireAnimation, 1.f);
+void AFPSCharacter::ActivatePlayerMesh(EPlayerMeshType Type) {
+	if (PlayerMeshComponentMap.Contains(Type)) {
+		UPlayerMeshComponent* PlayerMeshComponent = PlayerMeshComponentMap.FindRef(Type);
+		if (ActivePlayerMeshComponent) {
+			ActivePlayerMeshComponent->Deactivate();
 		}
+		ActivePlayerMeshComponent = PlayerMeshComponent;
+		ActivePlayerMeshComponent->Activate();
+	} else if (Type == EPlayerMeshType::NONE) {
+		if (ActivePlayerMeshComponent) {
+			ActivePlayerMeshComponent->Deactivate();
+		}
+	} else {
+		UE_LOG(LogFPChar, Error, TEXT("Failed to switch mesh, missing EPlayerMeshType"))
 	}
 }
 
-
-void AFPSCharacter::OnReload() {
-
+void AFPSCharacter::AddPlayerMesh(EPlayerMeshType Type, UPlayerMeshComponent* PlayerMeshComponent, bool IsStartingMesh) {
+	PlayerMeshComponentMap.Add(Type, PlayerMeshComponent);
+	if (IsStartingMesh) {
+		ActivatePlayerMesh(Type);
+	}
 }
-

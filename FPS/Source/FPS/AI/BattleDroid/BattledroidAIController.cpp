@@ -19,11 +19,11 @@ ABattledroidAIController::ABattledroidAIController() : Super() {
 
 void ABattledroidAIController::BeginPlay() {
 	Super::BeginPlay();
-	APawn* Pawn = GetPawn();
-	if (Pawn->IsA(ABattledroidAICharacter::StaticClass())) {
-		ABattledroidAICharacter* Character = Cast<ABattledroidAICharacter>(Pawn);
-		if (Character) {
-			USkeletalMeshComponent* SMesh = Character->GetMesh();
+	APawn* CurrentPawn = GetPawn();
+	if (CurrentPawn->IsA(ABattledroidAICharacter::StaticClass())) {
+		ABattledroidAICharacter* CurrentCharacter = Cast<ABattledroidAICharacter>(CurrentPawn);
+		if (CurrentCharacter) {
+			USkeletalMeshComponent* SMesh = CurrentCharacter->GetMesh();
 			if (SMesh) {
 				UAnimInstance* AnimInstance = SMesh->GetAnimInstance();
 
@@ -32,7 +32,7 @@ void ABattledroidAIController::BeginPlay() {
 				}
 			}
 
-			CharacterMovementComponent = Cast<UCharacterMovementComponent>(Character->GetMovementComponent());
+			CharacterMovementComponent = Cast<UCharacterMovementComponent>(CurrentCharacter->GetMovementComponent());
 
 			BattleDroidStats = NewObject<UBattleDroidStats>(this);
 			if (BattleDroidStats) {
@@ -134,11 +134,11 @@ void ABattledroidAIController::OnDeath()
 	BattledroidAnimInstance->InAction = false;
 	if (DeathByHeadshot && FMath::RandRange(0.f, 1.f) < FreakOutByHeadshotChance) {
 		BattledroidAnimInstance->DeathByHeadshot = DeathByHeadshot;
-		APawn* Pawn = GetPawn();
-		if (Pawn->IsA(ABattledroidAICharacter::StaticClass())) {
-			ABattledroidAICharacter* Character = Cast<ABattledroidAICharacter>(Pawn);
-			if (Character) {
-				USkeletalMeshComponent* SMesh = Character->GetMesh();
+		APawn* CurrentPawn = GetPawn();
+		if (CurrentPawn->IsA(ABattledroidAICharacter::StaticClass())) {
+			ABattledroidAICharacter* CurrentCharacter = Cast<ABattledroidAICharacter>(CurrentPawn);
+			if (CurrentCharacter) {
+				USkeletalMeshComponent* SMesh = CurrentCharacter->GetMesh();
 				SMesh->HideBoneByName(BoneNameHead, EPhysBodyOp::PBO_Term);
 			}
 		}

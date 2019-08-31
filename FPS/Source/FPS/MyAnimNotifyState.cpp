@@ -8,11 +8,11 @@
 
 void UMyAnimNotifyState::NotifyBegin(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation, float TotalDuration)
 {
-	UWorld* world = MeshComp->GetWorld();
-	if (world != nullptr) {
-		ACharacter* player = UGameplayStatics::GetPlayerCharacter(world, 0);
-		if (player != nullptr && player->IsA(APlayerCharacter::StaticClass())) {
-			Cast<APlayerCharacter>(player)->ReloadAmmo();
+	UWorld* World = MeshComp->GetWorld();
+	if (World != nullptr) {
+		ACharacter* Player = UGameplayStatics::GetPlayerCharacter(World, 0);
+		if (Player != nullptr && Player->IsA(APlayerCharacter::StaticClass())) {
+			Cast<APlayerCharacter>(Player)->ReloadAmmoCount();
 		}
 	}
 }

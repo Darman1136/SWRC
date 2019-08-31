@@ -30,43 +30,34 @@ AFPSProjectile::AFPSProjectile() {
 	InitialLifeSpan = 3.0f;
 }
 
-void AFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
-{
+void AFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit) {
 	// Only add impulse and destroy projectile if we hit a physics
-	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL) && OtherComp->IsSimulatingPhysics())
-	{
+	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL) && OtherComp->IsSimulatingPhysics()) {
 		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
-
 		Destroy();
 	}
 }
 
-EWeaponDamageType AFPSProjectile::GetDamageType()
-{
+EWeaponDamageType AFPSProjectile::GetDamageType() {
 	return DamageType;
 }
 
-void AFPSProjectile::SetDamageType(EWeaponDamageType NewDamageType)
-{
+void AFPSProjectile::SetDamageType(EWeaponDamageType NewDamageType) {
 	DamageType = NewDamageType;
 }
 
-float AFPSProjectile::GetDamage()
-{
+float AFPSProjectile::GetDamage() {
 	return Damage;
 }
 
-void AFPSProjectile::SetDamage(float NewDamage)
-{
+void AFPSProjectile::SetDamage(float NewDamage) {
 	Damage = NewDamage;
 }
 
-AActor * AFPSProjectile::GetProjectileOwner()
-{
+AActor* AFPSProjectile::GetProjectileOwner() {
 	return ProjectileOwner;
 }
 
-void AFPSProjectile::SetProjectileOwner(AActor * NewOwner)
-{
+void AFPSProjectile::SetProjectileOwner(AActor* NewOwner) {
 	ProjectileOwner = NewOwner;
 }
