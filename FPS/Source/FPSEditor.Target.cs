@@ -9,5 +9,10 @@ public class FPSEditorTarget : TargetRules
 	{
 		Type = TargetType.Editor;
 		ExtraModuleNames.Add("FPS");
+        ExtraModuleNames.AddRange( 
+			new string[]
+			{
+				"SWRCEditor"
+			});
 	}
 }

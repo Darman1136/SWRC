@@ -10,11 +10,19 @@
 			"LoadingPhase": "Default",
 			"AdditionalDependencies": [
 				"Engine",
-				"CoreUObject",
 				"AIModule",
+				"CoreUObject"
+			]
+		},
+        {
+            "Name": "SWRCEditor",
+            "Type": "Editor",
+            "LoadingPhase":  "PostEngineInit",
+			"AdditionalDependencies": [
+				"Engine",
 				"AnimGraph"
 			]
-		}
+        }
 	],
 	"Plugins": [
 		{
