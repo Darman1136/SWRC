@@ -30,13 +30,9 @@ void UPlayerWeaponMeshComponent::TriggerStopMainAction() {
 	DoStopMainAction();
 }
 
-void UPlayerWeaponMeshComponent::DoMainAction() {
+void UPlayerWeaponMeshComponent::DoMainAction() {}
 
-}
-
-void UPlayerWeaponMeshComponent::DoStopMainAction() {
-	
-}
+void UPlayerWeaponMeshComponent::DoStopMainAction() {}
 
 void UPlayerWeaponMeshComponent::TriggerReload() {
 	DoReload();

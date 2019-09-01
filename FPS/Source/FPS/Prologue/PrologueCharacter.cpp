@@ -27,6 +27,7 @@
 #include "AI/BasicAIController.h"
 #include "Player/Mesh/PlayerBabyMeshComponent.h"
 #include "Player/Mesh/PlayerBoyMeshComponent.h"
+#include "Player/Mesh/PlayerHelmetMeshComponent.h"
 
 APrologueCharacter::APrologueCharacter() : Super() {
 	PlayerBabyMeshComponent = CreateDefaultSubobject<UPlayerBabyMeshComponent>(TEXT("PlayerBabyMesh"));
@@ -35,7 +36,11 @@ APrologueCharacter::APrologueCharacter() : Super() {
 
 	PlayerBoyMeshComponent = CreateDefaultSubobject<UPlayerBoyMeshComponent>(TEXT("PlayerBoyMesh"));
 	PlayerBoyMeshComponent->Initialize(this);
-	AddPlayerMesh(PlayerBoyMeshComponent->GetPlayerMeshType(), PlayerBoyMeshComponent, false);
+	AddPlayerMesh(PlayerBoyMeshComponent->GetPlayerMeshType(), PlayerBoyMeshComponent);
+
+	PlayerHelmetMeshComponent = CreateDefaultSubobject<UPlayerHelmetMeshComponent>(TEXT("PlayerHelmetMesh"));
+	PlayerHelmetMeshComponent->Initialize(this);
+	AddPlayerMesh(PlayerHelmetMeshComponent->GetPlayerMeshType(), PlayerHelmetMeshComponent);
 
 	VisorMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VisorMesh"));
 	VisorMesh->SetOnlyOwnerSee(true);
@@ -114,5 +119,3 @@ void APrologueCharacter::SendLookRay() {
 		}
 	}
 }
-
-void APrologueCharacter::OnReload() {}

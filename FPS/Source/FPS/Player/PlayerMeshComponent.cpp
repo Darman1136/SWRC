@@ -35,11 +35,15 @@ void UPlayerMeshComponent::Deactivate() {
 	SetVisibility(false);
 }
 
-void UPlayerMeshComponent::TriggerMainAction() {}
+void UPlayerMeshComponent::TriggerMainAction() {
+	DoMainAction();
+}
 
 void UPlayerMeshComponent::DoMainAction() {}
 
-void UPlayerMeshComponent::TriggerStopMainAction() {}
+void UPlayerMeshComponent::TriggerStopMainAction() {
+	DoStopMainAction();
+}
 
 void UPlayerMeshComponent::DoStopMainAction() {}
 

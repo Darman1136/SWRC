@@ -112,14 +112,27 @@ void AFPSCharacter::LookUpAtRate(float Rate) {
 }
 
 void AFPSCharacter::OnFirePressed() {
+	if (!IsPlayerInputEnabled()) {
+		return;
+	}
 	GetActivePlayerMeshComponent()->TriggerMainAction();
 }
 
 void AFPSCharacter::OnFireReleased() {
+	if (!IsPlayerInputEnabled()) {
+		return;
+	}
 	GetActivePlayerMeshComponent()->TriggerStopMainAction();
 }
 
-void AFPSCharacter::OnReload() {}
+void AFPSCharacter::OnReload() {
+	if (!IsPlayerInputEnabled()) {
+		return;
+	}
+	OnReloadInternal();
+}
+
+void AFPSCharacter::OnReloadInternal() {}
 
 void AFPSCharacter::ActivatePlayerMesh(EPlayerMeshType Type) {
 	if (PlayerMeshComponentMap.Contains(Type)) {
@@ -143,4 +156,8 @@ void AFPSCharacter::AddPlayerMesh(EPlayerMeshType Type, UPlayerMeshComponent* Pl
 	if (IsStartingMesh) {
 		ActivatePlayerMesh(Type);
 	}
+}
+
+void AFPSCharacter::SetPlayerInputEnabled(bool Enabled) {
+	PlayerInputEnabled = Enabled;
 }

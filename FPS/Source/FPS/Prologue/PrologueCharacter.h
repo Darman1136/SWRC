@@ -19,8 +19,6 @@ class FPS_API APrologueCharacter : public AFPSCharacter {
 public:
 	APrologueCharacter();
 
-	void OnReload() override;
-
 	UFUNCTION(BlueprintPure, Category = "Speech|Audio")
 		UAudioComponent* GetSpeechAudioComponent() { return SpeechAudioComponent; }
 
@@ -55,6 +53,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Mesh|Player|Boy")
 		class UPlayerBoyMeshComponent* PlayerBoyMeshComponent;
+
+	UPROPERTY(EditAnywhere, Category = "Mesh|Player|Helmet")
+		class UPlayerHelmetMeshComponent* PlayerHelmetMeshComponent;
 
 private:
 	APlayerCameraManager* CameraManager;

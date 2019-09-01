@@ -16,6 +16,4 @@ class FPS_API UPlayerBoyMeshComponent : public UPlayerMeshComponent
 
 public:
 	UPlayerBoyMeshComponent();
-
-	virtual void Initialize(AActor* CurrentParent) override;
 };

@@ -24,7 +24,3 @@ UPlayerBoyMeshComponent::UPlayerBoyMeshComponent() : Super() {
 	SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel2, ECollisionResponse::ECR_Ignore);
 
 }
-
-void UPlayerBoyMeshComponent::Initialize(AActor* CurrentParent) {
-	Super::Initialize(CurrentParent);
-}

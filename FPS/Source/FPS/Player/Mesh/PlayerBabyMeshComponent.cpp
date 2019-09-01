@@ -30,15 +30,6 @@ UPlayerBabyMeshComponent::UPlayerBabyMeshComponent() : Super() {
 	SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel2, ECollisionResponse::ECR_Ignore);
 }
 
-void UPlayerBabyMeshComponent::Initialize(AActor* CurrentParent) {
-	Super::Initialize(CurrentParent);
-}
-
-
-void UPlayerBabyMeshComponent::TriggerMainAction() {
-	DoMainAction();
-}
-
 void UPlayerBabyMeshComponent::DoMainAction() {
 	if (MainActionAnimation != NULL) {
 		UAnimInstance* AnimInstance = GetAnimInstance();

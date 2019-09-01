@@ -77,7 +77,7 @@ void APlayerCharacter::ReloadAmmoCount() {
 	}
 }
 
-void APlayerCharacter::OnReload() {
+void APlayerCharacter::OnReloadInternal() {
 	UPlayerMeshComponent* ActiveMesh = GetActivePlayerMeshComponent();
 	if (ActiveMesh->IsA(UPlayerWeaponMeshComponent::StaticClass())) {
 		Cast<UPlayerWeaponMeshComponent>(ActiveMesh)->TriggerReload();

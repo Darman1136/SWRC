@@ -23,7 +23,9 @@ public:
 	void OnFireReleased();
 
 	/** Reloads */
-	virtual void OnReload();
+	void OnReload();
+
+	virtual void OnReloadInternal();
 
 	/** Resets HMD orientation and position in VR. */
 	void OnResetVR();
@@ -46,9 +48,15 @@ public:
 	 */
 	void LookUpAtRate(float Rate);
 
-	FORCEINLINE class UPlayerMeshComponent* GetActivePlayerMeshComponent() const { return ActivePlayerMeshComponent; }
+	UFUNCTION(BlueprintCallable)
+		void SetPlayerInputEnabled(bool Enabled);
 
-	FORCEINLINE class UStaticMeshComponent* GetVisorMesh() const { return VisorMesh; }
+	FORCEINLINE bool IsPlayerInputEnabled() const { return PlayerInputEnabled; };
+
+	UFUNCTION(BlueprintPure, Category = "Player|Mesh")
+		FORCEINLINE class UPlayerMeshComponent* GetActivePlayerMeshComponent() const { return ActivePlayerMeshComponent; }
+	UFUNCTION(BlueprintPure, Category = "Player|Mesh")
+		FORCEINLINE class UStaticMeshComponent* GetVisorMesh() const { return VisorMesh; }
 	/** Returns FirstPersonCameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
@@ -71,7 +79,7 @@ protected:
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 
 	UFUNCTION(BlueprintCallable, Category = "Mesh|Player")
-	void ActivatePlayerMesh(EPlayerMeshType Type);
+		void ActivatePlayerMesh(EPlayerMeshType Type);
 
 	void AddPlayerMesh(EPlayerMeshType Type, UPlayerMeshComponent* PlayerMeshComponent, bool IsStartingMesh = false);
 
@@ -90,6 +98,8 @@ private:
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 		class UPlayerMeshComponent* ActivePlayerMeshComponent;
+
+	bool PlayerInputEnabled = true;
 
 };
 

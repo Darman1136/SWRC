@@ -14,17 +14,17 @@ enum class EPlayerMeshType : uint8 {
 	NONE,
 	BABY,
 	BOY,
+	PROLOGUE_HELMET,
 	DC17M
 };
 
 /**
- * 
+ *
  */
 UCLASS()
-class FPS_API UPlayerMeshComponent : public USkeletalMeshComponent
-{
+class FPS_API UPlayerMeshComponent : public USkeletalMeshComponent {
 	GENERATED_BODY()
-	
+
 public:
 	// Sets default values for this actor's properties
 	UPlayerMeshComponent();
@@ -38,7 +38,8 @@ public:
 
 	void Deactivate();
 
-	virtual void TriggerMainAction();
+	UFUNCTION(BlueprintCallable)
+		virtual void TriggerMainAction();
 
 	virtual void TriggerStopMainAction();
 

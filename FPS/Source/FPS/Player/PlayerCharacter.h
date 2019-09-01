@@ -19,7 +19,7 @@ public:
 
 	void ReloadAmmoCount();
 
-	void OnReload() override;
+	void OnReloadInternal() override;
 
 public:
 	//UPROPERTY(VisibleAnywhere, Category = Gun)

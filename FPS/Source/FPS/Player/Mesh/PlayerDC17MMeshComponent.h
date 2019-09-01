@@ -38,6 +38,6 @@ public:
 
 	class UMaterialInstanceDynamic* AmmoChargeMag;
 
-	UPROPERTY(EditDefaultsOnly, Category = Projectile, meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditDefaultsOnly, Category = Projectile)
 		TSubclassOf<class AFPSProjectile> ProjectileClass;
 };
