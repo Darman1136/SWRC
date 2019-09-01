@@ -11,13 +11,13 @@ void AFightRoomActorAIController::BeginPlay() {
 void AFightRoomActorAIController::StartBehaviorTree() {
 	Super::StartBehaviorTree();
 
-	AActor* Pawn = GetPawn();
-	if (BehaviorTree && Pawn && Pawn->IsA(AFightRoomActorAICharacter::StaticClass())) {
-		AFightRoomActorAICharacter* Character = Cast<AFightRoomActorAICharacter>(Pawn);
+	AActor* CurrentPawn = GetPawn();
+	if (BehaviorTree && CurrentPawn && CurrentPawn->IsA(AFightRoomActorAICharacter::StaticClass())) {
+		AFightRoomActorAICharacter* CurrentCharacter = Cast<AFightRoomActorAICharacter>(CurrentPawn);
 
 		UBlackboardComponent* BlackboardComponent = GetBlackboardComponent();
 		if (BlackboardComponent != nullptr) {
-			BlackboardComponent->SetValueAsObject(TargetBlackboardKeyName, Character->GetAimTarget());
+			BlackboardComponent->SetValueAsObject(TargetBlackboardKeyName, CurrentCharacter->GetAimTarget());
 		}
 	}
 }

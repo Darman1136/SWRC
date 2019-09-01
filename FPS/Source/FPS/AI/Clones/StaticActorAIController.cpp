@@ -47,9 +47,9 @@ void AStaticActorAIController::PlayNextAnimation() {
 
 void AStaticActorAIController::PlayNextAnimationInternal(UAnimationAsset* Animation) {
 	if (Animation && PlayNext) {
-		AStaticActorAICharacter* Character = Cast<AStaticActorAICharacter>(GetPawn());
-		if (Character) {
-			Character->GetMesh()->PlayAnimation(Animation, false);
+		AStaticActorAICharacter* CurrentCharacter = Cast<AStaticActorAICharacter>(GetPawn());
+		if (CurrentCharacter) {
+			CurrentCharacter->GetMesh()->PlayAnimation(Animation, false);
 		}
 	}
 }

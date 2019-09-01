@@ -73,15 +73,13 @@ void ABattledroidAIController::Tick(float DeltaTime) {
 		if (FMath::IsNearlyEqual(Max, FMath::Abs(Norm.X))) {
 			BattledroidAnimInstance->WalkSpeed = Norm.X;
 			BattledroidAnimInstance->StrafeSpeed = 0.f;
-		}
-		else if (FMath::IsNearlyEqual(Max, FMath::Abs(Norm.Y))) {
+		} else if (FMath::IsNearlyEqual(Max, FMath::Abs(Norm.Y))) {
 			BattledroidAnimInstance->WalkSpeed = 0.f;
 			BattledroidAnimInstance->StrafeSpeed = Norm.Y;
 		}
 
 		// UE_LOG(LogTemp, Warning, TEXT("%s %s"), *FString::SanitizeFloat(BattledroidAnimInstance->WalkSpeed), *FString::SanitizeFloat(BattledroidAnimInstance->StrafeSpeed));
-	}
-	else {
+	} else {
 		BattledroidAnimInstance->IsWalking = false;
 	}
 
@@ -89,9 +87,8 @@ void ABattledroidAIController::Tick(float DeltaTime) {
 	BattledroidAnimInstance->InAction = InAction;
 }
 
-void ABattledroidAIController::TakeDamage(AActor * AttackingActor, EWeaponDamageType DamageType, float amount, const FHitResult & Hit)
-{
-	Super::TakeDamage(AttackingActor, DamageType, amount, Hit);
+void ABattledroidAIController::TakeDamageAI(AActor* AttackingActor, EWeaponDamageType DamageType, float amount, const FHitResult& Hit) {
+	Super::TakeDamageAI(AttackingActor, DamageType, amount, Hit);
 
 	DeathByHeadshot = GetTakenDamageAreaByBoneName(Hit.BoneName) == EDamageArea::DAHead;
 
@@ -102,31 +99,27 @@ void ABattledroidAIController::TakeDamage(AActor * AttackingActor, EWeaponDamage
 
 
 
-EDamageArea ABattledroidAIController::GetTakenDamageAreaByBoneName(FName Bone)
-{
+EDamageArea ABattledroidAIController::GetTakenDamageAreaByBoneName(FName Bone) {
 	if (Bone == BoneNameHead) {
 		return EDamageArea::DAHead;
 	}
 	return Super::GetTakenDamageAreaByBoneName(Bone);
 }
 
-float ABattledroidAIController::GetTakenDamageMultiplier(FName Bone)
-{
+float ABattledroidAIController::GetTakenDamageMultiplier(FName Bone) {
 	EDamageArea DamageArea = GetTakenDamageAreaByBoneName(Bone);
 
 	float Multiplier;
 	if (DamageArea == EDamageArea::DAHead) {
 		Multiplier = 2.f;
-	}
-	else {
+	} else {
 		Multiplier = Super::GetTakenDamageMultiplier(Bone);
 	}
 
 	return Multiplier;
 }
 
-void ABattledroidAIController::OnDeath()
-{
+void ABattledroidAIController::OnDeath() {
 	Super::OnDeath();
 	BattledroidAnimInstance->WalkSpeed = 0.f;
 	BattledroidAnimInstance->StrafeSpeed = 0.f;

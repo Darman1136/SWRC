@@ -138,13 +138,13 @@ void AFPSCharacter::ActivatePlayerMesh(EPlayerMeshType Type) {
 	if (PlayerMeshComponentMap.Contains(Type)) {
 		UPlayerMeshComponent* PlayerMeshComponent = PlayerMeshComponentMap.FindRef(Type);
 		if (ActivePlayerMeshComponent) {
-			ActivePlayerMeshComponent->Deactivate();
+			ActivePlayerMeshComponent->DeactivatePlayerMesh();
 		}
 		ActivePlayerMeshComponent = PlayerMeshComponent;
-		ActivePlayerMeshComponent->Activate();
+		ActivePlayerMeshComponent->ActivatePlayerMesh();
 	} else if (Type == EPlayerMeshType::NONE) {
 		if (ActivePlayerMeshComponent) {
-			ActivePlayerMeshComponent->Deactivate();
+			ActivePlayerMeshComponent->DeactivatePlayerMesh();
 		}
 	} else {
 		UE_LOG(LogFPChar, Error, TEXT("Failed to switch mesh, missing EPlayerMeshType"))

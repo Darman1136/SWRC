@@ -15,9 +15,9 @@ void ACloneBoyAIController::BeginPlay() {
 }
 
 void ACloneBoyAIController::LookedAtByPlayer(AActor* PlayerActor) {
-	APawn* Pawn = GetPawn();
-	if (Pawn->IsA(ACloneBoyAICharacter::StaticClass())) {
-		ACloneBoyAICharacter* CloneBoyAICharacter = Cast<ACloneBoyAICharacter>(Pawn);
+	APawn* CurrentPawn = GetPawn();
+	if (CurrentPawn->IsA(ACloneBoyAICharacter::StaticClass())) {
+		ACloneBoyAICharacter* CloneBoyAICharacter = Cast<ACloneBoyAICharacter>(CurrentPawn);
 		if (CloneBoyAICharacter) {
 			UAnimationAsset* LookAtAnimation = CloneBoyAICharacter->GetLookAtAnimation();
 			float LookAtAnimationLength = CloneBoyAICharacter->GetLookAtAnimationLength();

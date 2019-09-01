@@ -29,7 +29,7 @@ public:
 
 	int32 GetHealth();
 
-	virtual void TakeDamage(AActor* AttackingActor, EWeaponDamageType DamageType, float amount, const FHitResult& Hit);
+	virtual void TakeDamageAI(AActor* AttackingActor, EWeaponDamageType DamageType, float amount, const FHitResult& Hit);
 
 	virtual void LookedAtByPlayer(AActor* PlayerActor);
 

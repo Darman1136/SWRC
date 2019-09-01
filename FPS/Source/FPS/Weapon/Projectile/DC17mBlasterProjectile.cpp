@@ -33,8 +33,7 @@ ADC17mBlasterProjectile::ADC17mBlasterProjectile() : Super() {
 //	}
 //}
 
-void ADC17mBlasterProjectile::OnConstruction(const FTransform & Transform)
-{
+void ADC17mBlasterProjectile::OnConstruction(const FTransform& Transform) {
 	Super::OnConstruction(Transform);
 	UDC17mBlasterStats* WeaponStats = NewObject<UDC17mBlasterStats>(this);
 	if (WeaponStats && WeaponStats->GetMesh()) {
@@ -47,8 +46,7 @@ void ADC17mBlasterProjectile::OnConstruction(const FTransform & Transform)
 }
 
 void ADC17mBlasterProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit) {
-	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL))
-	{
+	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL)) {
 		if (OtherComp->IsSimulatingPhysics()) {
 			OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
 		}
@@ -56,7 +54,7 @@ void ADC17mBlasterProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherA
 		ABasicAICharacter* BasicAICharacter = Cast<ABasicAICharacter>(OtherActor);
 		if (BasicAICharacter) {
 			ABasicAIController* BasicAIController = BasicAICharacter->GetCastedController<ABasicAIController>();
-			BasicAIController->TakeDamage(GetProjectileOwner(), GetDamageType(), GetDamage(), Hit);
+			BasicAIController->TakeDamageAI(GetProjectileOwner(), GetDamageType(), GetDamage(), Hit);
 		}
 
 		if (ImpactGenericParticleSystem) {

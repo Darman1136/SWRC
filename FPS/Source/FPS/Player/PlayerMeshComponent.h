@@ -34,9 +34,9 @@ public:
 	virtual void InitializeBeginPlay();
 
 public:
-	void Activate();
+	void ActivatePlayerMesh();
 
-	void Deactivate();
+	void DeactivatePlayerMesh();
 
 	UFUNCTION(BlueprintCallable)
 		virtual void TriggerMainAction();

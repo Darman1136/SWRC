@@ -70,7 +70,7 @@ bool ACloneAICharacter::IsMagEmpty() {
 	return false;
 }
 
-float ACloneAICharacter::GetRandomDeviation(float Accuracy) {
-	float RandomDeviation = FMath::RandRange(0.f - (1.f - Accuracy), 0.f + 1.f - Accuracy);
+float ACloneAICharacter::GetRandomDeviation(float CurrentAccuracy) {
+	float RandomDeviation = FMath::RandRange(0.f - (1.f - CurrentAccuracy), 0.f + 1.f - CurrentAccuracy);
 	return MaxAccuracyDeviation * RandomDeviation;
 }

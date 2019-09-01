@@ -45,7 +45,7 @@ int32 ABasicAIController::GetHealth() {
 	return Health;
 }
 
-void ABasicAIController::TakeDamage(AActor* AttackingActor, EWeaponDamageType DamageType, float amount, const FHitResult& Hit) {
+void ABasicAIController::TakeDamageAI(AActor* AttackingActor, EWeaponDamageType DamageType, float amount, const FHitResult& Hit) {
 	EDamageArea DamageArea = GetTakenDamageAreaByBoneName(Hit.BoneName);
 
 	Health -= amount * GetTakenDamageMultiplier(Hit.BoneName);

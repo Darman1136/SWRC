@@ -11,8 +11,7 @@
  *
  */
 UCLASS()
-class FPS_API ABattledroidAIController : public ABasicAIController
-{
+class FPS_API ABattledroidAIController : public ABasicAIController {
 	GENERATED_BODY()
 
 public:
@@ -22,7 +21,7 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
-	virtual void TakeDamage(AActor* AttackingActor, EWeaponDamageType DamageType, float amount, const FHitResult& Hit) override;
+	virtual void TakeDamageAI(AActor* AttackingActor, EWeaponDamageType DamageType, float amount, const FHitResult& Hit) override;
 
 protected:
 	virtual EDamageArea GetTakenDamageAreaByBoneName(FName Bone) override;
