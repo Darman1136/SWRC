@@ -1,6 +1,6 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "4.22",
+	"EngineAssociation": "4.23",
 	"Category": "",
 	"Description": "",
 	"Modules": [
@@ -14,15 +14,15 @@
 				"CoreUObject"
 			]
 		},
-        {
-            "Name": "SWRCEditor",
-            "Type": "Editor",
-            "LoadingPhase":  "PostEngineInit",
+		{
+			"Name": "SWRCEditor",
+			"Type": "Editor",
+			"LoadingPhase": "PostEngineInit",
 			"AdditionalDependencies": [
 				"Engine",
 				"AnimGraph"
 			]
-        }
+		}
 	],
 	"Plugins": [
 		{
