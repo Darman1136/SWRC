@@ -38,10 +38,13 @@ void AFPSHUD::DrawHUD()
 void AFPSHUD::BeginPlay() {
 	Super::BeginPlay();
 
+	// temporarily disable crosshair
+	/*
 	if (CrosshairWidgetClass) {
 		CrosshairWidget = CreateWidget<UUserWidget>(GetWorld(), CrosshairWidgetClass);
 		if (CrosshairWidget) {
 			CrosshairWidget->AddToViewport();
 		}
 	}
+	*/
 }

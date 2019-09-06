@@ -27,12 +27,12 @@ void UPlayerMeshComponent::Initialize(AActor* CurrentParent) {
 void UPlayerMeshComponent::InitializeBeginPlay() {}
 
 void UPlayerMeshComponent::ActivatePlayerMesh() {
-	SetVisibility(true);
+	SetVisibility(true, true);
 	ShowLoadAnimation();
 }
 
 void UPlayerMeshComponent::DeactivatePlayerMesh() {
-	SetVisibility(false);
+	SetVisibility(false, true);
 }
 
 void UPlayerMeshComponent::TriggerMainAction() {

@@ -38,7 +38,7 @@ void ADC17mBlasterProjectile::OnConstruction(const FTransform& Transform) {
 	UDC17mBlasterStats* WeaponStats = NewObject<UDC17mBlasterStats>(this);
 	if (WeaponStats && WeaponStats->GetMesh()) {
 		ProjectileMesh->SetStaticMesh(WeaponStats->GetMesh().Get());
-		ProjectileMesh->SetWorldScale3D(FVector(.05, .1, .05));
+		ProjectileMesh->SetWorldScale3D(FVector(.05, .5, .05));
 		ProjectileMesh->AddLocalRotation(FQuat(FVector(0.f, 0.f, 1.f), 1.5708f));
 
 		//ProjectileMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);

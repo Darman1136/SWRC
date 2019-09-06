@@ -122,7 +122,7 @@ void UPlayerDC17MMeshComponent::DoMainAction() {
 						SpawnedProjectile->SetProjectileOwner(Parent);
 						// TODO find a way to store gun values nicely (don't seem to get datatables to work right)
 						SpawnedProjectile->SetDamage(30);
-						SpawnedProjectile->SetDamageType(EWeaponDamageType::WDTBullet);
+						SpawnedProjectile->SetDamageType(EWeaponDamageType::WDTEnergy);
 					}
 				}
 			}

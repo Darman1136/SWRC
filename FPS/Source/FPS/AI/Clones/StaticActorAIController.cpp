@@ -41,8 +41,10 @@ void AStaticActorAIController::PlayNextAnimation() {
 	if (CurrentAnimationIndex >= AnimationCycle.Num() && LoopCustomAnimation) {
 		CurrentAnimationIndex = 0;
 	}
-	UAnimationAsset* Animation = AnimationCycle[CurrentAnimationIndex];
-	PlayNextAnimationInternal(Animation);
+	if (CurrentAnimationIndex < AnimationCycle.Num()) {
+		UAnimationAsset* Animation = AnimationCycle[CurrentAnimationIndex];
+		PlayNextAnimationInternal(Animation);
+	}
 }
 
 void AStaticActorAIController::PlayNextAnimationInternal(UAnimationAsset* Animation) {

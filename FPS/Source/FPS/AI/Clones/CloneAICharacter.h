@@ -56,5 +56,5 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = Projectile)
 		TSubclassOf<class AFPSProjectile> ProjectileClass;
 
-	class UWeaponStats* WeaponStats;
+	// class UWeaponStats* WeaponStats;
 };

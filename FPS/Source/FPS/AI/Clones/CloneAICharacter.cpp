@@ -21,7 +21,7 @@ ACloneAICharacter::ACloneAICharacter() {
 void ACloneAICharacter::BeginPlay() {
 	Super::BeginPlay();
 
-	WeaponStats = NewObject<UDC17mBlasterStats>(this);
+	// WeaponStats = NewObject<UDC17mBlasterStats>(this);
 }
 
 void ACloneAICharacter::OnFire() {
@@ -52,8 +52,8 @@ void ACloneAICharacter::OnFire() {
 					AFPSProjectile* SpawnedProjectile = World->SpawnActor<AFPSProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 					if (SpawnedProjectile) {
 						SpawnedProjectile->SetProjectileOwner(this);
-						SpawnedProjectile->SetDamage(WeaponStats->GetDamage());
-						SpawnedProjectile->SetDamageType(WeaponStats->GetDamageType());
+						SpawnedProjectile->SetDamage(30);
+						SpawnedProjectile->SetDamageType(EWeaponDamageType::WDTEnergy);
 					}
 				}
 			}
