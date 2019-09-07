@@ -1,0 +1,1 @@
+"D:/Programme/Epic Games/UE_4.22/Engine/Binaries/DotNET/UnrealBuildTool.exe" -2019 -projectfiles -project="D:/Games/UnrealEngine/git/SWRC/FPS/FPS.uproject" -game -engine -progress
