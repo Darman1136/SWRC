@@ -10,6 +10,10 @@
 #include "Weapon/Projectile/DamageAreaEnum.h"
 #include "BasicAICharacter.h"
 #include "FPS.h"
+#include "Components/CapsuleComponent.h"
+#include "Common/DismembermentActor.h"
+#include "Components/StaticMeshComponent.h"
+#include "Engine/World.h"
 
 const FName ABasicAIController::BKTarget = FName("Target");
 const FName ABasicAIController::BKTargetLocation = FName("TargetLocation");
@@ -46,11 +50,10 @@ int32 ABasicAIController::GetHealth() {
 }
 
 void ABasicAIController::TakeDamageAI(AActor* AttackingActor, EWeaponDamageType DamageType, float amount, const FHitResult& Hit) {
-	EDamageArea DamageArea = GetTakenDamageAreaByBoneName(Hit.BoneName);
-
 	Health -= amount * GetTakenDamageMultiplier(Hit.BoneName);
 	if (Health < 0) {
 		Health = 0;
+		OnDeath(Hit.BoneName);
 	}
 	// UE_LOG(LogTemp, Warning, TEXT("Health: %d, Type: %s, Amount: %f, Attacker: %s, Bone: %s, DamageAreaByBone: %s"), Health, *GETENUMSTRING("EWeaponDamageType", DamageType), amount, *AttackingActor->GetName(), *Hit.BoneName.ToString(), *GETENUMSTRING("EDamageArea", DamageArea));
 }
@@ -58,15 +61,57 @@ void ABasicAIController::TakeDamageAI(AActor* AttackingActor, EWeaponDamageType 
 void ABasicAIController::TurnHeadToObject(AActor* Actor) {
 }
 
-EDamageArea ABasicAIController::GetTakenDamageAreaByBoneName(FName Bone) {
-	return EDamageArea::DADefault;
-}
-
 float ABasicAIController::GetTakenDamageMultiplier(FName Bone) {
+	if (!Bone.IsNone()) {
+		if (HitBoneToDamageMultiplierMap.Contains(Bone)) {
+			return HitBoneToDamageMultiplierMap.FindRef(Bone);
+		}
+	}
 	return 1.f;
 }
 
-void ABasicAIController::OnDeath() {
+void ABasicAIController::OnDeath(FName Bone) {
+	APawn* CurrentPawn = GetPawn();
+	if (CurrentPawn->IsA(ABasicAICharacter::StaticClass())) {
+		ABasicAICharacter* CurrentCharacter = Cast<ABasicAICharacter>(CurrentPawn);
+		CurrentCharacter->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+	if (!Bone.IsNone()) {
+		if (HitBoneToSpawnBoneMap.Contains(Bone)) {
+			FName SpawnBone = HitBoneToSpawnBoneMap.FindRef(Bone);
+			if (!SpawnBone.IsNone() && SpawnBoneToStaticMeshMap.Contains(SpawnBone) && SpawnBoneToSpawnChanceMap.Contains(SpawnBone)) {
+				float SpawnChance = SpawnBoneToSpawnChanceMap.FindRef(SpawnBone);
+				if (SpawnChance >= FMath::RandRange(0.f, 1.f)) {
+					Dismember(SpawnBone, SpawnBoneToStaticMeshMap.FindRef(SpawnBone));
+				}
+			}
+		}
+	}
+	if (FAIDeath_OnDeath.IsBound()) {
+		FAIDeath_OnDeath.Broadcast();
+	}
+}
+
+void ABasicAIController::Dismember(FName Bone, UStaticMesh* MeshToSpawn) {
+	APawn* CurrentPawn = GetPawn();
+	if (CurrentPawn->IsA(ABasicAICharacter::StaticClass())) {
+		ABasicAICharacter* CurrentCharacter = Cast<ABasicAICharacter>(CurrentPawn);
+		if (CurrentCharacter) {
+			USkeletalMeshComponent* SMesh = CurrentCharacter->GetMesh();
+			SMesh->HideBoneByName(Bone, EPhysBodyOp::PBO_Term);
+
+
+			FTransform SocketTransform = SMesh->GetSocketTransform(FName(*(Bone.ToString() + "Socket")));
+			
+			FActorSpawnParameters ActorSpawnParams;
+			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+			ActorSpawnParams.Owner = CurrentCharacter;
+			ADismembermentActor* SpawnedActor = GetWorld()->SpawnActor<ADismembermentActor>( ADismembermentActor::StaticClass(), SocketTransform.GetLocation(), FRotator(SocketTransform.GetRotation()), ActorSpawnParams);
+			if (SpawnedActor) {
+				SpawnedActor->GetStaticMesh()->SetStaticMesh(MeshToSpawn);
+			}
+		}
+	}
 }
 
 void ABasicAIController::LookedAtByPlayer(AActor* PlayerActor) {

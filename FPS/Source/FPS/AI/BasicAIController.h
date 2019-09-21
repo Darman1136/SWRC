@@ -11,6 +11,9 @@
 #include "Weapon/Projectile/DamageAreaEnum.h"
 #include "BasicAIController.generated.h"
 
+/* Broadcasts on death of this AI */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAIDeath);
+
 /**
  *
  */
@@ -35,14 +38,17 @@ public:
 
 	virtual void StartBehaviorTree();
 
+	UPROPERTY(BlueprintAssignable)
+		FAIDeath FAIDeath_OnDeath;
+
 protected:
 	virtual void TurnHeadToObject(AActor* Actor);
 
-	virtual EDamageArea GetTakenDamageAreaByBoneName(FName Bone);
-
 	virtual float GetTakenDamageMultiplier(FName Bone);
 
-	virtual void OnDeath();
+	virtual void OnDeath(FName Bone);
+
+	virtual void Dismember(FName Bone, UStaticMesh* MeshToSpawn);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = AI)
@@ -67,6 +73,18 @@ private:
 public:
 	static const FName BKTarget;
 	static const FName BKTargetLocation;
+	
+	UPROPERTY(EditAnywhere, Category = Dismemberment)
+		TMap<FName, FName> HitBoneToSpawnBoneMap;
 
+	UPROPERTY(EditAnywhere, Category = Dismemberment)
+		TMap<FName, UStaticMesh*> SpawnBoneToStaticMeshMap;
+
+	/* Chance to dismember and spawn the mesh. 0.f to 1.f */
+	UPROPERTY(EditAnywhere, Category = Dismemberment)
+		TMap<FName, float> SpawnBoneToSpawnChanceMap;
+
+	UPROPERTY(EditAnywhere, Category = Damage)
+		TMap<FName, float> HitBoneToDamageMultiplierMap;
 };
 

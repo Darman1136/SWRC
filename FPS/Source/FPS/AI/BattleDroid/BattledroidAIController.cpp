@@ -10,7 +10,6 @@
 #include "Data/EnemyStats/BattleDroidStats.h"
 #include "Weapon/Projectile/DamageAreaEnum.h"
 
-const FName ABattledroidAIController::BoneNameHead = FName("Head");
 const float ABattledroidAIController::FreakOutByHeadshotChance = 0.07f;
 
 ABattledroidAIController::ABattledroidAIController() : Super() {
@@ -89,52 +88,28 @@ void ABattledroidAIController::Tick(float DeltaTime) {
 
 void ABattledroidAIController::TakeDamageAI(AActor* AttackingActor, EWeaponDamageType DamageType, float amount, const FHitResult& Hit) {
 	Super::TakeDamageAI(AttackingActor, DamageType, amount, Hit);
-
-	DeathByHeadshot = GetTakenDamageAreaByBoneName(Hit.BoneName) == EDamageArea::DAHead;
-
-	if (Health == 0) {
-		OnDeath();
-	}
 }
 
-
-
-EDamageArea ABattledroidAIController::GetTakenDamageAreaByBoneName(FName Bone) {
-	if (Bone == BoneNameHead) {
-		return EDamageArea::DAHead;
-	}
-	return Super::GetTakenDamageAreaByBoneName(Bone);
-}
-
-float ABattledroidAIController::GetTakenDamageMultiplier(FName Bone) {
-	EDamageArea DamageArea = GetTakenDamageAreaByBoneName(Bone);
-
-	float Multiplier;
-	if (DamageArea == EDamageArea::DAHead) {
-		Multiplier = 2.f;
-	} else {
-		Multiplier = Super::GetTakenDamageMultiplier(Bone);
-	}
-
-	return Multiplier;
-}
-
-void ABattledroidAIController::OnDeath() {
-	Super::OnDeath();
+void ABattledroidAIController::OnDeath(FName Bone) {
+	Super::OnDeath(Bone);
 	BattledroidAnimInstance->WalkSpeed = 0.f;
 	BattledroidAnimInstance->StrafeSpeed = 0.f;
 	BattledroidAnimInstance->IsWalking = false;
 	BattledroidAnimInstance->InAction = false;
-	if (DeathByHeadshot && FMath::RandRange(0.f, 1.f) < FreakOutByHeadshotChance) {
-		BattledroidAnimInstance->DeathByHeadshot = DeathByHeadshot;
-		APawn* CurrentPawn = GetPawn();
-		if (CurrentPawn->IsA(ABattledroidAICharacter::StaticClass())) {
-			ABattledroidAICharacter* CurrentCharacter = Cast<ABattledroidAICharacter>(CurrentPawn);
-			if (CurrentCharacter) {
-				USkeletalMeshComponent* SMesh = CurrentCharacter->GetMesh();
-				SMesh->HideBoneByName(BoneNameHead, EPhysBodyOp::PBO_Term);
-			}
-		}
-	}
+
+	//if (DeathByHeadshot && FMath::RandRange(0.f, 1.f) < FreakOutByHeadshotChance) {
+	//	BattledroidAnimInstance->DeathByHeadshot = DeathByHeadshot;
+	//	APawn* CurrentPawn = GetPawn();
+	//	if (CurrentPawn->IsA(ABattledroidAICharacter::StaticClass())) {
+	//		ABattledroidAICharacter* CurrentCharacter = Cast<ABattledroidAICharacter>(CurrentPawn);
+	//		if (CurrentCharacter) {
+	//			USkeletalMeshComponent* SMesh = CurrentCharacter->GetMesh();
+	//			SMesh->HideBoneByName(BoneNameNeck, EPhysBodyOp::PBO_Term);
+	//			if (FAIDismembered_OnDismember.IsBound()) {
+	//				FAIDismembered_OnDismember.Broadcast();
+	//			}
+	//		}
+	//	}
+	//}
 	BattledroidAnimInstance->Alive = false;
 }

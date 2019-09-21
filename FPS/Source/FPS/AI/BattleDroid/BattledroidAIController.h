@@ -24,11 +24,7 @@ public:
 	virtual void TakeDamageAI(AActor* AttackingActor, EWeaponDamageType DamageType, float amount, const FHitResult& Hit) override;
 
 protected:
-	virtual EDamageArea GetTakenDamageAreaByBoneName(FName Bone) override;
-
-	virtual float GetTakenDamageMultiplier(FName Bone) override;
-
-	virtual void OnDeath() override;
+	virtual void OnDeath(FName Bone) override;
 
 private:
 	class UBattledroidAnimInstance* BattledroidAnimInstance;
@@ -37,9 +33,5 @@ private:
 
 	class UBattleDroidStats* BattleDroidStats;
 
-	bool DeathByHeadshot;
-
 	static const float FreakOutByHeadshotChance;
-
-	static const FName BoneNameHead;
 };
