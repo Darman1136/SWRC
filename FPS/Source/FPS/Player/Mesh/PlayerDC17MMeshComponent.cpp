@@ -15,6 +15,7 @@
 #include "Kismet/GameplayStatics.h"
 #include <EngineGlobals.h>
 #include "FPSProjectile.h"
+#include "DrawDebugHelpers.h"
 
 UPlayerDC17MMeshComponent::UPlayerDC17MMeshComponent() : Super() {
 	PlayerMeshType = EPlayerMeshType::BABY;
@@ -111,15 +112,14 @@ void UPlayerDC17MMeshComponent::DoMainAction() {
 				UWorld* const World = GetWorld();
 				if (World != NULL) {
 					FRotator SpawnRotation = GetComponentRotation();
-					const FTransform MuzzleTransform = GetBoneTransform(GetBoneIndex(TEXT("muzzle")));
-					// TODO instead of adding a spawn offset, the projectile should ignore the gun itself
-					const FVector SpawnLocation = MuzzleTransform.GetLocation() + ProjectileSpawnOffset * Camera->GetForwardVector();
+					const FTransform MuzzleTransform = GetSocketTransform(MuzzleSocketFName);
+					const FVector SpawnLocation = MuzzleTransform.GetLocation();
 					FActorSpawnParameters ActorSpawnParams;
 					ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+					ActorSpawnParams.Owner = Parent;
 
 					AFPSProjectile* SpawnedProjectile = World->SpawnActor<AFPSProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 					if (SpawnedProjectile) {
-						SpawnedProjectile->SetProjectileOwner(Parent);
 						// TODO find a way to store gun values nicely (don't seem to get datatables to work right)
 						SpawnedProjectile->SetDamage(30);
 						SpawnedProjectile->SetDamageType(EWeaponDamageType::WDTEnergy);

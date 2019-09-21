@@ -48,7 +48,6 @@ public:
 	FORCEINLINE bool IsVisiorEnabled() const { return VisiorEnabled; }
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	virtual void DoMainAction();

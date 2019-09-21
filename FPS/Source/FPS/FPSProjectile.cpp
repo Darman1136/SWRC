@@ -1,9 +1,9 @@
 // Copyright 1998-2018 Epic Games, Inc. All Rights Reserved.
 
 #include "FPSProjectile.h"
-#include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
 #include "Weapon/Projectile/WeaponDamageType.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 
 AFPSProjectile::AFPSProjectile() {
 	// Use a sphere as a simple collision representation
@@ -25,14 +25,19 @@ AFPSProjectile::AFPSProjectile() {
 	ProjectileMovement->InitialSpeed = 3000.f;
 	ProjectileMovement->MaxSpeed = 3000.f;
 	ProjectileMovement->bRotationFollowsVelocity = true;
+	
 
 	// Die after 3 seconds by default
 	InitialLifeSpan = 3.0f;
 }
 
+void AFPSProjectile::BeginPlay() {
+	Super::BeginPlay();
+	CollisionComp->IgnoreActorWhenMoving(GetOwner(), true);
+}
+
 void AFPSProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit) {
-	// Only add impulse and destroy projectile if we hit a physics
-	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL) && OtherComp->IsSimulatingPhysics()) {
+	if (OtherActor != GetOwner() && (OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL) && OtherComp->IsSimulatingPhysics()) {
 		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
 		Destroy();
 	}
@@ -52,12 +57,4 @@ float AFPSProjectile::GetDamage() {
 
 void AFPSProjectile::SetDamage(float NewDamage) {
 	Damage = NewDamage;
-}
-
-AActor* AFPSProjectile::GetProjectileOwner() {
-	return ProjectileOwner;
-}
-
-void AFPSProjectile::SetProjectileOwner(AActor* NewOwner) {
-	ProjectileOwner = NewOwner;
 }

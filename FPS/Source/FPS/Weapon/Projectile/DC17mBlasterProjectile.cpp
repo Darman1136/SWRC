@@ -21,32 +21,16 @@ ADC17mBlasterProjectile::ADC17mBlasterProjectile() : Super() {
 	CollisionComp->OnComponentHit.AddDynamic(this, &ADC17mBlasterProjectile::OnHit);
 }
 
-//void ADC17mBlasterProjectile::BeginPlay() {
-//	UDC17mBlasterStats* WeaponStats = NewObject<UDC17mBlasterStats>(this);
-//	if (WeaponStats && WeaponStats->GetMesh()) {
-//		ProjectileMesh->SetStaticMesh(WeaponStats->GetMesh().Get());
-//		ProjectileMesh->SetWorldScale3D(FVector(.05, .1, .05));
-//		ProjectileMesh->AddLocalRotation(FQuat(FVector(0.f, 0.f, 1.f), 1.5708f));
-//
-//		//ProjectileMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-//
-//	}
-//}
-
 void ADC17mBlasterProjectile::OnConstruction(const FTransform& Transform) {
 	Super::OnConstruction(Transform);
 	UDC17mBlasterStats* WeaponStats = NewObject<UDC17mBlasterStats>(this);
 	if (WeaponStats && WeaponStats->GetMesh()) {
 		ProjectileMesh->SetStaticMesh(WeaponStats->GetMesh().Get());
-		ProjectileMesh->SetWorldScale3D(FVector(.05, .5, .05));
-		ProjectileMesh->AddLocalRotation(FQuat(FVector(0.f, 0.f, 1.f), 1.5708f));
-
-		//ProjectileMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 }
 
 void ADC17mBlasterProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit) {
-	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL)) {
+	if ((GetOwner() != OtherActor) && (OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL)) {
 		if (OtherComp->IsSimulatingPhysics()) {
 			OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
 		}
@@ -54,7 +38,7 @@ void ADC17mBlasterProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherA
 		ABasicAICharacter* BasicAICharacter = Cast<ABasicAICharacter>(OtherActor);
 		if (BasicAICharacter) {
 			ABasicAIController* BasicAIController = BasicAICharacter->GetCastedController<ABasicAIController>();
-			BasicAIController->TakeDamageAI(GetProjectileOwner(), GetDamageType(), GetDamage(), Hit);
+			BasicAIController->TakeDamageAI(GetOwner(), GetDamageType(), GetDamage(), Hit);
 		}
 
 		if (ImpactGenericParticleSystem) {

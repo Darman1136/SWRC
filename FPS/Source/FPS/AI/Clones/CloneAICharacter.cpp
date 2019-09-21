@@ -41,17 +41,17 @@ void ACloneAICharacter::OnFire() {
 					FRotator SpawnRotation = GetControlRotation();
 					SpawnRotation.Add(-2.f, -.3f, 0.f);
 
-					
+
 					SpawnRotation.Add(GetRandomDeviation(Accuracy), GetRandomDeviation(Accuracy), GetRandomDeviation(Accuracy));
 					const FVector SpawnLocation = Muzzle->GetComponentLocation();
 
 					FActorSpawnParameters ActorSpawnParams;
-					// ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 					ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+					ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+					ActorSpawnParams.Owner = this;
 
 					AFPSProjectile* SpawnedProjectile = World->SpawnActor<AFPSProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 					if (SpawnedProjectile) {
-						SpawnedProjectile->SetProjectileOwner(this);
 						SpawnedProjectile->SetDamage(30);
 						SpawnedProjectile->SetDamageType(EWeaponDamageType::WDTEnergy);
 					}

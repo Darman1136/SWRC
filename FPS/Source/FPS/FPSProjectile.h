@@ -15,6 +15,8 @@ class AFPSProjectile : public AActor
 public:
 	AFPSProjectile();
 
+	virtual void BeginPlay() override;
+
 	/** called when projectile hits something */
 	UFUNCTION()
 		virtual void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
@@ -31,10 +33,6 @@ public:
 	float GetDamage();
 
 	void SetDamage(float Damage);
-
-	AActor* GetProjectileOwner();
-
-	void SetProjectileOwner(AActor* NewOwner);
 
 protected:
 	/** Sphere collision component */
