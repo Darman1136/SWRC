@@ -54,8 +54,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		class UAnimMontage* ReloadAnimation;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gun)
-		FVector ProjectileSpawnOffset;
+	UPROPERTY(EditDefaultsOnly, Category = MainAction)
+		FName MuzzleSocketFName = FName("muzzleSocket");
 
 private:
 	bool bIsFiring = false;

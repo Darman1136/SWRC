@@ -41,6 +41,4 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = Projectile)
 		TSubclassOf<class AFPSProjectile> ProjectileClass;
 
-	UPROPERTY(EditDefaultsOnly, Category = Projectile)
-		FName MuzzleSocketFName = FName("muzzleSocket");
 };
