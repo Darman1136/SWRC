@@ -28,7 +28,6 @@ void UPlayerMeshComponent::Initialize(AActor* CurrentParent) {
 void UPlayerMeshComponent::InitializeBeginPlay() {}
 
 bool UPlayerMeshComponent::ActivatePlayerMesh() {
-	SetVisibility(true, true);
 	return ShowLoadAnimation();
 }
 
@@ -54,9 +53,11 @@ bool UPlayerMeshComponent::ShowLoadAnimation() {
 		UAnimInstance* AnimInstance = GetAnimInstance();
 		if (AnimInstance != NULL) {
 			AnimInstance->Montage_Play(LoadAnimation, 1.f);
+			SetVisibility(true, true);
 			return true;
 		}
 	}
+	SetVisibility(true, true);
 	return false;
 }
 

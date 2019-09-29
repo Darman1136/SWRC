@@ -15,7 +15,8 @@ enum class EPlayerMeshType : uint8 {
 	BABY,
 	BOY,
 	PROLOGUE_HELMET,
-	DC17M
+	DC17M,
+	DC15S
 };
 
 /**

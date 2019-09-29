@@ -18,7 +18,7 @@
 #include "DrawDebugHelpers.h"
 
 UPlayerDC17MMeshComponent::UPlayerDC17MMeshComponent() : Super() {
-	PlayerMeshType = EPlayerMeshType::BABY;
+	PlayerMeshType = EPlayerMeshType::DC17M;
 	VisiorEnabled = false;
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>ActualSkeletalMesh(TEXT("SkeletalMesh'/Game/FirstPerson/Meshes/HUD/DC17mBlaster/dc17mBlaster_splitTextures.dc17mBlaster_splitTextures'"));

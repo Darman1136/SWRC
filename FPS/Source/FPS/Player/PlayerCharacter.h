@@ -45,6 +45,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Mesh|Player|DC17M")
 		class UPlayerDC17MMeshComponent* PlayerDC17MMeshComponent;
 
+	UPROPERTY(EditAnywhere, Category = "Mesh|Player|DC15S")
+		class UPlayerDC15SMeshComponent* PlayerDC15SMeshComponent;
+
 private:
 	UMaterialInstanceDynamic* VisorMaterialInstance;
 	float VisorWiperStartTime = -2.f;

@@ -17,6 +17,7 @@
 #include "Weapon/DC17mBlaster.h"
 #include "Data/DC17mBlasterStats.h"
 #include "Player/Mesh/PlayerDC17MMeshComponent.h"
+#include "Player/Mesh/PlayerDC15SMeshComponent.h"
 
 APlayerCharacter::APlayerCharacter() : Super() {
 	PrimaryActorTick.bCanEverTick = true;
@@ -24,6 +25,10 @@ APlayerCharacter::APlayerCharacter() : Super() {
 	PlayerDC17MMeshComponent = CreateDefaultSubobject<UPlayerDC17MMeshComponent>(TEXT("PlayerDC17MMesh"));
 	PlayerDC17MMeshComponent->Initialize(this);
 	AddPlayerMesh(PlayerDC17MMeshComponent->GetPlayerMeshType(), PlayerDC17MMeshComponent);
+
+	PlayerDC15SMeshComponent = CreateDefaultSubobject<UPlayerDC15SMeshComponent>(TEXT("PlayerDC15SMesh"));
+	PlayerDC15SMeshComponent->Initialize(this);
+	AddPlayerMesh(PlayerDC15SMeshComponent->GetPlayerMeshType(), PlayerDC15SMeshComponent);
 
 	VisorMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VisorMesh"));
 	VisorMesh->SetOnlyOwnerSee(true);

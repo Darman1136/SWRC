@@ -10,6 +10,7 @@
 
 class UInputComponent;
 
+DECLARE_DELEGATE_OneParam(FSwitchWeaponDelegate, EPlayerMeshType);
 
 UCLASS(abstract, config = Game)
 class AFPSCharacter : public ABasicCharacter {
@@ -86,6 +87,8 @@ protected:
 		void ActivatePlayerMesh(EPlayerMeshType Type);
 
 	void AddPlayerMesh(EPlayerMeshType Type, UPlayerMeshComponent* PlayerMeshComponent, bool IsStartingMesh = false);
+
+	void SwitchWeapon(EPlayerMeshType Type);
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)

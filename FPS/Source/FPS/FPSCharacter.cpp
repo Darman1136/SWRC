@@ -1,6 +1,7 @@
 // Copyright 1998-2018 Epic Games, Inc. All Rights Reserved.
 
 #include "FPSCharacter.h"
+#include "FPS.h"
 #include "FPSProjectile.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
@@ -67,6 +68,8 @@ void AFPSCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 
 	// Bind reload event
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AFPSCharacter::OnReload);
+	PlayerInputComponent->BindAction<FSwitchWeaponDelegate>("SwitchWeapon1", IE_Pressed, this, &AFPSCharacter::SwitchWeapon, EPlayerMeshType::DC15S);
+	PlayerInputComponent->BindAction<FSwitchWeaponDelegate>("SwitchWeapon2", IE_Pressed, this, &AFPSCharacter::SwitchWeapon, EPlayerMeshType::DC17M);
 
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AFPSCharacter::OnResetVR);
 
@@ -180,4 +183,11 @@ void AFPSCharacter::AddPlayerMesh(EPlayerMeshType Type, UPlayerMeshComponent* Pl
 
 void AFPSCharacter::SetPlayerInputEnabled(bool Enabled) {
 	PlayerInputEnabled = Enabled;
+}
+
+void AFPSCharacter::SwitchWeapon(EPlayerMeshType Type) {
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *GETENUMSTRING("EPlayerMeshType", Type));
+	if (IsPlayerInputEnabled()) {
+		ActivatePlayerMesh(Type);
+	}
 }
