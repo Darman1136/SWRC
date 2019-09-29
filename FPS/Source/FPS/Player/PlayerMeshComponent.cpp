@@ -2,6 +2,7 @@
 
 
 #include "PlayerMeshComponent.h"
+#include "Animation/AnimInstance.h"
 
 UPlayerMeshComponent::UPlayerMeshComponent() {
 	PlayerMeshType = EPlayerMeshType::NONE;
@@ -26,13 +27,13 @@ void UPlayerMeshComponent::Initialize(AActor* CurrentParent) {
 
 void UPlayerMeshComponent::InitializeBeginPlay() {}
 
-void UPlayerMeshComponent::ActivatePlayerMesh() {
+bool UPlayerMeshComponent::ActivatePlayerMesh() {
 	SetVisibility(true, true);
-	ShowLoadAnimation();
+	return ShowLoadAnimation();
 }
 
-void UPlayerMeshComponent::DeactivatePlayerMesh() {
-	SetVisibility(false, true);
+bool UPlayerMeshComponent::DeactivatePlayerMesh() {
+	return ShowHolsterAnimation();
 }
 
 void UPlayerMeshComponent::TriggerMainAction() {
@@ -47,7 +48,32 @@ void UPlayerMeshComponent::TriggerStopMainAction() {
 
 void UPlayerMeshComponent::DoStopMainAction() {}
 
-void UPlayerMeshComponent::ShowLoadAnimation() {}
+bool UPlayerMeshComponent::ShowLoadAnimation() {
+	if (LoadAnimation != NULL) {
+		// Get the animation object for the arms mesh
+		UAnimInstance* AnimInstance = GetAnimInstance();
+		if (AnimInstance != NULL) {
+			AnimInstance->Montage_Play(LoadAnimation, 1.f);
+			return true;
+		}
+	}
+	return false;
+}
 
-void UPlayerMeshComponent::ShowHolsterAnimation() {}
+void UPlayerMeshComponent::FinishLoadAnimation() {}
 
+bool UPlayerMeshComponent::ShowHolsterAnimation() {
+	if (HolsterAnimation != NULL) {
+		// Get the animation object for the arms mesh
+		UAnimInstance* AnimInstance = GetAnimInstance();
+		if (AnimInstance != NULL) {
+			AnimInstance->Montage_Play(HolsterAnimation, 1.f);
+			return true;
+		}
+	}
+	return false;
+}
+
+void UPlayerMeshComponent::FinishHolsterAnimation() {
+	SetVisibility(false, true);
+}

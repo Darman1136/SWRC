@@ -32,7 +32,7 @@
 APrologueCharacter::APrologueCharacter() : Super() {
 	PlayerBabyMeshComponent = CreateDefaultSubobject<UPlayerBabyMeshComponent>(TEXT("PlayerBabyMesh"));
 	PlayerBabyMeshComponent->Initialize(this);
-	AddPlayerMesh(PlayerBabyMeshComponent->GetPlayerMeshType(), PlayerBabyMeshComponent, true);
+	AddPlayerMesh(PlayerBabyMeshComponent->GetPlayerMeshType(), PlayerBabyMeshComponent);
 
 	PlayerBoyMeshComponent = CreateDefaultSubobject<UPlayerBoyMeshComponent>(TEXT("PlayerBoyMesh"));
 	PlayerBoyMeshComponent->Initialize(this);
@@ -77,6 +77,7 @@ void APrologueCharacter::OnConstruction(const FTransform& Transform) {
 
 void APrologueCharacter::BeginPlay() {
 	Super::BeginPlay();
+	ActivatePlayerMesh(EPlayerMeshType::BABY);
 	CameraManager = Cast<APlayerCameraManager>(UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0));
 
 	/*

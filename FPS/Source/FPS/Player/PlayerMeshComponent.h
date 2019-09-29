@@ -33,10 +33,10 @@ public:
 
 	virtual void InitializeBeginPlay();
 
-public:
-	void ActivatePlayerMesh();
-
-	void DeactivatePlayerMesh();
+	/* True if an animation was set to play, false if none available */
+	bool ActivatePlayerMesh();
+	/* True if an animation was set to play, false if none available */
+	bool DeactivatePlayerMesh();
 
 	UFUNCTION(BlueprintCallable)
 		virtual void TriggerMainAction();
@@ -47,6 +47,10 @@ public:
 
 	FORCEINLINE bool IsVisiorEnabled() const { return VisiorEnabled; }
 
+	virtual void FinishLoadAnimation();
+
+	virtual void FinishHolsterAnimation();
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -54,9 +58,9 @@ protected:
 
 	virtual void DoStopMainAction();
 
-	virtual void ShowLoadAnimation();
+	virtual bool ShowLoadAnimation();
 
-	virtual void ShowHolsterAnimation();
+	virtual bool ShowHolsterAnimation();
 
 protected:
 	EPlayerMeshType PlayerMeshType;
@@ -66,8 +70,14 @@ protected:
 	AActor* Parent;
 
 	/** AnimMontage to play each time we fire */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
 		class UAnimMontage* MainActionAnimation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
+		class UAnimMontage* HolsterAnimation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
+		class UAnimMontage* LoadAnimation;
 
 	UCameraComponent* Camera;
 };

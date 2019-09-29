@@ -136,18 +136,38 @@ void AFPSCharacter::OnReloadInternal() {}
 
 void AFPSCharacter::ActivatePlayerMesh(EPlayerMeshType Type) {
 	if (PlayerMeshComponentMap.Contains(Type)) {
-		UPlayerMeshComponent* PlayerMeshComponent = PlayerMeshComponentMap.FindRef(Type);
+		NextActivePlayerMeshComponent = PlayerMeshComponentMap.FindRef(Type);
 		if (ActivePlayerMeshComponent) {
-			ActivePlayerMeshComponent->DeactivatePlayerMesh();
+			if (!ActivePlayerMeshComponent->DeactivatePlayerMesh()) {
+				FinishPlayerMeshHolsterAnimation();
+			}
+		} else if (NextActivePlayerMeshComponent) {
+			ActivePlayerMeshComponent = NextActivePlayerMeshComponent;
+			if (!ActivePlayerMeshComponent->ActivatePlayerMesh()) {
+				FinishPlayerMeshLoadAnimation();
+			}
 		}
-		ActivePlayerMeshComponent = PlayerMeshComponent;
-		ActivePlayerMeshComponent->ActivatePlayerMesh();
 	} else if (Type == EPlayerMeshType::NONE) {
+		NextActivePlayerMeshComponent = nullptr;
 		if (ActivePlayerMeshComponent) {
-			ActivePlayerMeshComponent->DeactivatePlayerMesh();
+			if (!ActivePlayerMeshComponent->DeactivatePlayerMesh()) {
+				FinishPlayerMeshHolsterAnimation();
+			}
 		}
 	} else {
 		UE_LOG(LogFPChar, Error, TEXT("Failed to switch mesh, missing EPlayerMeshType"))
+	}
+}
+
+void AFPSCharacter::FinishPlayerMeshLoadAnimation() {
+	ActivePlayerMeshComponent->FinishLoadAnimation();
+}
+
+void AFPSCharacter::FinishPlayerMeshHolsterAnimation() {
+	ActivePlayerMeshComponent->FinishHolsterAnimation();
+	if (NextActivePlayerMeshComponent) {
+		ActivePlayerMeshComponent = NextActivePlayerMeshComponent;
+		ActivePlayerMeshComponent->ActivatePlayerMesh();
 	}
 }
 

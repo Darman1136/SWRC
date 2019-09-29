@@ -158,7 +158,3 @@ void UPlayerDC17MMeshComponent::UpdateAmmoMaterials() {
 		}
 	}
 }
-
-void UPlayerDC17MMeshComponent::ShowLoadAnimation() {}
-
-void UPlayerDC17MMeshComponent::ShowHolsterAnimation() {}

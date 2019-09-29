@@ -23,7 +23,7 @@ APlayerCharacter::APlayerCharacter() : Super() {
 
 	PlayerDC17MMeshComponent = CreateDefaultSubobject<UPlayerDC17MMeshComponent>(TEXT("PlayerDC17MMesh"));
 	PlayerDC17MMeshComponent->Initialize(this);
-	AddPlayerMesh(PlayerDC17MMeshComponent->GetPlayerMeshType(), PlayerDC17MMeshComponent, true);
+	AddPlayerMesh(PlayerDC17MMeshComponent->GetPlayerMeshType(), PlayerDC17MMeshComponent);
 
 	VisorMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VisorMesh"));
 	VisorMesh->SetOnlyOwnerSee(true);
@@ -36,6 +36,7 @@ APlayerCharacter::APlayerCharacter() : Super() {
 
 void APlayerCharacter::BeginPlay() {
 	Super::BeginPlay();
+	ActivatePlayerMesh(EPlayerMeshType::DC17M);
 
 	// Can't get DataTables to work properly without crashing sometimes
 	/*

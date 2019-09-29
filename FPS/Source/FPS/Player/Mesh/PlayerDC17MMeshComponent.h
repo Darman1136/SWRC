@@ -23,10 +23,6 @@ public:
 protected:
 	virtual void DoMainAction() override;
 
-	virtual void ShowLoadAnimation() override;
-
-	virtual void ShowHolsterAnimation() override;
-
 	virtual void UpdateAmmoMaterials() override;
 
 public:

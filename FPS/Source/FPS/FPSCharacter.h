@@ -60,6 +60,10 @@ public:
 	/** Returns FirstPersonCameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
+	virtual void FinishPlayerMeshLoadAnimation();
+
+	virtual void FinishPlayerMeshHolsterAnimation();
+
 public:
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
@@ -98,6 +102,9 @@ private:
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 		class UPlayerMeshComponent* ActivePlayerMeshComponent;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+		class UPlayerMeshComponent* NextActivePlayerMeshComponent;
 
 	bool PlayerInputEnabled = true;
 
