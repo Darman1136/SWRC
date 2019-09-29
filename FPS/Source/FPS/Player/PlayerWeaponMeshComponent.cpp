@@ -6,13 +6,21 @@
 #include "TimerManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "Animation/AnimInstance.h"
+#include "AnimInstance/PlayerMeshComponentAnimInstance.h"
 
-UPlayerWeaponMeshComponent::UPlayerWeaponMeshComponent() : Super() {}
+UPlayerWeaponMeshComponent::UPlayerWeaponMeshComponent() : Super() {
+	PrimaryComponentTick.bCanEverTick = true;
+}
 
 void UPlayerWeaponMeshComponent::Initialize(AActor* CurrentParent) {
 	Super::Initialize(CurrentParent);
 	CurrentAmmo = MaxAmmo;
 	CurrentMagAmmo = MaxMagAmmo;
+}
+
+void UPlayerWeaponMeshComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) {
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	UpdateAnimationBlueprint();
 }
 
 void UPlayerWeaponMeshComponent::TriggerMainAction() {
@@ -63,6 +71,13 @@ void UPlayerWeaponMeshComponent::ReloadAmmoCount() {
 }
 
 void UPlayerWeaponMeshComponent::UpdateAmmoMaterials() {}
+
+void UPlayerWeaponMeshComponent::UpdateAnimationBlueprint() {
+	UPlayerMeshComponentAnimInstance* AnimInstance = Cast<UPlayerMeshComponentAnimInstance>(GetAnimInstance()); 
+	if (Parent && AnimInstance != NULL) {
+		AnimInstance->MovementSpeed = Parent->GetVelocity().Size();
+	}
+}
 
 bool UPlayerWeaponMeshComponent::IsMagEmpty() {
 	return CurrentMagAmmo <= 0;

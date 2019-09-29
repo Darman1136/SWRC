@@ -16,6 +16,7 @@
 #include <EngineGlobals.h>
 #include "FPSProjectile.h"
 #include "DrawDebugHelpers.h"
+#include "AnimInstance/MeshComponents/DC17mMeshComponentAnimInstance.h"
 
 UPlayerDC17MMeshComponent::UPlayerDC17MMeshComponent() : Super() {
 	PlayerMeshType = EPlayerMeshType::DC17M;
@@ -26,7 +27,7 @@ UPlayerDC17MMeshComponent::UPlayerDC17MMeshComponent() : Super() {
 		SetSkeletalMesh(ActualSkeletalMesh.Object);
 	}
 
-	static ConstructorHelpers::FClassFinder<UAnimInstance> ActualAnimationBlueprint(TEXT("/Game/FirstPerson/Meshes/HUD/DC17mBlaster/AB_DC17mBlaster"));
+	static ConstructorHelpers::FClassFinder<UDC17mMeshComponentAnimInstance> ActualAnimationBlueprint(TEXT("/Game/FirstPerson/Meshes/HUD/DC17mBlaster/AB_DC17mBlaster"));
 	if (ActualAnimationBlueprint.Succeeded()) {
 		SetAnimInstanceClass(ActualAnimationBlueprint.Class);
 	}

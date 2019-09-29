@@ -7,10 +7,9 @@
 #include <Materials/MaterialInstanceDynamic.h>
 #include "FPSProjectile.h"
 #include "Animation/AnimInstance.h"
+#include "AnimInstance/MeshComponents/DC15SMeshComponentAnimInstance.h"
 
 UPlayerDC15SMeshComponent::UPlayerDC15SMeshComponent() : Super() {
-	PrimaryComponentTick.bCanEverTick = true;
-
 	PlayerMeshType = EPlayerMeshType::DC15S;
 	VisiorEnabled = false;
 
@@ -19,7 +18,7 @@ UPlayerDC15SMeshComponent::UPlayerDC15SMeshComponent() : Super() {
 		SetSkeletalMesh(ActualSkeletalMesh.Object);
 	}
 
-	static ConstructorHelpers::FClassFinder<UAnimInstance> ActualAnimationBlueprint(TEXT("/Game/FirstPerson/Meshes/HUD/DC15s/AB_dc15s"));
+	static ConstructorHelpers::FClassFinder<UDC15SMeshComponentAnimInstance> ActualAnimationBlueprint(TEXT("/Game/FirstPerson/Meshes/HUD/DC15s/AB_dc15s"));
 	if (ActualAnimationBlueprint.Succeeded()) {
 		SetAnimInstanceClass(ActualAnimationBlueprint.Class);
 	}

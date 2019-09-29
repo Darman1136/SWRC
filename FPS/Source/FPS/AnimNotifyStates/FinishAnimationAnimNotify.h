@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS(meta = (DisplayName = "Abstract Finish Animation"))
+UCLASS(abstract, meta = (DisplayName = "Abstract Finish Animation"))
 class FPS_API UFinishAnimationAnimNotify : public UAnimNotify
 {
 	GENERATED_BODY()

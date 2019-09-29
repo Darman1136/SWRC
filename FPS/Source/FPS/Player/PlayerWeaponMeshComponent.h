@@ -9,7 +9,7 @@
 /**
  *
  */
-UCLASS()
+UCLASS(abstract)
 class FPS_API UPlayerWeaponMeshComponent : public UPlayerMeshComponent {
 	GENERATED_BODY()
 
@@ -27,6 +27,8 @@ public:
 	virtual void ReloadAmmoCount();
 
 protected:
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
 	virtual void DoMainAction() override;
 
 	virtual void DoStopMainAction() override;
@@ -36,6 +38,8 @@ protected:
 	virtual bool IsMagEmpty();
 
 	virtual void UpdateAmmoMaterials();
+
+	virtual void UpdateAnimationBlueprint();
 
 protected:
 	bool bIsFiring = false;
