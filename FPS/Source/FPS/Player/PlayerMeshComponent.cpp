@@ -32,6 +32,7 @@ bool UPlayerMeshComponent::ActivatePlayerMesh() {
 }
 
 bool UPlayerMeshComponent::DeactivatePlayerMesh() {
+	TriggerStopMainAction();
 	return ShowHolsterAnimation();
 }
 

@@ -9,6 +9,7 @@
 #include "Runtime/CoreUObject/Public/UObject/ConstructorHelpers.h"
 #include "AI/BasicAICharacter.h"
 #include "AI/BasicAIController.h"
+#include "Components/PointLightComponent.h"
 
 ADC17mBlasterProjectile::ADC17mBlasterProjectile() : Super() {
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMesh"));
@@ -17,6 +18,12 @@ ADC17mBlasterProjectile::ADC17mBlasterProjectile() : Super() {
 	ProjectileMesh->SetCollisionProfileName(TEXT("NoCollision"));
 
 	ProjectileMovement->ProjectileGravityScale = 0.f;
+
+	ProjectilePointLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("MyLight"));
+	ProjectilePointLight->SetupAttachment(CollisionComp);
+	ProjectilePointLight->SetIntensity(1000.f);
+	ProjectilePointLight->SetAttenuationRadius(500);
+	ProjectilePointLight->SetLightColor(FLinearColor(FColor(129, 134, 214)));
 
 	CollisionComp->OnComponentHit.AddDynamic(this, &ADC17mBlasterProjectile::OnHit);
 }

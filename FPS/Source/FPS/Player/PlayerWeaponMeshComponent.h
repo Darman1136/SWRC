@@ -33,11 +33,13 @@ protected:
 
 	virtual void DoReload();
 
-	bool IsMagEmpty();
+	virtual bool IsMagEmpty();
 
 	virtual void UpdateAmmoMaterials();
 
 protected:
+	bool bIsFiring = false;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gun)
 		int MaxAmmo = 300;
 
@@ -58,8 +60,6 @@ protected:
 		FName MuzzleSocketFName = FName("muzzleSocket");
 
 private:
-	bool bIsFiring = false;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gun, meta = (AllowPrivateAccess = true))
 		float FireDelay = .1f;
 

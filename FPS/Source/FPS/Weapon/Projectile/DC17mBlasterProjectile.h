@@ -10,8 +10,7 @@
  *
  */
 UCLASS()
-class FPS_API ADC17mBlasterProjectile : public AFPSProjectile
-{
+class FPS_API ADC17mBlasterProjectile : public AFPSProjectile {
 	GENERATED_BODY()
 
 public:
@@ -20,4 +19,8 @@ public:
 	virtual void OnConstruction(const FTransform& Transform);
 
 	virtual void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit) override;
+
+protected:
+	UPROPERTY(EditAnywhere)
+		class UPointLightComponent* ProjectilePointLight;
 };

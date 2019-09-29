@@ -7,11 +7,10 @@
 #include "PlayerDC15SMeshComponent.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
-class FPS_API UPlayerDC15SMeshComponent : public UPlayerWeaponMeshComponent
-{
+class FPS_API UPlayerDC15SMeshComponent : public UPlayerWeaponMeshComponent {
 	GENERATED_BODY()
 
 public:
@@ -21,10 +20,18 @@ public:
 
 	virtual void InitializeBeginPlay() override;
 
+	virtual void TriggerMainAction() override;
+
+	virtual void TriggerStopMainAction() override;
+
 protected:
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
 	virtual void DoMainAction() override;
 
 	virtual void UpdateAmmoMaterials() override;
+
+	virtual bool IsMagEmpty() override;
 
 public:
 	class UMaterialInstanceDynamic* AmmoMaterialInst;
@@ -36,4 +43,10 @@ protected:
 	float MaxAmmo = 1.f;
 
 	float CurrentAmmo = MaxAmmo;
+
+	UPROPERTY(EditAnywhere, Category = Gun)
+		float AmmoPerShot = .3f;
+
+	UPROPERTY(EditAnywhere, Category = Gun)
+		float AmmoRechargeRate = .5f;
 };

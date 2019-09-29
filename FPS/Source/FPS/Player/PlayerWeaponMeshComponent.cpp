@@ -32,7 +32,9 @@ void UPlayerWeaponMeshComponent::TriggerStopMainAction() {
 
 void UPlayerWeaponMeshComponent::DoMainAction() {}
 
-void UPlayerWeaponMeshComponent::DoStopMainAction() {}
+void UPlayerWeaponMeshComponent::DoStopMainAction() {
+	bIsFiring = false;
+}
 
 void UPlayerWeaponMeshComponent::TriggerReload() {
 	DoReload();
