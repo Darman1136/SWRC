@@ -3,13 +3,17 @@
 #include "MoverLerpActor.h"
 #include "Components/StaticMeshComponent.h"
 #include "TimerManager.h"
+#include "Components/AudioComponent.h"
 
 AMoverLerpActor::AMoverLerpActor() {
+	PrimaryActorTick.bCanEverTick = true;
+
 	MoverMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mover Mesh"));
 	RootComponent = MoverMesh;
 
-	PrimaryActorTick.bCanEverTick = true;
-
+	CommonAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("CommonAudioComponent"));
+	CommonAudioComponent->SetupAttachment(MoverMesh);
+	CommonAudioComponent->bAutoActivate = false;
 }
 
 void AMoverLerpActor::BeginPlay() {
@@ -82,6 +86,13 @@ void AMoverLerpActor::Tick(float DeltaTime) {
 	}
 }
 
+void AMoverLerpActor::PlaySoundAtCommonAudioComponent(class USoundBase* sound) {
+	if (sound) {
+		CommonAudioComponent->SetSound(sound);
+		CommonAudioComponent->Play();
+	}
+}
+
 void AMoverLerpActor::TriggerMover(bool MovesOnCollisionTriggerAfterwards) {
 	Triggered = true;
 	TriggersStartMover = MovesOnCollisionTriggerAfterwards;
@@ -93,13 +104,20 @@ void AMoverLerpActor::DoTranslation(float LerpAlpha) {
 	} else {
 		TranslateBackwards(LerpAlpha);
 	}
+	ReverseActivePreviously = ReverseActive;
 }
 
 void AMoverLerpActor::TranslateForwards(float LerpAlpha) {
+	if (ReverseActive != ReverseActivePreviously) {
+		PlaySoundAtCommonAudioComponent(TranslateStartSound);
+	}
 	Translate(InitialTranslation, EndTranslation, LerpAlpha);
 }
 
 void AMoverLerpActor::TranslateBackwards(float LerpAlpha) {
+	if (ReverseActive != ReverseActivePreviously) {
+		PlaySoundAtCommonAudioComponent(TranslateReverseSound);
+	}
 	Translate(EndTranslation, InitialTranslation, LerpAlpha);
 }
 
@@ -114,13 +132,16 @@ void AMoverLerpActor::Translate(FVector Start, FVector End, float LerpAlpha) {
 
 void AMoverLerpActor::Finished() {
 	if (EnableReverse) {
-		if (DelayBeforeReverse > 0.f) {
+		ReverseActive = !ReverseActive;
+		if (ReverseActive && DelayBeforeReverse > 0.f) {
 			PauseBeforeReverse(DelayBeforeReverse);
 		}
-		if (ReverseActive) {
+		// Check if character reentered the trigger while reversing
+		if (!ReverseActive && BlockingActors.Num() > 0) {
+			Triggered = true;
+		} else if (!ReverseActive) {
 			Triggered = false;
 		}
-		ReverseActive = !ReverseActive;
 	} else {
 		InitializeValues();
 		Triggered = false;

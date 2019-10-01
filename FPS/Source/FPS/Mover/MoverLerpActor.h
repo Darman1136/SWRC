@@ -17,7 +17,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable, Category = Mover)
-	void TriggerMover(bool MovesOnCollisionTriggerAfterwards = true);
+		void TriggerMover(bool MovesOnCollisionTriggerAfterwards = true);
 
 protected:
 	virtual void BeginPlay() override;
@@ -63,14 +63,13 @@ private:
 
 	void Rotate(FRotator StartRotation, FRotator EndRotation, float LerpAlpha);
 
+	void PlaySoundAtCommonAudioComponent(class USoundBase* sound);
+
 private:
 
 	// Settings
 	UPROPERTY(EditAnywhere, Category = MoverSettings)
 		bool AlwaysOn = false;
-
-	UPROPERTY(VisibleAnywhere, Category = MoverSettings)
-		bool Triggered = false;
 
 	/* Time to lerp from start to end position in ms */
 	UPROPERTY(EditAnywhere, Category = MoverSettings, meta = (ClampMin = "0.0"))
@@ -97,6 +96,18 @@ private:
 	UPROPERTY(EditAnywhere, Category = MoverSettingsTrigger)
 		TArray<UClass*> TriggerCollidersImportantActors;
 
+	UPROPERTY(EditAnywhere, Category = MoverSettingsTrigger, meta = (EditCondition = "TriggersStartMover"))
+		class USoundBase* TranslateStartSound;
+
+	UPROPERTY(EditAnywhere, Category = MoverSettingsTrigger, meta = (EditCondition = "TriggersStartMover"))
+		class USoundBase* TranslateReverseSound;
+
+	UPROPERTY(VisibleAnywhere, Category = MoverState)
+		bool Triggered = false;
+
+	UPROPERTY(VisibleDefaultsOnly)
+		class UAudioComponent* CommonAudioComponent;
+
 	/* Array which holds the actors currently blocking the reverse animation */
 	TArray<AActor*> BlockingActors;
 
@@ -108,6 +119,8 @@ private:
 	float TimeSinceMovementStart = 0.f;
 
 	bool ReverseActive = false;
+
+	bool ReverseActivePreviously = !ReverseActive;
 
 	bool Done = false;
 
