@@ -15,6 +15,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Engine/World.h"
 
+const FName ABasicAIController::BKIsAlive = FName("IsAlive");
 const FName ABasicAIController::BKTarget = FName("Target");
 const FName ABasicAIController::BKTargetLocation = FName("TargetLocation");
 
@@ -35,7 +36,7 @@ void ABasicAIController::OnPossess(class APawn* InPawn) {
 void ABasicAIController::BeginPlay() {
 	Super::BeginPlay();
 
-	if (AutoStartBehaviorTree) {
+	if (GetCastedPawn<ABasicAICharacter>()->IsAutoStartBehaviorTree()) {
 		StartBehaviorTree();
 	}
 }
@@ -71,6 +72,8 @@ float ABasicAIController::GetTakenDamageMultiplier(FName Bone) {
 }
 
 void ABasicAIController::OnDeath(FName Bone) {
+	BlackboardComp->SetValueAsBool(ABasicAIController::BKIsAlive, false);
+
 	APawn* CurrentPawn = GetPawn();
 	if (CurrentPawn->IsA(ABasicAICharacter::StaticClass())) {
 		ABasicAICharacter* CurrentCharacter = Cast<ABasicAICharacter>(CurrentPawn);
@@ -122,18 +125,7 @@ void ABasicAIController::StartBehaviorTree() {
 	if (BehaviorTree) {
 		BlackboardComp->InitializeBlackboard(*(BehaviorTree->BlackboardAsset));
 		if (BlackboardComp != nullptr) {
-
 			InitializeBlackboardWithValues();
-
-			TArray<AActor*> FoundActors;
-			UGameplayStatics::GetAllActorsOfClass(GetWorld(), AFPSCharacter::StaticClass(), FoundActors);
-
-			if (FoundActors.Num() == 1) {
-				BlackboardComp->SetValueAsObject(ABasicAIController::BKTarget, FoundActors[0]);
-				//SetFocus(FoundActors[0], EAIFocusPriority::Gameplay);
-			} else {
-				UE_LOG(LogTemp, Error, TEXT("Failed to find and set player"));
-			}
 		}
 		UE_LOG(LogTemp, Warning, TEXT("Running BehaviorTree"));
 		RunBehaviorTree(BehaviorTree);
@@ -152,4 +144,5 @@ void ABasicAIController::InitializeBlackboardWithValues() {
 			}
 		}
 	}
+	BlackboardComp->SetValueAsBool(ABasicAIController::BKIsAlive, true);
 }

@@ -16,8 +16,6 @@ class FPS_API ADC17mBlasterProjectile : public AFPSProjectile {
 public:
 	ADC17mBlasterProjectile();
 
-	virtual void OnConstruction(const FTransform& Transform);
-
 	virtual void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit) override;
 
 protected:

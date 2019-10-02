@@ -28,14 +28,6 @@ ADC17mBlasterProjectile::ADC17mBlasterProjectile() : Super() {
 	CollisionComp->OnComponentHit.AddDynamic(this, &ADC17mBlasterProjectile::OnHit);
 }
 
-void ADC17mBlasterProjectile::OnConstruction(const FTransform& Transform) {
-	Super::OnConstruction(Transform);
-	UDC17mBlasterStats* WeaponStats = NewObject<UDC17mBlasterStats>(this);
-	if (WeaponStats && WeaponStats->GetMesh()) {
-		ProjectileMesh->SetStaticMesh(WeaponStats->GetMesh().Get());
-	}
-}
-
 void ADC17mBlasterProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit) {
 	if ((GetOwner() != OtherActor) && (OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL)) {
 		if (OtherComp->IsSimulatingPhysics()) {

@@ -38,6 +38,29 @@ public:
 
 	virtual void StartBehaviorTree();
 
+	template <typename ABasicAICharacter>
+	ABasicAICharacter* GetCastedPawn() {
+		return Cast<ABasicAICharacter>(GetPawn());
+	}
+
+public:
+	static const FName BKIsAlive;
+	static const FName BKTarget;
+	static const FName BKTargetLocation;
+
+	UPROPERTY(EditAnywhere, Category = Dismemberment)
+		TMap<FName, FName> HitBoneToSpawnBoneMap;
+
+	UPROPERTY(EditAnywhere, Category = Dismemberment)
+		TMap<FName, UStaticMesh*> SpawnBoneToStaticMeshMap;
+
+	/* Chance to dismember and spawn the mesh. 0.f to 1.f */
+	UPROPERTY(EditAnywhere, Category = Dismemberment)
+		TMap<FName, float> SpawnBoneToSpawnChanceMap;
+
+	UPROPERTY(EditAnywhere, Category = Damage)
+		TMap<FName, float> HitBoneToDamageMultiplierMap;
+
 	UPROPERTY(BlueprintAssignable)
 		FAIDeath FAIDeath_OnDeath;
 
@@ -64,27 +87,8 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Animation)
 		bool LookAtCanInterrupt = false;
 
-	UPROPERTY(EditAnywhere, Category = AIProperties)
-		bool AutoStartBehaviorTree = false;
-
 private:
 	void InitializeBlackboardWithValues();
 
-public:
-	static const FName BKTarget;
-	static const FName BKTargetLocation;
-	
-	UPROPERTY(EditAnywhere, Category = Dismemberment)
-		TMap<FName, FName> HitBoneToSpawnBoneMap;
-
-	UPROPERTY(EditAnywhere, Category = Dismemberment)
-		TMap<FName, UStaticMesh*> SpawnBoneToStaticMeshMap;
-
-	/* Chance to dismember and spawn the mesh. 0.f to 1.f */
-	UPROPERTY(EditAnywhere, Category = Dismemberment)
-		TMap<FName, float> SpawnBoneToSpawnChanceMap;
-
-	UPROPERTY(EditAnywhere, Category = Damage)
-		TMap<FName, float> HitBoneToDamageMultiplierMap;
 };
 

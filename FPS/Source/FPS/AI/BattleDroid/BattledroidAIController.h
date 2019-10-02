@@ -23,8 +23,18 @@ public:
 
 	virtual void TakeDamageAI(AActor* AttackingActor, EWeaponDamageType DamageType, float amount, const FHitResult& Hit) override;
 
+public:
+	static const FName BKHeadBone1;
+	static const FName BKHeadBone2;
+
 protected:
 	virtual void OnDeath(FName Bone) override;
+
+	virtual void Dismember(FName Bone, UStaticMesh* MeshToSpawn) override;
+
+protected:
+	UPROPERTY(EditAnywhere)
+		float FreakOutByHeadshotChance = 0.07f;
 
 private:
 	class UBattledroidAnimInstance* BattledroidAnimInstance;
@@ -33,5 +43,5 @@ private:
 
 	class UBattleDroidStats* BattleDroidStats;
 
-	static const float FreakOutByHeadshotChance;
+	
 };

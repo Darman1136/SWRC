@@ -2,7 +2,7 @@
 
 #include "BTTask_LookAtActor.h"
 #include "AI/BasicAIController.h"
-#include "Runtime/Engine/Classes/Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetMathLibrary.h"
 
 
 UBTTask_LookAtActor::UBTTask_LookAtActor() : Super() {

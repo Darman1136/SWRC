@@ -10,7 +10,8 @@
 #include "Data/EnemyStats/BattleDroidStats.h"
 #include "Weapon/Projectile/DamageAreaEnum.h"
 
-const float ABattledroidAIController::FreakOutByHeadshotChance = 0.07f;
+const FName ABattledroidAIController::BKHeadBone1 = FName("Head");
+const FName ABattledroidAIController::BKHeadBone2 = FName("neck");
 
 ABattledroidAIController::ABattledroidAIController() : Super() {
 	//
@@ -82,7 +83,6 @@ void ABattledroidAIController::Tick(float DeltaTime) {
 		BattledroidAnimInstance->IsWalking = false;
 	}
 
-
 	BattledroidAnimInstance->InAction = InAction;
 }
 
@@ -97,19 +97,13 @@ void ABattledroidAIController::OnDeath(FName Bone) {
 	BattledroidAnimInstance->IsWalking = false;
 	BattledroidAnimInstance->InAction = false;
 
-	//if (DeathByHeadshot && FMath::RandRange(0.f, 1.f) < FreakOutByHeadshotChance) {
-	//	BattledroidAnimInstance->DeathByHeadshot = DeathByHeadshot;
-	//	APawn* CurrentPawn = GetPawn();
-	//	if (CurrentPawn->IsA(ABattledroidAICharacter::StaticClass())) {
-	//		ABattledroidAICharacter* CurrentCharacter = Cast<ABattledroidAICharacter>(CurrentPawn);
-	//		if (CurrentCharacter) {
-	//			USkeletalMeshComponent* SMesh = CurrentCharacter->GetMesh();
-	//			SMesh->HideBoneByName(BoneNameNeck, EPhysBodyOp::PBO_Term);
-	//			if (FAIDismembered_OnDismember.IsBound()) {
-	//				FAIDismembered_OnDismember.Broadcast();
-	//			}
-	//		}
-	//	}
-	//}
+	
 	BattledroidAnimInstance->Alive = false;
+}
+
+void ABattledroidAIController::Dismember(FName Bone, UStaticMesh* MeshToSpawn) {
+	if ((BKHeadBone1 == Bone || BKHeadBone2 == Bone) && FMath::RandRange(0.f, 1.f) < FreakOutByHeadshotChance) {
+		BattledroidAnimInstance->DeathByHeadshot = true;
+	}
+	Super::Dismember(Bone, MeshToSpawn);
 }

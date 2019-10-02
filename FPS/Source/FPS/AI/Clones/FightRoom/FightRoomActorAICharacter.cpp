@@ -12,7 +12,6 @@ void AFightRoomActorAICharacter::OnConstruction(const FTransform& Transform) {
 
 void AFightRoomActorAICharacter::BeginPlay() {
 	Super::BeginPlay();
-	GetWeaponMesh()->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("weaponAttach_R"));
 }
 
 
