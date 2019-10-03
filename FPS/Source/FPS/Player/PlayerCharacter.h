@@ -21,6 +21,8 @@ public:
 
 	void OnReloadInternal() override;
 
+	void ReloadDone();
+
 public:
 	//UPROPERTY(VisibleAnywhere, Category = Gun)
 	//	TScriptInterface<UUseableWeapon> WeaponStatsReference;

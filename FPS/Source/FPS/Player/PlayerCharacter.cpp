@@ -90,6 +90,13 @@ void APlayerCharacter::OnReloadInternal() {
 	}
 }
 
+void APlayerCharacter::ReloadDone() {
+	UPlayerMeshComponent* ActiveMesh = GetActivePlayerMeshComponent();
+	if (ActiveMesh->IsA(UPlayerWeaponMeshComponent::StaticClass())) {
+		Cast<UPlayerWeaponMeshComponent>(ActiveMesh)->ReloadDone();
+	}
+}
+
 void APlayerCharacter::StartWiper() {
 	VisorWiperActive = true;
 	UE_LOG(LogTemp, Warning, TEXT("WIPE start"));

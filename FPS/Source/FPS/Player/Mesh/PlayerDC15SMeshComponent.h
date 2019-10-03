@@ -33,6 +33,10 @@ protected:
 
 	virtual bool IsMagEmpty() override;
 
+	void ResetMainActionCooldown();
+
+	virtual bool CanUseMainAction() override;
+
 public:
 	class UMaterialInstanceDynamic* AmmoMaterialInst;
 
@@ -49,4 +53,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = Gun)
 		float AmmoRechargeRate = .5f;
+
+private:
+	bool IsCoolingDown = false;
+
+	FTimerHandle MainActionCooldownHandle;
 };

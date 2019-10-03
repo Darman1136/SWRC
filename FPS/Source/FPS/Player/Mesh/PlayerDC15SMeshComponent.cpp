@@ -8,6 +8,8 @@
 #include "FPSProjectile.h"
 #include "Animation/AnimInstance.h"
 #include "AnimInstance/MeshComponents/DC15SMeshComponentAnimInstance.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
 
 UPlayerDC15SMeshComponent::UPlayerDC15SMeshComponent() : Super() {
 	PlayerMeshType = EPlayerMeshType::DC15S;
@@ -74,45 +76,37 @@ void UPlayerDC15SMeshComponent::TriggerStopMainAction() {
 
 void UPlayerDC15SMeshComponent::DoMainAction() {
 	Super::DoMainAction();
-	if (IsMagEmpty()) {
+	if (!CanUseMainAction()) {
 		TriggerStopMainAction();
 		return;
 	}
 
-	if (MainActionAnimation != NULL) {
-		// Get the animation object for the arms mesh
-		UAnimInstance* AnimInstance = GetAnimInstance();
-		if (AnimInstance != NULL && AnimInstance->GetCurrentActiveMontage() == NULL) {
-			AnimInstance->Montage_Play(MainActionAnimation, 1.f);
+	bIsFiring = true;
+	IsCoolingDown = true;
+	GetWorld()->GetTimerManager().SetTimer(MainActionCooldownHandle, this, &UPlayerDC15SMeshComponent::ResetMainActionCooldown, FireDelay);
 
-			// Get the animation object for the arms mesh
-			UAnimInstance* AnimInstance = GetAnimInstance();
-			if (AnimInstance != NULL) {
-				if (CurrentAmmo > 0) {
-					CurrentAmmo -= AmmoPerShot;
-				} else {
-					CurrentAmmo = 0;
-				}
-				UpdateAmmoMaterials();
+	if (CurrentAmmo > 0) {
+		CurrentAmmo -= AmmoPerShot;
+	} else {
+		CurrentAmmo = 0;
+	}
+	UpdateAmmoMaterials();
 
-				if (ProjectileClass != NULL) {
-					UWorld* const World = GetWorld();
-					if (World != NULL) {
-						FRotator SpawnRotation = GetComponentRotation();
-						const FTransform MuzzleTransform = GetSocketTransform(MuzzleSocketFName);
-						const FVector SpawnLocation = MuzzleTransform.GetLocation();
-						FActorSpawnParameters ActorSpawnParams;
-						ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-						ActorSpawnParams.Owner = Parent;
+	if (ProjectileClass != NULL) {
+		UWorld* const World = GetWorld();
+		if (World != NULL) {
+			FRotator SpawnRotation = GetComponentRotation();
+			const FTransform MuzzleTransform = GetSocketTransform(MuzzleSocketFName);
+			const FVector SpawnLocation = MuzzleTransform.GetLocation();
+			FActorSpawnParameters ActorSpawnParams;
+			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+			ActorSpawnParams.Owner = Parent;
 
-						AFPSProjectile* SpawnedProjectile = World->SpawnActor<AFPSProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
-						if (SpawnedProjectile) {
-							// TODO find a way to store gun values nicely (don't seem to get datatables to work right)
-							SpawnedProjectile->SetDamage(30);
-							SpawnedProjectile->SetDamageType(EWeaponDamageType::WDTEnergy);
-						}
-					}
-				}
+			AFPSProjectile* SpawnedProjectile = World->SpawnActor<AFPSProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+			if (SpawnedProjectile) {
+				// TODO find a way to store gun values nicely (don't seem to get datatables to work right)
+				SpawnedProjectile->SetDamage(30);
+				SpawnedProjectile->SetDamageType(EWeaponDamageType::WDTEnergy);
 			}
 		}
 	}
@@ -127,4 +121,13 @@ void UPlayerDC15SMeshComponent::UpdateAmmoMaterials() {
 
 bool UPlayerDC15SMeshComponent::IsMagEmpty() {
 	return CurrentAmmo <= AmmoPerShot;
+}
+
+void UPlayerDC15SMeshComponent::ResetMainActionCooldown() {
+	bIsFiring = false;
+	IsCoolingDown = false;
+}
+
+bool UPlayerDC15SMeshComponent::CanUseMainAction() {
+	return Super::CanUseMainAction() && !IsCoolingDown;
 }

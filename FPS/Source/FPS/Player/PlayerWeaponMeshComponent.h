@@ -26,6 +26,8 @@ public:
 
 	virtual void ReloadAmmoCount();
 
+	virtual void ReloadDone();
+
 protected:
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
@@ -41,8 +43,13 @@ protected:
 
 	virtual void UpdateAnimationBlueprint();
 
+	virtual bool CanUseMainAction() override;
+
+	virtual void ResetState() override;
+
 protected:
 	bool bIsFiring = false;
+	bool bIsReloading = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gun)
 		int MaxAmmo = 300;
@@ -63,9 +70,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = MainAction)
 		FName MuzzleSocketFName = FName("muzzleSocket");
 
-private:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gun, meta = (AllowPrivateAccess = true))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gun)
 		float FireDelay = .1f;
 
+private:
 	FTimerHandle FireTimeHandle;
 };

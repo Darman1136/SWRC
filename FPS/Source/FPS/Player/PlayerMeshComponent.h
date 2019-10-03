@@ -63,6 +63,12 @@ protected:
 
 	virtual bool ShowHolsterAnimation();
 
+	virtual bool CanUseMainAction();
+
+	void ShowLoadAnimationMesh();
+
+	virtual void ResetState();
+
 protected:
 	EPlayerMeshType PlayerMeshType;
 
@@ -70,15 +76,14 @@ protected:
 
 	AActor* Parent;
 
-	/** AnimMontage to play each time we fire */
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
-		class UAnimMontage* MainActionAnimation;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
 		class UAnimMontage* HolsterAnimation;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
 		class UAnimMontage* LoadAnimation;
 
-	UCameraComponent* Camera;
+	class UCameraComponent* Camera;
+
+private:
+	FTimerHandle ShowLoadMeshHandle;
 };

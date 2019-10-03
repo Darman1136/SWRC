@@ -18,4 +18,8 @@ public:
 
 protected:
 	virtual void DoMainAction() override;
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
+		class UAnimMontage* MainActionAnimation;
 };

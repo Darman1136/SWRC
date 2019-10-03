@@ -3,6 +3,8 @@
 
 #include "PlayerMeshComponent.h"
 #include "Animation/AnimInstance.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
 
 UPlayerMeshComponent::UPlayerMeshComponent() {
 	PlayerMeshType = EPlayerMeshType::NONE;
@@ -33,6 +35,7 @@ bool UPlayerMeshComponent::ActivatePlayerMesh() {
 
 bool UPlayerMeshComponent::DeactivatePlayerMesh() {
 	TriggerStopMainAction();
+	ResetState();
 	return ShowHolsterAnimation();
 }
 
@@ -50,11 +53,10 @@ void UPlayerMeshComponent::DoStopMainAction() {}
 
 bool UPlayerMeshComponent::ShowLoadAnimation() {
 	if (LoadAnimation != NULL) {
-		// Get the animation object for the arms mesh
 		UAnimInstance* AnimInstance = GetAnimInstance();
 		if (AnimInstance != NULL) {
 			AnimInstance->Montage_Play(LoadAnimation, 1.f);
-			SetVisibility(true, true);
+			GetWorld()->GetTimerManager().SetTimer(ShowLoadMeshHandle, this, &UPlayerMeshComponent::ShowLoadAnimationMesh, .1f);
 			return true;
 		}
 	}
@@ -62,11 +64,14 @@ bool UPlayerMeshComponent::ShowLoadAnimation() {
 	return false;
 }
 
+void UPlayerMeshComponent::ShowLoadAnimationMesh() {
+	SetVisibility(true, true);
+}
+
 void UPlayerMeshComponent::FinishLoadAnimation() {}
 
 bool UPlayerMeshComponent::ShowHolsterAnimation() {
 	if (HolsterAnimation != NULL) {
-		// Get the animation object for the arms mesh
 		UAnimInstance* AnimInstance = GetAnimInstance();
 		if (AnimInstance != NULL) {
 			AnimInstance->Montage_Play(HolsterAnimation, 1.f);
@@ -79,3 +84,9 @@ bool UPlayerMeshComponent::ShowHolsterAnimation() {
 void UPlayerMeshComponent::FinishHolsterAnimation() {
 	SetVisibility(false, true);
 }
+
+bool UPlayerMeshComponent::CanUseMainAction() {
+	return true;
+}
+
+void UPlayerMeshComponent::ResetState() {}

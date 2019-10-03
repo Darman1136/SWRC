@@ -52,17 +52,7 @@ void UPlayerWeaponMeshComponent::DoReload() {
 	if (CurrentAmmo <= 0 || CurrentMagAmmo == MaxMagAmmo) {
 		return;
 	}
-
-	if (ReloadAnimation != NULL) {
-		// Get the animation object for the arms mesh
-		UAnimInstance* AnimInstance = GetAnimInstance();
-		if (AnimInstance != NULL) {
-			if (AnimInstance->GetCurrentActiveMontage() == NULL) {
-				// try and play the sound if specified
-				AnimInstance->Montage_Play(ReloadAnimation, 1.f);
-			}
-		}
-	}
+	bIsReloading = true;
 }
 
 void UPlayerWeaponMeshComponent::ReloadAmmoCount() {
@@ -70,15 +60,30 @@ void UPlayerWeaponMeshComponent::ReloadAmmoCount() {
 	UpdateAmmoMaterials();
 }
 
+void UPlayerWeaponMeshComponent::ReloadDone() {
+	bIsReloading = false;
+}
+
 void UPlayerWeaponMeshComponent::UpdateAmmoMaterials() {}
 
 void UPlayerWeaponMeshComponent::UpdateAnimationBlueprint() {
-	UPlayerMeshComponentAnimInstance* AnimInstance = Cast<UPlayerMeshComponentAnimInstance>(GetAnimInstance()); 
+	UPlayerMeshComponentAnimInstance* AnimInstance = Cast<UPlayerMeshComponentAnimInstance>(GetAnimInstance());
 	if (Parent && AnimInstance != NULL) {
 		AnimInstance->MovementSpeed = Parent->GetVelocity().Size();
+		AnimInstance->IsFiring = bIsFiring;
+		AnimInstance->IsReloading = bIsReloading;
 	}
 }
 
 bool UPlayerWeaponMeshComponent::IsMagEmpty() {
 	return CurrentMagAmmo <= 0;
+}
+
+bool UPlayerWeaponMeshComponent::CanUseMainAction() {
+	return Super::CanUseMainAction() && !IsMagEmpty() && !bIsReloading;
+}
+
+void UPlayerWeaponMeshComponent::ResetState() {
+	bIsFiring = false;
+	bIsReloading = false;
 }

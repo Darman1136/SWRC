@@ -20,4 +20,19 @@ public:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
 		float MovementSpeed = 0.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
+		bool IsFiring = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
+		bool IsReloading = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
+		bool IsHolstering = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
+		bool IsLoading = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Idle)
+		float TimeIdle = 0.f;
 };

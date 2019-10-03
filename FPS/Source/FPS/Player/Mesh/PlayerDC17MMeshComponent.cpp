@@ -80,51 +80,40 @@ void UPlayerDC17MMeshComponent::InitializeBeginPlay() {
 
 void UPlayerDC17MMeshComponent::DoMainAction() {
 	Super::DoMainAction();
-	if (IsMagEmpty()) {
+	if (!CanUseMainAction()) {
 		TriggerStopMainAction();
 		return;
 	}
 
-	if (MainActionAnimation != NULL) {
-		// Get the animation object for the arms mesh
-		UAnimInstance* AnimInstance = GetAnimInstance();
-		if (AnimInstance != NULL && AnimInstance->GetCurrentActiveMontage() == NULL) {
-			AnimInstance->Montage_Play(MainActionAnimation, 1.f);
+	UAnimInstance* AnimInstance = GetAnimInstance();
+	if (AnimInstance != NULL) {
+		if (CurrentAmmo > 0) {
+			CurrentAmmo--;
+		} else {
+			CurrentAmmo = 0;
 		}
-	}
-	// try and play a firing animation if specified
-	if (MainActionAnimation != NULL) {
-		// Get the animation object for the arms mesh
-		UAnimInstance* AnimInstance = GetAnimInstance();
-		if (AnimInstance != NULL) {
-			if (CurrentAmmo > 0) {
-				CurrentAmmo--;
-			} else {
-				CurrentAmmo = 0;
-			}
-			if (CurrentMagAmmo > 0) {
-				CurrentMagAmmo--;
-			} else {
-				CurrentMagAmmo = 0;
-			}
-			UpdateAmmoMaterials();
+		if (CurrentMagAmmo > 0) {
+			CurrentMagAmmo--;
+		} else {
+			CurrentMagAmmo = 0;
+		}
+		UpdateAmmoMaterials();
 
-			if (ProjectileClass != NULL) {
-				UWorld* const World = GetWorld();
-				if (World != NULL) {
-					FRotator SpawnRotation = GetComponentRotation();
-					const FTransform MuzzleTransform = GetSocketTransform(MuzzleSocketFName);
-					const FVector SpawnLocation = MuzzleTransform.GetLocation();
-					FActorSpawnParameters ActorSpawnParams;
-					ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-					ActorSpawnParams.Owner = Parent;
+		if (ProjectileClass != NULL) {
+			UWorld* const World = GetWorld();
+			if (World != NULL) {
+				FRotator SpawnRotation = GetComponentRotation();
+				const FTransform MuzzleTransform = GetSocketTransform(MuzzleSocketFName);
+				const FVector SpawnLocation = MuzzleTransform.GetLocation();
+				FActorSpawnParameters ActorSpawnParams;
+				ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+				ActorSpawnParams.Owner = Parent;
 
-					AFPSProjectile* SpawnedProjectile = World->SpawnActor<AFPSProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
-					if (SpawnedProjectile) {
-						// TODO find a way to store gun values nicely (don't seem to get datatables to work right)
-						SpawnedProjectile->SetDamage(30);
-						SpawnedProjectile->SetDamageType(EWeaponDamageType::WDTEnergy);
-					}
+				AFPSProjectile* SpawnedProjectile = World->SpawnActor<AFPSProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+				if (SpawnedProjectile) {
+					// TODO find a way to store gun values nicely (don't seem to get datatables to work right)
+					SpawnedProjectile->SetDamage(30);
+					SpawnedProjectile->SetDamageType(EWeaponDamageType::WDTEnergy);
 				}
 			}
 		}
