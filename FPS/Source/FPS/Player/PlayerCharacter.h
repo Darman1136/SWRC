@@ -23,6 +23,8 @@ public:
 
 	void ReloadDone();
 
+	void OnZoomInternal() override;
+
 public:
 	//UPROPERTY(VisibleAnywhere, Category = Gun)
 	//	TScriptInterface<UUseableWeapon> WeaponStatsReference;

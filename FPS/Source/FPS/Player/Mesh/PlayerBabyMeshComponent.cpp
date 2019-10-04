@@ -10,6 +10,7 @@
 UPlayerBabyMeshComponent::UPlayerBabyMeshComponent() : Super() {
 	PlayerMeshType = EPlayerMeshType::BABY;
 	VisiorEnabled = false;
+	bCanZoom = false;
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>ActualSkeletalMesh(TEXT("SkeletalMesh'/Game/FirstPerson/Meshes/HUD/Baby/baby.baby'"));
 	if (ActualSkeletalMesh.Succeeded()) {

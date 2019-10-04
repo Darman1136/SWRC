@@ -77,24 +77,21 @@ void APlayerCharacter::Tick(float DeltaTime) {
 }
 
 void APlayerCharacter::ReloadAmmoCount() {
-	UPlayerMeshComponent* ActiveMesh = GetActivePlayerMeshComponent();
-	if (ActiveMesh->IsA(UPlayerWeaponMeshComponent::StaticClass())) {
-		Cast<UPlayerWeaponMeshComponent>(ActiveMesh)->ReloadAmmoCount();
-	}
+	GetCastedPlayerMesh<UPlayerWeaponMeshComponent>()->ReloadAmmoCount();
 }
 
 void APlayerCharacter::OnReloadInternal() {
-	UPlayerMeshComponent* ActiveMesh = GetActivePlayerMeshComponent();
-	if (ActiveMesh->IsA(UPlayerWeaponMeshComponent::StaticClass())) {
-		Cast<UPlayerWeaponMeshComponent>(ActiveMesh)->TriggerReload();
-	}
+	Super::OnReloadInternal();
+	GetCastedPlayerMesh<UPlayerWeaponMeshComponent>()->TriggerReload();
 }
 
 void APlayerCharacter::ReloadDone() {
-	UPlayerMeshComponent* ActiveMesh = GetActivePlayerMeshComponent();
-	if (ActiveMesh->IsA(UPlayerWeaponMeshComponent::StaticClass())) {
-		Cast<UPlayerWeaponMeshComponent>(ActiveMesh)->ReloadDone();
-	}
+	GetCastedPlayerMesh<UPlayerWeaponMeshComponent>()->ReloadDone();
+}
+
+void APlayerCharacter::OnZoomInternal() {
+	Super::OnZoomInternal();
+	GetCastedPlayerMesh<UPlayerWeaponMeshComponent>()->TriggerZoom();
 }
 
 void APlayerCharacter::StartWiper() {

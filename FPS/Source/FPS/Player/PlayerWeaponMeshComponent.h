@@ -47,9 +47,12 @@ protected:
 
 	virtual void ResetState() override;
 
+	virtual void DoZoom() override;
+
 protected:
 	bool bIsFiring = false;
 	bool bIsReloading = false;
+	bool bIsZooming = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gun)
 		int MaxAmmo = 300;

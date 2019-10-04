@@ -9,6 +9,7 @@
 UPlayerBoyMeshComponent::UPlayerBoyMeshComponent() : Super() {
 	PlayerMeshType = EPlayerMeshType::BOY;
 	VisiorEnabled = false;
+	bCanZoom = false;
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>ActualSkeletalMesh(TEXT("SkeletalMesh'/Game/FirstPerson/Meshes/HUD/Boy/HelmetBoy.HelmetBoy'"));
 	if (ActualSkeletalMesh.Succeeded()) {

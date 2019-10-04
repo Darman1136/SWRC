@@ -68,9 +68,12 @@ void UPlayerMeshComponent::ShowLoadAnimationMesh() {
 	SetVisibility(true, true);
 }
 
-void UPlayerMeshComponent::FinishLoadAnimation() {}
+void UPlayerMeshComponent::FinishLoadAnimation() {
+	bIsActive = true;
+}
 
 bool UPlayerMeshComponent::ShowHolsterAnimation() {
+	bIsActive = false;
 	if (HolsterAnimation != NULL) {
 		UAnimInstance* AnimInstance = GetAnimInstance();
 		if (AnimInstance != NULL) {
@@ -90,3 +93,10 @@ bool UPlayerMeshComponent::CanUseMainAction() {
 }
 
 void UPlayerMeshComponent::ResetState() {}
+
+
+void UPlayerMeshComponent::TriggerZoom() {
+	DoZoom();
+}
+
+void UPlayerMeshComponent::DoZoom() {}

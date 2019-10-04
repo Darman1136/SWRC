@@ -78,7 +78,6 @@ void APrologueCharacter::OnConstruction(const FTransform& Transform) {
 void APrologueCharacter::BeginPlay() {
 	Super::BeginPlay();
 	ActivatePlayerMesh(EPlayerMeshType::BABY);
-	CameraManager = Cast<APlayerCameraManager>(UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0));
 
 	/*
 	if (CameraManager)

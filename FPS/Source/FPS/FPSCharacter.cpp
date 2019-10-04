@@ -17,6 +17,7 @@
 #include "Engine/World.h"
 #include "TimerManager.h"
 #include "Player/PlayerMeshComponent.h"
+#include "Camera/PlayerCameraManager.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -46,6 +47,9 @@ void AFPSCharacter::BeginPlay() {
 	// Call the base class  
 	Super::BeginPlay();
 
+	CameraManager = Cast<APlayerCameraManager>(UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0));
+	DefaultFOV = CameraManager->GetFOVAngle();
+
 	for (const TPair<EPlayerMeshType, UPlayerMeshComponent*>& PlayerMeshComponent : PlayerMeshComponentMap) {
 		PlayerMeshComponent.Value->InitializeBeginPlay();
 	}
@@ -68,6 +72,9 @@ void AFPSCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 
 	// Bind reload event
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AFPSCharacter::OnReload);
+
+	PlayerInputComponent->BindAction("Zoom", IE_Pressed, this, &AFPSCharacter::OnZoom);
+
 	PlayerInputComponent->BindAction<FSwitchWeaponDelegate>("SwitchWeapon1", IE_Pressed, this, &AFPSCharacter::SwitchWeapon, EPlayerMeshType::DC15S);
 	PlayerInputComponent->BindAction<FSwitchWeaponDelegate>("SwitchWeapon2", IE_Pressed, this, &AFPSCharacter::SwitchWeapon, EPlayerMeshType::DC17M);
 
@@ -135,15 +142,45 @@ void AFPSCharacter::OnReload() {
 	OnReloadInternal();
 }
 
-void AFPSCharacter::OnReloadInternal() {}
+void AFPSCharacter::OnReloadInternal() {
+	ResetZoom();
+}
+
+void AFPSCharacter::OnZoom() {
+	if (!IsPlayerInputEnabled()) {
+		return;
+	}
+	bIsZooming = !bIsZooming && GetCastedPlayerMesh<UPlayerMeshComponent>()->CanZoom();
+	OnZoomInternal();
+}
+
+void AFPSCharacter::OnZoomInternal() {
+	if (bIsZooming) {
+		EngageZoom();
+	} else {
+		ResetZoom();
+	}
+}
+
+void AFPSCharacter::EngageZoom() {
+	if (GetCastedPlayerMesh<UPlayerMeshComponent>()->CanZoom()) {
+		bIsZooming = true;
+		CameraManager->SetFOV(DefaultFOV * ZoomFactor);
+	} else {
+		ResetZoom();
+	}
+}
+
+void AFPSCharacter::ResetZoom() {
+	bIsZooming = false;
+	CameraManager->SetFOV(DefaultFOV);
+}
 
 void AFPSCharacter::ActivatePlayerMesh(EPlayerMeshType Type) {
 	if (PlayerMeshComponentMap.Contains(Type)) {
 		NextActivePlayerMeshComponent = PlayerMeshComponentMap.FindRef(Type);
 		if (ActivePlayerMeshComponent) {
-			if (!ActivePlayerMeshComponent->DeactivatePlayerMesh()) {
-				FinishPlayerMeshHolsterAnimation();
-			}
+			DeactivatePlayerMesh();
 		} else if (NextActivePlayerMeshComponent) {
 			ActivePlayerMeshComponent = NextActivePlayerMeshComponent;
 			if (!ActivePlayerMeshComponent->ActivatePlayerMesh()) {
@@ -153,12 +190,17 @@ void AFPSCharacter::ActivatePlayerMesh(EPlayerMeshType Type) {
 	} else if (Type == EPlayerMeshType::NONE) {
 		NextActivePlayerMeshComponent = nullptr;
 		if (ActivePlayerMeshComponent) {
-			if (!ActivePlayerMeshComponent->DeactivatePlayerMesh()) {
-				FinishPlayerMeshHolsterAnimation();
-			}
+			DeactivatePlayerMesh();
 		}
 	} else {
 		UE_LOG(LogFPChar, Error, TEXT("Failed to switch mesh, missing EPlayerMeshType"))
+	}
+}
+
+void AFPSCharacter::DeactivatePlayerMesh() {
+	ResetZoom();
+	if (!ActivePlayerMeshComponent->DeactivatePlayerMesh()) {
+		FinishPlayerMeshHolsterAnimation();
 	}
 }
 

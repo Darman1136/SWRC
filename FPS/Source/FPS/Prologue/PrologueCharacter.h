@@ -57,7 +57,4 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Mesh|Player|Helmet")
 		class UPlayerHelmetMeshComponent* PlayerHelmetMeshComponent;
 
-private:
-	APlayerCameraManager* CameraManager;
-
 };

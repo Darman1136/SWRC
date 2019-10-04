@@ -48,9 +48,13 @@ public:
 
 	FORCEINLINE bool IsVisiorEnabled() const { return VisiorEnabled; }
 
+	FORCEINLINE bool CanZoom() const { return bCanZoom; }
+
 	virtual void FinishLoadAnimation();
 
 	virtual void FinishHolsterAnimation();
+
+	virtual void TriggerZoom();
 
 protected:
 	virtual void BeginPlay() override;
@@ -69,6 +73,8 @@ protected:
 
 	virtual void ResetState();
 
+	virtual void DoZoom();
+
 protected:
 	EPlayerMeshType PlayerMeshType;
 
@@ -83,6 +89,10 @@ protected:
 		class UAnimMontage* LoadAnimation;
 
 	class UCameraComponent* Camera;
+
+	bool bCanZoom = true;
+
+	bool bIsActive = false;
 
 private:
 	FTimerHandle ShowLoadMeshHandle;

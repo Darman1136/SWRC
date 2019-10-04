@@ -28,6 +28,14 @@ public:
 
 	virtual void OnReloadInternal();
 
+	void OnZoom();
+
+	virtual void OnZoomInternal();
+
+	void EngageZoom();
+
+	void ResetZoom();
+
 	/** Resets HMD orientation and position in VR. */
 	void OnResetVR();
 
@@ -86,9 +94,16 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Mesh|Player")
 		void ActivatePlayerMesh(EPlayerMeshType Type);
 
+	void DeactivatePlayerMesh();
+
 	void AddPlayerMesh(EPlayerMeshType Type, UPlayerMeshComponent* PlayerMeshComponent, bool IsStartingMesh = false);
 
 	void SwitchWeapon(EPlayerMeshType Type);
+
+	template <typename UPlayerMeshComponent>
+	UPlayerMeshComponent* GetCastedPlayerMesh() {
+		return Cast<UPlayerMeshComponent>(GetActivePlayerMeshComponent());
+	}
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
@@ -100,6 +115,16 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Mesh|Player")
 		TMap<EPlayerMeshType, UPlayerMeshComponent*> PlayerMeshComponentMap;
+
+	class APlayerCameraManager* CameraManager;
+
+	UPROPERTY(EditAnywhere, Category = Weapon)
+		float ZoomFactor = .6f;
+
+	UPROPERTY(VisibleAnywhere)
+		float DefaultFOV;
+
+	bool bIsZooming = false;
 
 private:
 	/** Pawn mesh: 1st person view (arms; seen only by self) */

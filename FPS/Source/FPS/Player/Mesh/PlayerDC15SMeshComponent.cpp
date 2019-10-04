@@ -14,6 +14,7 @@
 UPlayerDC15SMeshComponent::UPlayerDC15SMeshComponent() : Super() {
 	PlayerMeshType = EPlayerMeshType::DC15S;
 	VisiorEnabled = false;
+	bCanZoom = false;
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>ActualSkeletalMesh(TEXT("SkeletalMesh'/Game/FirstPerson/Meshes/HUD/DC15s/dc15s.dc15s'"));
 	if (ActualSkeletalMesh.Succeeded()) {

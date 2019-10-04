@@ -18,6 +18,9 @@ public:
 	UPlayerMeshComponentAnimInstance();
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool IsActive = false;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
 		float MovementSpeed = 0.f;
 
@@ -33,6 +36,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
 		bool IsLoading = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Idle)
-		float TimeIdle = 0.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
+		bool IsZooming = false;
 };

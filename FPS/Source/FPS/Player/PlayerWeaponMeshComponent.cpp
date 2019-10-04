@@ -53,6 +53,7 @@ void UPlayerWeaponMeshComponent::DoReload() {
 		return;
 	}
 	bIsReloading = true;
+	bIsZooming = false;
 }
 
 void UPlayerWeaponMeshComponent::ReloadAmmoCount() {
@@ -72,6 +73,8 @@ void UPlayerWeaponMeshComponent::UpdateAnimationBlueprint() {
 		AnimInstance->MovementSpeed = Parent->GetVelocity().Size();
 		AnimInstance->IsFiring = bIsFiring;
 		AnimInstance->IsReloading = bIsReloading;
+		AnimInstance->IsZooming = bIsZooming;
+		AnimInstance->IsActive = bIsActive;
 	}
 }
 
@@ -84,6 +87,12 @@ bool UPlayerWeaponMeshComponent::CanUseMainAction() {
 }
 
 void UPlayerWeaponMeshComponent::ResetState() {
+	Super::ResetState();
 	bIsFiring = false;
 	bIsReloading = false;
+	bIsZooming = false;
+}
+
+void UPlayerWeaponMeshComponent::DoZoom() {
+	bIsZooming = !bIsZooming;
 }

@@ -10,6 +10,7 @@
 UPlayerHelmetMeshComponent::UPlayerHelmetMeshComponent() : Super() {
 	PlayerMeshType = EPlayerMeshType::PROLOGUE_HELMET;
 	VisiorEnabled = false;
+	bCanZoom = false;
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>ActualSkeletalMesh(TEXT("SkeletalMesh'/Game/FirstPerson/Meshes/HUD/Helmet/HudArmsHelmet.HudArmsHelmet'"));
 	if (ActualSkeletalMesh.Succeeded()) {
