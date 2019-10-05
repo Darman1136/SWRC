@@ -21,4 +21,8 @@ protected:
 	virtual void ShowHolsterAnimation() override;
 
 	virtual void ShowLoadAnimation() override;
+
+protected:
+	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+		class UStaticMeshComponent* BoyVisorMesh;
 };
