@@ -37,6 +37,8 @@ protected:
 
 	virtual bool CanUseMainAction() override;
 
+	virtual void SetupAttachementMeleeCollision() override;
+
 public:
 	class UMaterialInstanceDynamic* AmmoMaterialInst;
 

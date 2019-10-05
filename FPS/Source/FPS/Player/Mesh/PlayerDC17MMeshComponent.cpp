@@ -21,6 +21,7 @@
 UPlayerDC17MMeshComponent::UPlayerDC17MMeshComponent() : Super() {
 	PlayerMeshType = EPlayerMeshType::DC17M;
 	VisiorEnabled = false;
+	MeleeCollisionSocketName = FName("knifeSocket");
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>ActualSkeletalMesh(TEXT("SkeletalMesh'/Game/FirstPerson/Meshes/HUD/DC17mBlaster/dc17mBlaster_splitTextures.dc17mBlaster_splitTextures'"));
 	if (ActualSkeletalMesh.Succeeded()) {
@@ -146,5 +147,15 @@ void UPlayerDC17MMeshComponent::UpdateAmmoMaterials() {
 		} else {
 			AmmoChargeMag->SetVectorParameterValue("Value", FLinearColor(FMath::CeilToInt(CurrentMagAmmo / 3.f), 0, 0));
 		}
+	}
+}
+
+void UPlayerDC17MMeshComponent::SetupAttachementMeleeCollision() {
+	Super::SetupAttachementMeleeCollision();
+	if (MeleeCollisionCheck) {
+		MeleeCollisionCheck->RelativeLocation = FVector(0.f, -50.f, 0.f);
+		MeleeCollisionCheck->RelativeRotation = FRotator(90.f, 0.f, 90.f);
+		MeleeCollisionCheck->SetCapsuleHalfHeight(60, false);
+		MeleeCollisionCheck->SetCapsuleRadius(40);
 	}
 }

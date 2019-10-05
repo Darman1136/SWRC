@@ -25,6 +25,8 @@ protected:
 
 	virtual void UpdateAmmoMaterials() override;
 
+	virtual void SetupAttachementMeleeCollision() override;
+
 public:
 	class UMaterialInstanceDynamic* AmmoDigit100;
 

@@ -94,6 +94,11 @@ void APlayerCharacter::OnZoomInternal() {
 	GetCastedPlayerMesh<UPlayerWeaponMeshComponent>()->TriggerZoom();
 }
 
+void APlayerCharacter::OnMeleeInternal() {
+	Super::OnMeleeInternal();
+	GetCastedPlayerMesh<UPlayerWeaponMeshComponent>()->TriggerMeleeAction();
+}
+
 void APlayerCharacter::StartWiper() {
 	VisorWiperActive = true;
 	UE_LOG(LogTemp, Warning, TEXT("WIPE start"));

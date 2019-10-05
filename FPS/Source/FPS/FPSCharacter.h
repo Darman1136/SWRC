@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "BasicCharacter.h"
 #include "Player/PlayerMeshComponent.h"
+#include "Player/PlayerWeaponMeshComponent.h"
 #include "FPSCharacter.generated.h"
 
 class UInputComponent;
@@ -26,11 +27,9 @@ public:
 	/** Reloads */
 	void OnReload();
 
-	virtual void OnReloadInternal();
-
 	void OnZoom();
 
-	virtual void OnZoomInternal();
+	void OnMelee();
 
 	void EngageZoom();
 
@@ -73,6 +72,10 @@ public:
 
 	virtual void FinishPlayerMeshHolsterAnimation();
 
+	virtual void FinishPlayerMeshMeleeAnimation();
+
+	virtual void CheckMeleeHit();
+
 public:
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
@@ -104,6 +107,12 @@ protected:
 	UPlayerMeshComponent* GetCastedPlayerMesh() {
 		return Cast<UPlayerMeshComponent>(GetActivePlayerMeshComponent());
 	}
+
+	virtual void OnReloadInternal();
+
+	virtual void OnZoomInternal();
+
+	virtual void OnMeleeInternal();
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)

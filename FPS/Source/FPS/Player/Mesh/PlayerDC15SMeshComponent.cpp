@@ -10,11 +10,13 @@
 #include "AnimInstance/MeshComponents/DC15SMeshComponentAnimInstance.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
+#include "Components/CapsuleComponent.h"
 
 UPlayerDC15SMeshComponent::UPlayerDC15SMeshComponent() : Super() {
 	PlayerMeshType = EPlayerMeshType::DC15S;
 	VisiorEnabled = false;
 	bCanZoom = false;
+	MeleeCollisionSocketName = FName("ring_R3Socket");
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>ActualSkeletalMesh(TEXT("SkeletalMesh'/Game/FirstPerson/Meshes/HUD/DC15s/dc15s.dc15s'"));
 	if (ActualSkeletalMesh.Succeeded()) {
@@ -131,4 +133,14 @@ void UPlayerDC15SMeshComponent::ResetMainActionCooldown() {
 
 bool UPlayerDC15SMeshComponent::CanUseMainAction() {
 	return Super::CanUseMainAction() && !IsCoolingDown;
+}
+
+void UPlayerDC15SMeshComponent::SetupAttachementMeleeCollision() {
+	Super::SetupAttachementMeleeCollision();
+	if (MeleeCollisionCheck) {
+		MeleeCollisionCheck->RelativeLocation = FVector(0.f, 55.f, 0.f);
+		MeleeCollisionCheck->RelativeRotation = FRotator(0.f, 0.f, 90.f);
+		MeleeCollisionCheck->SetCapsuleHalfHeight(60, false);
+		MeleeCollisionCheck->SetCapsuleRadius(40);
+	}
 }

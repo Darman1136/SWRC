@@ -16,6 +16,8 @@ class FPS_API UPlayerWeaponMeshComponent : public UPlayerMeshComponent {
 public:
 	UPlayerWeaponMeshComponent();
 
+	virtual void OnComponentCreated() override;
+
 	virtual void Initialize(AActor* CurrentParent) override;
 
 	virtual void TriggerMainAction() override;
@@ -27,6 +29,8 @@ public:
 	virtual void ReloadAmmoCount();
 
 	virtual void ReloadDone();
+
+	virtual void CheckMeleeHit();
 
 protected:
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -45,9 +49,19 @@ protected:
 
 	virtual bool CanUseMainAction() override;
 
+	virtual bool CanUseMeleeAction() override;
+
+	virtual bool CanUseZoom() override;
+
+	virtual bool CanUseReload();
+
 	virtual void ResetState() override;
 
 	virtual void DoZoom() override;
+
+	virtual void DoMeleeAction() override;
+
+	virtual void SetupAttachementMeleeCollision();
 
 protected:
 	/* State variables */
@@ -77,6 +91,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gun)
 		float FireDelay = .1f;
+
+	UPROPERTY(EditAnywhere, Category = Melee)
+		class UCapsuleComponent* MeleeCollisionCheck;
+
+	UPROPERTY(EditAnywhere, Category = Melee)
+		FName MeleeCollisionSocketName;
 
 private:
 	FTimerHandle FireTimeHandle;

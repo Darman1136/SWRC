@@ -19,11 +19,7 @@ public:
 
 	void ReloadAmmoCount();
 
-	void OnReloadInternal() override;
-
 	void ReloadDone();
-
-	void OnZoomInternal() override;
 
 public:
 	//UPROPERTY(VisibleAnywhere, Category = Gun)
@@ -44,6 +40,12 @@ protected:
 	void PlayWiper(float DeltaTime);
 
 	void ResetWiper();
+
+	void OnReloadInternal() override;
+
+	void OnZoomInternal() override;
+
+	void OnMeleeInternal() override;
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "Mesh|Player|DC17M")

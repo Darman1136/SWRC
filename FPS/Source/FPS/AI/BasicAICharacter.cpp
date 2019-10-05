@@ -104,7 +104,7 @@ float ABasicAICharacter::GetRandomDeviation(float CurrentAccuracy) {
 }
 
 void ABasicAICharacter::AttachWeaponMeshToBone(FName Bone) {
-	if (Bone.IsValid()) {
+	if (!Bone.IsNone()) {
 		GetWeaponMesh()->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, Bone);
 	}
 }

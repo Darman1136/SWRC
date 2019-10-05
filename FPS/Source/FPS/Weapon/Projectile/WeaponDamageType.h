@@ -12,5 +12,6 @@ enum class EWeaponDamageType : uint8
 	WDTDefault	UMETA(DisplayName = "Default"),
 	WDTEnergy 	UMETA(DisplayName = "Energy"),
 	WDTExplosion 	UMETA(DisplayName = "Explosion"),
-	WDTBullet 	UMETA(DisplayName = "Bullet")
+	WDTBullet 	UMETA(DisplayName = "Bullet"),
+	WDTMelee 	UMETA(DisplayName = "Melee")
 };

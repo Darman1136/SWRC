@@ -44,15 +44,19 @@ public:
 
 	virtual void TriggerStopMainAction();
 
+	virtual void TriggerMeleeAction();
+
 	FORCEINLINE EPlayerMeshType GetPlayerMeshType() const { return PlayerMeshType; }
 
 	FORCEINLINE bool IsVisiorEnabled() const { return VisiorEnabled; }
 
-	FORCEINLINE bool CanZoom() const { return bCanZoom; }
+	bool CanZoom() { return bCanZoom && CanUseZoom(); }
 
 	virtual void FinishLoadAnimation();
 
 	virtual void FinishHolsterAnimation();
+
+	virtual void FinishMeleeAnimation();
 
 	virtual void TriggerZoom();
 
@@ -63,11 +67,17 @@ protected:
 
 	virtual void DoStopMainAction();
 
+	virtual void DoMeleeAction();
+
 	virtual void ShowLoadAnimation();
 
 	virtual void ShowHolsterAnimation();
 
 	virtual bool CanUseMainAction();
+
+	virtual bool CanUseMeleeAction();
+
+	virtual bool CanUseZoom();
 
 	void ShowLoadAnimationMesh();
 
@@ -88,6 +98,7 @@ protected:
 	bool bIsActive = false;
 	bool bIsLoading = false;
 	bool bIsHolstering = false;
+	bool bIsMeleeing = false;
 	/* State variables */
 
 private:

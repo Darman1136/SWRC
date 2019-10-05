@@ -40,5 +40,11 @@ public:
 		bool IsZooming = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
+		bool IsMeleeing = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
+		bool IsThrowingNade = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
 		bool IsSwitchingDC17Attachments = false;
 };

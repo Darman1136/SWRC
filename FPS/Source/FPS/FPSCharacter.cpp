@@ -75,6 +75,8 @@ void AFPSCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 
 	PlayerInputComponent->BindAction("Zoom", IE_Pressed, this, &AFPSCharacter::OnZoom);
 
+	PlayerInputComponent->BindAction("Melee", IE_Pressed, this, &AFPSCharacter::OnMelee);
+
 	PlayerInputComponent->BindAction<FSwitchWeaponDelegate>("SwitchWeapon1", IE_Pressed, this, &AFPSCharacter::SwitchWeapon, EPlayerMeshType::DC15S);
 	PlayerInputComponent->BindAction<FSwitchWeaponDelegate>("SwitchWeapon2", IE_Pressed, this, &AFPSCharacter::SwitchWeapon, EPlayerMeshType::DC17M);
 
@@ -176,6 +178,17 @@ void AFPSCharacter::ResetZoom() {
 	CameraManager->SetFOV(DefaultFOV);
 }
 
+void AFPSCharacter::OnMelee() {
+	if (!IsPlayerInputEnabled()) {
+		return;
+	}
+	OnMeleeInternal();
+}
+
+void AFPSCharacter::OnMeleeInternal() {
+	ResetZoom();
+}
+
 void AFPSCharacter::ActivatePlayerMesh(EPlayerMeshType Type) {
 	if (PlayerMeshComponentMap.Contains(Type)) {
 		NextActivePlayerMeshComponent = PlayerMeshComponentMap.FindRef(Type);
@@ -218,6 +231,12 @@ void AFPSCharacter::FinishPlayerMeshHolsterAnimation() {
 	}
 }
 
+void AFPSCharacter::FinishPlayerMeshMeleeAnimation() {
+	if (ActivePlayerMeshComponent) {
+		ActivePlayerMeshComponent->FinishMeleeAnimation();
+	}
+}
+
 void AFPSCharacter::AddPlayerMesh(EPlayerMeshType Type, UPlayerMeshComponent* PlayerMeshComponent, bool IsStartingMesh) {
 	PlayerMeshComponentMap.Add(Type, PlayerMeshComponent);
 	if (IsStartingMesh) {
@@ -233,5 +252,11 @@ void AFPSCharacter::SwitchWeapon(EPlayerMeshType Type) {
 	UE_LOG(LogTemp, Warning, TEXT("%s"), *GETENUMSTRING("EPlayerMeshType", Type));
 	if (IsPlayerInputEnabled()) {
 		ActivatePlayerMesh(Type);
+	}
+}
+
+void AFPSCharacter::CheckMeleeHit() {
+	if (ActivePlayerMeshComponent && ActivePlayerMeshComponent->IsA(UPlayerWeaponMeshComponent::StaticClass())) {
+		GetCastedPlayerMesh<UPlayerWeaponMeshComponent>()->CheckMeleeHit();
 	}
 }

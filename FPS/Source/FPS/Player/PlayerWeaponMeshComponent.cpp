@@ -7,9 +7,18 @@
 #include "Kismet/GameplayStatics.h"
 #include "Animation/AnimInstance.h"
 #include "AnimInstance/PlayerMeshComponentAnimInstance.h"
+#include "Components/CapsuleComponent.h"
+#include "AI/BasicAICharacter.h"
 
 UPlayerWeaponMeshComponent::UPlayerWeaponMeshComponent() : Super() {
 	PrimaryComponentTick.bCanEverTick = true;
+
+	MeleeCollisionCheck = CreateDefaultSubobject<UCapsuleComponent>(TEXT("MeleeCollisionCheck"));
+}
+
+void UPlayerWeaponMeshComponent::OnComponentCreated() {
+	Super::OnComponentCreated();
+	SetupAttachementMeleeCollision();
 }
 
 void UPlayerWeaponMeshComponent::Initialize(AActor* CurrentParent) {
@@ -49,7 +58,7 @@ void UPlayerWeaponMeshComponent::TriggerReload() {
 }
 
 void UPlayerWeaponMeshComponent::DoReload() {
-	if (CurrentAmmo <= 0 || CurrentMagAmmo == MaxMagAmmo) {
+	if (!CanUseReload()) {
 		return;
 	}
 	bIsReloading = true;
@@ -65,6 +74,14 @@ void UPlayerWeaponMeshComponent::ReloadDone() {
 	bIsReloading = false;
 }
 
+void UPlayerWeaponMeshComponent::DoMeleeAction() {
+	if (!CanUseMeleeAction()) {
+		return;
+	}
+	Super::DoMeleeAction();
+	bIsZooming = false;
+}
+
 void UPlayerWeaponMeshComponent::UpdateAmmoMaterials() {}
 
 void UPlayerWeaponMeshComponent::UpdateAnimationBlueprint() {
@@ -77,6 +94,7 @@ void UPlayerWeaponMeshComponent::UpdateAnimationBlueprint() {
 		AnimInstance->IsActive = bIsActive;
 		AnimInstance->IsLoading = bIsLoading;
 		AnimInstance->IsHolstering = bIsHolstering;
+		AnimInstance->IsMeleeing = bIsMeleeing;
 	}
 }
 
@@ -88,6 +106,18 @@ bool UPlayerWeaponMeshComponent::CanUseMainAction() {
 	return Super::CanUseMainAction() && !IsMagEmpty() && !bIsReloading;
 }
 
+bool UPlayerWeaponMeshComponent::CanUseMeleeAction() {
+	return Super::CanUseMeleeAction() && !bIsReloading && !bIsMeleeing;
+}
+
+bool UPlayerWeaponMeshComponent::CanUseZoom() {
+	return Super::CanUseZoom() && !bIsReloading && !bIsMeleeing;
+}
+
+bool UPlayerWeaponMeshComponent::CanUseReload() {
+	return !bIsReloading && !bIsMeleeing && CurrentAmmo > 0 && CurrentMagAmmo != MaxMagAmmo;
+}
+
 void UPlayerWeaponMeshComponent::ResetState() {
 	Super::ResetState();
 	bIsFiring = false;
@@ -96,5 +126,41 @@ void UPlayerWeaponMeshComponent::ResetState() {
 }
 
 void UPlayerWeaponMeshComponent::DoZoom() {
-	bIsZooming = !bIsZooming;
+	if (!CanUseZoom()) {
+		bIsZooming = false;
+	} else {
+		bIsZooming = !bIsZooming;
+	}
 }
+
+void UPlayerWeaponMeshComponent::SetupAttachementMeleeCollision() {
+	if (MeleeCollisionCheck && !MeleeCollisionSocketName.IsNone()) {
+		MeleeCollisionCheck->SetupAttachment(this, MeleeCollisionSocketName);
+	}
+}
+
+void UPlayerWeaponMeshComponent::CheckMeleeHit() {
+	if (MeleeCollisionCheck) {
+		TArray<FOverlapInfo> OverlappingAIInfo = MeleeCollisionCheck->GetOverlapInfos();
+
+		float ClosestOverlappingActorDistance = 9999999.f;
+		ABasicAICharacter* ClosestOverlappingActor = nullptr;
+		FHitResult ClosestOverlappingActorHit;
+		for (FOverlapInfo Info : OverlappingAIInfo) {
+			FHitResult Hit = Info.OverlapInfo;
+			if (Hit.Actor.IsValid() && Hit.Actor.Get()->IsA(ABasicAICharacter::StaticClass())) {
+				if (Hit.Distance < ClosestOverlappingActorDistance) {
+					ClosestOverlappingActorHit = Hit;
+					ClosestOverlappingActorDistance = Hit.Distance;
+					ClosestOverlappingActor = Cast<ABasicAICharacter>(Hit.Actor.Get());
+				}
+			}
+		}
+
+		if (ClosestOverlappingActor) {
+			ABasicAIController* OverlappingController = ClosestOverlappingActor->GetCastedController<ABasicAIController>();
+			OverlappingController->TakeDamageAI(Parent, EWeaponDamageType::WDTMelee, 200.f, ClosestOverlappingActorHit);
+		}
+	}
+}
+

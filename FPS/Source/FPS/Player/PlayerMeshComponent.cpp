@@ -51,6 +51,17 @@ void UPlayerMeshComponent::TriggerStopMainAction() {
 
 void UPlayerMeshComponent::DoStopMainAction() {}
 
+void UPlayerMeshComponent::TriggerMeleeAction() {
+	DoMeleeAction();
+}
+
+void UPlayerMeshComponent::DoMeleeAction() {
+	if (!CanUseMeleeAction()) {
+		return;
+	}
+	bIsMeleeing = true;
+}
+
 void UPlayerMeshComponent::ShowLoadAnimation() {
 	GetWorld()->GetTimerManager().SetTimer(ShowLoadMeshHandle, this, &UPlayerMeshComponent::ShowLoadAnimationMesh, .1f);
 	bIsHolstering = false;
@@ -76,14 +87,27 @@ void UPlayerMeshComponent::FinishHolsterAnimation() {
 	SetVisibility(false, true);
 }
 
+void UPlayerMeshComponent::FinishMeleeAnimation() {
+	bIsMeleeing = false;
+}
+
 bool UPlayerMeshComponent::CanUseMainAction() {
+	return !bIsLoading && !bIsHolstering && !bIsMeleeing;
+}
+
+bool UPlayerMeshComponent::CanUseMeleeAction() {
 	return !bIsLoading && !bIsHolstering;
+}
+
+bool UPlayerMeshComponent::CanUseZoom() {
+	return !bIsLoading && !bIsHolstering && !bIsMeleeing;
 }
 
 void UPlayerMeshComponent::ResetState() {
 	bIsActive = false;
 	bIsLoading = false;
 	bIsHolstering = false;
+	bIsMeleeing = false;
 }
 
 
