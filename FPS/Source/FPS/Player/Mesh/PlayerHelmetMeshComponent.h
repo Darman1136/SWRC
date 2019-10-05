@@ -18,4 +18,8 @@ public:
 
 protected:
 	virtual void DoAnimation() override;
+
+	virtual void ShowHolsterAnimation() override;
+
+	virtual void ShowLoadAnimation() override;
 };

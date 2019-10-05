@@ -75,6 +75,8 @@ void UPlayerWeaponMeshComponent::UpdateAnimationBlueprint() {
 		AnimInstance->IsReloading = bIsReloading;
 		AnimInstance->IsZooming = bIsZooming;
 		AnimInstance->IsActive = bIsActive;
+		AnimInstance->IsLoading = bIsLoading;
+		AnimInstance->IsHolstering = bIsHolstering;
 	}
 }
 

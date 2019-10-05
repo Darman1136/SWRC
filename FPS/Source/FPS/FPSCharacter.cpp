@@ -183,9 +183,7 @@ void AFPSCharacter::ActivatePlayerMesh(EPlayerMeshType Type) {
 			DeactivatePlayerMesh();
 		} else if (NextActivePlayerMeshComponent) {
 			ActivePlayerMeshComponent = NextActivePlayerMeshComponent;
-			if (!ActivePlayerMeshComponent->ActivatePlayerMesh()) {
-				FinishPlayerMeshLoadAnimation();
-			}
+			ActivePlayerMeshComponent->ActivatePlayerMesh();
 		}
 	} else if (Type == EPlayerMeshType::NONE) {
 		NextActivePlayerMeshComponent = nullptr;
@@ -199,20 +197,24 @@ void AFPSCharacter::ActivatePlayerMesh(EPlayerMeshType Type) {
 
 void AFPSCharacter::DeactivatePlayerMesh() {
 	ResetZoom();
-	if (!ActivePlayerMeshComponent->DeactivatePlayerMesh()) {
-		FinishPlayerMeshHolsterAnimation();
+	if (ActivePlayerMeshComponent) {
+		ActivePlayerMeshComponent->DeactivatePlayerMesh();
 	}
 }
 
 void AFPSCharacter::FinishPlayerMeshLoadAnimation() {
-	ActivePlayerMeshComponent->FinishLoadAnimation();
+	if (ActivePlayerMeshComponent) {
+		ActivePlayerMeshComponent->FinishLoadAnimation();
+	}
 }
 
 void AFPSCharacter::FinishPlayerMeshHolsterAnimation() {
-	ActivePlayerMeshComponent->FinishHolsterAnimation();
-	if (NextActivePlayerMeshComponent) {
-		ActivePlayerMeshComponent = NextActivePlayerMeshComponent;
-		ActivePlayerMeshComponent->ActivatePlayerMesh();
+	if (ActivePlayerMeshComponent) {
+		ActivePlayerMeshComponent->FinishHolsterAnimation();
+		if (NextActivePlayerMeshComponent) {
+			ActivePlayerMeshComponent = NextActivePlayerMeshComponent;
+			ActivePlayerMeshComponent->ActivatePlayerMesh();
+		}
 	}
 }
 

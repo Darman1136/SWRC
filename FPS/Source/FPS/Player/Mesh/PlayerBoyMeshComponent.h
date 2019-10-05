@@ -16,4 +16,9 @@ class FPS_API UPlayerBoyMeshComponent : public UPlayerMeshComponent
 
 public:
 	UPlayerBoyMeshComponent();
+
+protected:
+	virtual void ShowHolsterAnimation() override;
+
+	virtual void ShowLoadAnimation() override;
 };

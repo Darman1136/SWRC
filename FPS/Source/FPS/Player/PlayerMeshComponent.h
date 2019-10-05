@@ -35,9 +35,9 @@ public:
 	virtual void InitializeBeginPlay();
 
 	/* True if an animation was set to play, false if none available */
-	bool ActivatePlayerMesh();
+	void ActivatePlayerMesh();
 	/* True if an animation was set to play, false if none available */
-	bool DeactivatePlayerMesh();
+	void DeactivatePlayerMesh();
 
 	UFUNCTION(BlueprintCallable)
 		virtual void TriggerMainAction();
@@ -63,9 +63,9 @@ protected:
 
 	virtual void DoStopMainAction();
 
-	virtual bool ShowLoadAnimation();
+	virtual void ShowLoadAnimation();
 
-	virtual bool ShowHolsterAnimation();
+	virtual void ShowHolsterAnimation();
 
 	virtual bool CanUseMainAction();
 
@@ -78,21 +78,17 @@ protected:
 protected:
 	EPlayerMeshType PlayerMeshType;
 
-	bool VisiorEnabled = true;
-
-	AActor* Parent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
-		class UAnimMontage* HolsterAnimation;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
-		class UAnimMontage* LoadAnimation;
-
+	class AActor* Parent;
 	class UCameraComponent* Camera;
 
+	bool VisiorEnabled = true;
 	bool bCanZoom = true;
 
+	/* State variables */
 	bool bIsActive = false;
+	bool bIsLoading = false;
+	bool bIsHolstering = false;
+	/* State variables */
 
 private:
 	FTimerHandle ShowLoadMeshHandle;

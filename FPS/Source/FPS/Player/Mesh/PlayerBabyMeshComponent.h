@@ -19,6 +19,8 @@ public:
 protected:
 	virtual void DoMainAction() override;
 
+	virtual void ShowHolsterAnimation() override;
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
 		class UAnimMontage* MainActionAnimation;

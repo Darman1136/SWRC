@@ -126,11 +126,11 @@ protected:
 
 	bool bIsZooming = false;
 
-private:
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
-	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = Mesh))
 		class UPlayerMeshComponent* ActivePlayerMeshComponent;
 
+private:
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 		class UPlayerMeshComponent* NextActivePlayerMeshComponent;
 

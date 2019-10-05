@@ -6,6 +6,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Animation/AnimInstance.h"
+#include "FPSCharacter.h"
 
 UPlayerBabyMeshComponent::UPlayerBabyMeshComponent() : Super() {
 	PlayerMeshType = EPlayerMeshType::BABY;
@@ -38,4 +39,10 @@ void UPlayerBabyMeshComponent::DoMainAction() {
 			AnimInstance->Montage_Play(MainActionAnimation, 1.f);
 		}
 	}
+}
+
+void UPlayerBabyMeshComponent::ShowHolsterAnimation() {
+	bIsActive = false;
+	FinishHolsterAnimation();
+	Cast<AFPSCharacter>(Parent)->FinishPlayerMeshHolsterAnimation();
 }

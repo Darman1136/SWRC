@@ -6,6 +6,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Animation/AnimInstance.h"
+#include "FPSCharacter.h"
 
 UPlayerHelmetMeshComponent::UPlayerHelmetMeshComponent() : Super() {
 	PlayerMeshType = EPlayerMeshType::PROLOGUE_HELMET;
@@ -37,4 +38,15 @@ void UPlayerHelmetMeshComponent::DoAnimation() {
 			AnimInstance->Montage_Play(AnimationMontage, 1.f);
 		}
 	}
+}
+
+void UPlayerHelmetMeshComponent::ShowHolsterAnimation() {
+	bIsActive = false;
+	FinishHolsterAnimation();
+	Cast<AFPSCharacter>(Parent)->FinishPlayerMeshHolsterAnimation();
+}
+
+void UPlayerHelmetMeshComponent::ShowLoadAnimation() {
+	ShowLoadAnimationMesh();
+	FinishLoadAnimation();
 }

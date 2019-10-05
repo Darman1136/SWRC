@@ -29,14 +29,14 @@ void UPlayerMeshComponent::Initialize(AActor* CurrentParent) {
 
 void UPlayerMeshComponent::InitializeBeginPlay() {}
 
-bool UPlayerMeshComponent::ActivatePlayerMesh() {
-	return ShowLoadAnimation();
+void UPlayerMeshComponent::ActivatePlayerMesh() {
+	ShowLoadAnimation();
 }
 
-bool UPlayerMeshComponent::DeactivatePlayerMesh() {
+void UPlayerMeshComponent::DeactivatePlayerMesh() {
 	TriggerStopMainAction();
 	ResetState();
-	return ShowHolsterAnimation();
+	ShowHolsterAnimation();
 }
 
 void UPlayerMeshComponent::TriggerMainAction() {
@@ -51,17 +51,10 @@ void UPlayerMeshComponent::TriggerStopMainAction() {
 
 void UPlayerMeshComponent::DoStopMainAction() {}
 
-bool UPlayerMeshComponent::ShowLoadAnimation() {
-	if (LoadAnimation != NULL) {
-		UAnimInstance* AnimInstance = GetAnimInstance();
-		if (AnimInstance != NULL) {
-			AnimInstance->Montage_Play(LoadAnimation, 1.f);
-			GetWorld()->GetTimerManager().SetTimer(ShowLoadMeshHandle, this, &UPlayerMeshComponent::ShowLoadAnimationMesh, .1f);
-			return true;
-		}
-	}
-	SetVisibility(true, true);
-	return false;
+void UPlayerMeshComponent::ShowLoadAnimation() {
+	GetWorld()->GetTimerManager().SetTimer(ShowLoadMeshHandle, this, &UPlayerMeshComponent::ShowLoadAnimationMesh, .1f);
+	bIsHolstering = false;
+	bIsLoading = true;
 }
 
 void UPlayerMeshComponent::ShowLoadAnimationMesh() {
@@ -70,18 +63,13 @@ void UPlayerMeshComponent::ShowLoadAnimationMesh() {
 
 void UPlayerMeshComponent::FinishLoadAnimation() {
 	bIsActive = true;
+	bIsLoading = false;
 }
 
-bool UPlayerMeshComponent::ShowHolsterAnimation() {
+void UPlayerMeshComponent::ShowHolsterAnimation() {
 	bIsActive = false;
-	if (HolsterAnimation != NULL) {
-		UAnimInstance* AnimInstance = GetAnimInstance();
-		if (AnimInstance != NULL) {
-			AnimInstance->Montage_Play(HolsterAnimation, 1.f);
-			return true;
-		}
-	}
-	return false;
+	bIsHolstering = true;
+	bIsLoading = false;
 }
 
 void UPlayerMeshComponent::FinishHolsterAnimation() {
@@ -89,10 +77,14 @@ void UPlayerMeshComponent::FinishHolsterAnimation() {
 }
 
 bool UPlayerMeshComponent::CanUseMainAction() {
-	return true;
+	return !bIsLoading && !bIsHolstering;
 }
 
-void UPlayerMeshComponent::ResetState() {}
+void UPlayerMeshComponent::ResetState() {
+	bIsActive = false;
+	bIsLoading = false;
+	bIsHolstering = false;
+}
 
 
 void UPlayerMeshComponent::TriggerZoom() {
