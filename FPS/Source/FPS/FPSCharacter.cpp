@@ -18,6 +18,7 @@
 #include "TimerManager.h"
 #include "Player/PlayerMeshComponent.h"
 #include "Camera/PlayerCameraManager.h"
+#include "UObject/ConstructorHelpers.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
@@ -41,6 +42,12 @@ AFPSCharacter::AFPSCharacter() {
 
 	// Uncomment the following line to turn motion controllers on by default:
 	//bUsingMotionControllers = true;
+
+	// Temporary selection of detonator
+	static ConstructorHelpers::FClassFinder<ADetonator> SelectedDetonatorClass(TEXT("/Game/FirstPersonCPP/Blueprints/Explosives/ThermalDetonatorBP"));
+	if (SelectedDetonatorClass.Succeeded()) {
+		SelectedDetonator = SelectedDetonatorClass.Class;
+	}
 }
 
 void AFPSCharacter::BeginPlay() {
@@ -76,6 +83,8 @@ void AFPSCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInput
 	PlayerInputComponent->BindAction("Zoom", IE_Pressed, this, &AFPSCharacter::OnZoom);
 
 	PlayerInputComponent->BindAction("Melee", IE_Pressed, this, &AFPSCharacter::OnMelee);
+
+	PlayerInputComponent->BindAction("Throw", IE_Pressed, this, &AFPSCharacter::OnThrow);
 
 	PlayerInputComponent->BindAction<FSwitchWeaponDelegate>("SwitchWeapon1", IE_Pressed, this, &AFPSCharacter::SwitchWeapon, EPlayerMeshType::DC15S);
 	PlayerInputComponent->BindAction<FSwitchWeaponDelegate>("SwitchWeapon2", IE_Pressed, this, &AFPSCharacter::SwitchWeapon, EPlayerMeshType::DC17M);
@@ -189,6 +198,23 @@ void AFPSCharacter::OnMeleeInternal() {
 	ResetZoom();
 }
 
+void AFPSCharacter::OnThrow() {
+	if (!IsPlayerInputEnabled()) {
+		return;
+	}
+	OnThrowInternal();
+}
+
+void AFPSCharacter::OnThrowInternal() {
+	ResetZoom();
+}
+
+void AFPSCharacter::DoThrow() {
+	if (ActivePlayerMeshComponent && ActivePlayerMeshComponent->IsA(UPlayerWeaponMeshComponent::StaticClass())) {
+		GetCastedPlayerMesh<UPlayerWeaponMeshComponent>()->DoThrowAction();
+	}
+}
+
 void AFPSCharacter::ActivatePlayerMesh(EPlayerMeshType Type) {
 	if (PlayerMeshComponentMap.Contains(Type)) {
 		NextActivePlayerMeshComponent = PlayerMeshComponentMap.FindRef(Type);
@@ -234,6 +260,12 @@ void AFPSCharacter::FinishPlayerMeshHolsterAnimation() {
 void AFPSCharacter::FinishPlayerMeshMeleeAnimation() {
 	if (ActivePlayerMeshComponent) {
 		ActivePlayerMeshComponent->FinishMeleeAnimation();
+	}
+}
+
+void AFPSCharacter::FinishPlayerMeshThrowAnimation() {
+	if (ActivePlayerMeshComponent) {
+		ActivePlayerMeshComponent->FinishThrowAnimation();
 	}
 }
 

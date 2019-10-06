@@ -47,6 +47,8 @@ protected:
 
 	void OnMeleeInternal() override;
 
+	void OnThrowInternal() override;
+
 protected:
 	UPROPERTY(EditAnywhere, Category = "Mesh|Player|DC17M")
 		class UPlayerDC17MMeshComponent* PlayerDC17MMeshComponent;

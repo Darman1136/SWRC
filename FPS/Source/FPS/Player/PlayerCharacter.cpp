@@ -99,6 +99,11 @@ void APlayerCharacter::OnMeleeInternal() {
 	GetCastedPlayerMesh<UPlayerWeaponMeshComponent>()->TriggerMeleeAction();
 }
 
+void APlayerCharacter::OnThrowInternal() {
+	Super::OnThrowInternal();
+	GetCastedPlayerMesh<UPlayerWeaponMeshComponent>()->TriggerThrowAction();
+}
+
 void APlayerCharacter::StartWiper() {
 	VisorWiperActive = true;
 	UE_LOG(LogTemp, Warning, TEXT("WIPE start"));

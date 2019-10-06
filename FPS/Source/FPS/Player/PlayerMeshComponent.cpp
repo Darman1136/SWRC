@@ -62,6 +62,13 @@ void UPlayerMeshComponent::DoMeleeAction() {
 	bIsMeleeing = true;
 }
 
+void UPlayerMeshComponent::TriggerThrowAction() {
+	if (!CanUseThrow()) {
+		return;
+	}
+	bIsThrowing = true;
+}
+
 void UPlayerMeshComponent::ShowLoadAnimation() {
 	GetWorld()->GetTimerManager().SetTimer(ShowLoadMeshHandle, this, &UPlayerMeshComponent::ShowLoadAnimationMesh, .1f);
 	bIsHolstering = false;
@@ -91,16 +98,24 @@ void UPlayerMeshComponent::FinishMeleeAnimation() {
 	bIsMeleeing = false;
 }
 
+void UPlayerMeshComponent::FinishThrowAnimation() {
+	bIsThrowing = false;
+}
+
 bool UPlayerMeshComponent::CanUseMainAction() {
 	return !bIsLoading && !bIsHolstering && !bIsMeleeing;
 }
 
 bool UPlayerMeshComponent::CanUseMeleeAction() {
-	return !bIsLoading && !bIsHolstering;
+	return !bIsMeleeing && !bIsLoading && !bIsHolstering;
 }
 
 bool UPlayerMeshComponent::CanUseZoom() {
 	return !bIsLoading && !bIsHolstering && !bIsMeleeing;
+}
+
+bool UPlayerMeshComponent::CanUseThrow() {
+	return !bIsThrowing && !bIsMeleeing;
 }
 
 void UPlayerMeshComponent::ResetState() {

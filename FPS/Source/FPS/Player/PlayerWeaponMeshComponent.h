@@ -32,6 +32,10 @@ public:
 
 	virtual void CheckMeleeHit();
 
+	virtual void TriggerThrowAction() override;
+
+	virtual void DoThrowAction();
+
 protected:
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
@@ -54,6 +58,8 @@ protected:
 	virtual bool CanUseZoom() override;
 
 	virtual bool CanUseReload();
+
+	virtual bool CanUseThrow() override;
 
 	virtual void ResetState() override;
 
@@ -97,6 +103,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = Melee)
 		FName MeleeCollisionSocketName;
+
+	UPROPERTY(EditDefaultsOnly)
+		FName ThrowSocketFName = FName("weaponAttach_L");
 
 private:
 	FTimerHandle FireTimeHandle;

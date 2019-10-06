@@ -9,6 +9,8 @@
 #include "AnimInstance/PlayerMeshComponentAnimInstance.h"
 #include "Components/CapsuleComponent.h"
 #include "AI/BasicAICharacter.h"
+#include "FPSCharacter.h"
+#include "Explosives/Detonator.h"
 
 UPlayerWeaponMeshComponent::UPlayerWeaponMeshComponent() : Super() {
 	PrimaryComponentTick.bCanEverTick = true;
@@ -82,6 +84,27 @@ void UPlayerWeaponMeshComponent::DoMeleeAction() {
 	bIsZooming = false;
 }
 
+void UPlayerWeaponMeshComponent::TriggerThrowAction() {
+	if (!CanUseThrow()) {
+		return;
+	}
+	Super::TriggerThrowAction();
+	bIsFiring = false;
+	bIsZooming = false;
+}
+
+void UPlayerWeaponMeshComponent::DoThrowAction() {
+	if (!ThrowSocketFName.IsNone() && Parent->IsA(AFPSCharacter::StaticClass())) {
+		FActorSpawnParameters ActorSpawnParams;
+		ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		ActorSpawnParams.Owner = Parent;
+		ADetonator* SpawnedDetonator = GetWorld()->SpawnActor<ADetonator>(Cast<AFPSCharacter>(Parent)->GetSelectedDetonator(), GetBoneLocation(ThrowSocketFName), FRotator(), ActorSpawnParams);
+		if (SpawnedDetonator) {
+			SpawnedDetonator->TriggerDetonate();
+		}
+	}
+}
+
 void UPlayerWeaponMeshComponent::UpdateAmmoMaterials() {}
 
 void UPlayerWeaponMeshComponent::UpdateAnimationBlueprint() {
@@ -95,6 +118,7 @@ void UPlayerWeaponMeshComponent::UpdateAnimationBlueprint() {
 		AnimInstance->IsLoading = bIsLoading;
 		AnimInstance->IsHolstering = bIsHolstering;
 		AnimInstance->IsMeleeing = bIsMeleeing;
+		AnimInstance->IsThrowingNade = bIsThrowing;
 	}
 }
 
@@ -107,7 +131,7 @@ bool UPlayerWeaponMeshComponent::CanUseMainAction() {
 }
 
 bool UPlayerWeaponMeshComponent::CanUseMeleeAction() {
-	return Super::CanUseMeleeAction() && !bIsReloading && !bIsMeleeing;
+	return Super::CanUseMeleeAction() && !bIsReloading;
 }
 
 bool UPlayerWeaponMeshComponent::CanUseZoom() {
@@ -118,11 +142,16 @@ bool UPlayerWeaponMeshComponent::CanUseReload() {
 	return !bIsReloading && !bIsMeleeing && CurrentAmmo > 0 && CurrentMagAmmo != MaxMagAmmo;
 }
 
+bool UPlayerWeaponMeshComponent::CanUseThrow() {
+	return Super::CanUseThrow() && !bIsReloading;
+}
+
 void UPlayerWeaponMeshComponent::ResetState() {
 	Super::ResetState();
 	bIsFiring = false;
 	bIsReloading = false;
 	bIsZooming = false;
+	bIsThrowing = false;
 }
 
 void UPlayerWeaponMeshComponent::DoZoom() {

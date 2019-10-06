@@ -7,6 +7,7 @@
 #include "BasicCharacter.h"
 #include "Player/PlayerMeshComponent.h"
 #include "Player/PlayerWeaponMeshComponent.h"
+#include "Explosives/Thermal/ThermalDetonator.h"
 #include "FPSCharacter.generated.h"
 
 class UInputComponent;
@@ -30,6 +31,10 @@ public:
 	void OnZoom();
 
 	void OnMelee();
+
+	void OnThrow();
+
+	virtual void DoThrow();
 
 	void EngageZoom();
 
@@ -59,7 +64,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void SetPlayerInputEnabled(bool Enabled);
 
-	FORCEINLINE bool IsPlayerInputEnabled() const { return PlayerInputEnabled; };
+	FORCEINLINE bool IsPlayerInputEnabled() const { return PlayerInputEnabled; }
 
 	UFUNCTION(BlueprintPure, Category = "Player|Mesh")
 		FORCEINLINE class UPlayerMeshComponent* GetActivePlayerMeshComponent() const { return ActivePlayerMeshComponent; }
@@ -74,7 +79,11 @@ public:
 
 	virtual void FinishPlayerMeshMeleeAnimation();
 
+	virtual void FinishPlayerMeshThrowAnimation();
+
 	virtual void CheckMeleeHit();
+
+	UClass* GetSelectedDetonator() { return SelectedDetonator; }
 
 public:
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
@@ -114,6 +123,8 @@ protected:
 
 	virtual void OnMeleeInternal();
 
+	virtual void OnThrowInternal();
+
 protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 		class UStaticMeshComponent* VisorMesh;
@@ -138,6 +149,8 @@ protected:
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true", Category = Mesh))
 		class UPlayerMeshComponent* ActivePlayerMeshComponent;
+
+	UClass* SelectedDetonator;
 
 private:
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)

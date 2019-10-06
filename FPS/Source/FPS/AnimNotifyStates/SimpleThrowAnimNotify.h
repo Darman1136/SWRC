@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimNotifies/AnimNotify.h"
-#include "SimpleMeleeAnimNotify.generated.h"
+#include "SimpleThrowAnimNotify.generated.h"
 
 /**
  *
  */
 UCLASS()
-class FPS_API USimpleMeleeAnimNotify : public UAnimNotify {
+class FPS_API USimpleThrowAnimNotify : public UAnimNotify {
 	GENERATED_BODY()
 
 public:
